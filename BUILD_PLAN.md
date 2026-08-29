@@ -246,6 +246,20 @@ correctness is the build and link-checker output. Step 8 later asserts the
 absence of the three index routes at the `dist` level as a durable regression
 test.
 
+**Amendment (found while implementing).** `astro-broken-links-checker` is real
+and active --- it ships transitively through `astro-theme-university` and
+fails the build on any unresolved internal link, confirmed by running
+`pnpm build` with a `/timeline/` link present before that page exists. So the
+nav in this step is `People`, `Policies` only, not the three named in the
+goal text; the `Timeline` entry is added in Step 6 once `/timeline/` exists,
+never before. Likewise, `src/pages/index.astro`'s "Where to go next" cards
+lose the `Sessions` and `Assessment` cards rather than being repointed at
+`/timeline/` early --- no valid non-broken target exists for them until
+Step 6, and there is no session-schedule page to point the former at, ever
+(that job moves to `WeekRail`, not a page). Step 6's scope now includes
+adding the `Timeline` nav link and a `Timeline` card on the home page
+alongside the page itself.
+
 ### Step 2 --- `GutterRail` shell
 
 **Goal.** A shared, empty rail shell mounted on both sides of every page, using
@@ -416,7 +430,10 @@ exists in `src/content/assessments/`; Assignment 2 and the ten labs and final
 exam do not and need placeholder frontmatter satisfying the existing
 `assessments` schema --- `week`, `due`, `weight`; per the plan's own opening
 line, "content is deliberately last", so these are structural placeholders
-with minimal valid frontmatter, not written copy).
+with minimal valid frontmatter, not written copy). Also edit
+`src/site-config.ts` to add the `Timeline` nav link and
+`src/pages/index.astro` to add a `Timeline` card, both deferred from Step 1
+per its amendment above since `/timeline/` did not exist yet.
 
 **Dependencies / spec.** Depends on Steps 1--3 (page shell). Serves S4's page
 (the page assessment weights will need to sum to 100% once real weights land

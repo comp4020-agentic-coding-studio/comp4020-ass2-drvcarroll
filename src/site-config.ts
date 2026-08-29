@@ -20,10 +20,9 @@ export const siteConfig = defineSiteConfig({
   ...slopBranding,
   name: "Slop University",
 
+  // Timeline joins this list in Step 6, once /timeline/ exists: the
+  // broken-links checker fails the build on a link with no page yet.
   links: [
-    { text: "Lectures", href: "/lectures/" },
-    { text: sessionLabels.plural, href: "/sessions/" },
-    { text: "Assessment", href: "/assessments/" },
     { text: "People", href: "/people/" },
     { text: "Policies", href: "/policies/" },
   ],

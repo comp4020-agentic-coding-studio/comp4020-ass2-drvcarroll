@@ -33,4 +33,4 @@ next, so build in the time to act on it.
 ## Afterwards
 
 If attendance or participation is worth marks, say so here and link the rule to
-the [assessment page](/assessments/) rather than restating it.
+the [assessment page](/assessments/assignment-1/) rather than restating it.

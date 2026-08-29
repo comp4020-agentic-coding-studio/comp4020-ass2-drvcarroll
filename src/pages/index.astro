@@ -4,7 +4,7 @@ import CardGrid from "astro-theme-university/components/CardGrid.astro";
 import ContentLayout from "astro-theme-university/layouts/ContentLayout.astro";
 import heroImage from "../assets/images/hero-home.avif";
 import { courseMeta } from "../course-config";
-import { sessionLabels, siteConfig } from "../site-config";
+import { siteConfig } from "../site-config";
 
 // STARTER_CONTENT: replace the hero artwork and its alt text below, then
 // remove this comment.
@@ -36,14 +36,11 @@ import { sessionLabels, siteConfig } from "../site-config";
 
   <h2>Where to go next</h2>
   <CardGrid columns={2}>
-    <Card title={sessionLabels.plural} href="/sessions/">
-      <p>The weekly schedule and what happens in each teaching session.</p>
-    </Card>
-    <Card title="Assessment" href="/assessments/">
-      <p>What is marked, what it is worth, and when it is due.</p>
-    </Card>
     <Card title="People" href="/people/">
       <p>Who teaches the course and how to reach them.</p>
+    </Card>
+    <Card title="Policies" href="/policies/">
+      <p>The rules that govern how the course is run and assessed.</p>
     </Card>
   </CardGrid>
 </ContentLayout>
