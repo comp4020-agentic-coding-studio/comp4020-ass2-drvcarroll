@@ -147,6 +147,10 @@ body:has(.gutter-rail):not(:has(.at-sidebar)) {
     bottom: 0;
     width: min(85vw, 20rem);
     padding: var(--at-spacing-md);
+    /* The toggle sits fixed above the panel's own top edge (same offset
+       from --at-nav-height plus its 44px height) — without this, a
+       panel's first rows render underneath it, unreadable. */
+    padding-block-start: calc(var(--at-spacing-md) * 2 + 44px);
     border: 1px solid var(--at-divider);
     background: var(--at-bg-alt);
     color: var(--at-text-secondary);

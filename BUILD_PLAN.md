@@ -451,6 +451,39 @@ intent survives") and last.
 sessions (some weeks present, some absent), asserts thirteen rows in order,
 correct `href`/`null` split, and correct `current` flag for a given path.
 
+**Amendment (post-implementation).** Three things resolved while building:
+
+1. *Real signature.* `buildWeekRows(sessions: {week, id}[], currentPath,
+   examHref: string | null = null): WeekRow[]`. `examHref` was added as a
+   third parameter rather than read from `assessments` inside the pure
+   function --- the architecture section fixes `weeks.ts` as "pure over
+   data", so the assessments lookup lives in `WeekRail.astro` (a side
+   effect at the edge) and is passed in, not fetched by `weeks.ts` itself.
+   The Exam row's `current` is hardcoded `false` per this step's own
+   Outputs line, never computed from `currentPath`.
+2. *URL convention confirmed from `sessions/[slug].astro`.* Session pages
+   are keyed by `session.id` (the loader's slug, e.g.
+   `01-getting-started`), and `trailingSlash: "always"` in
+   `astro.config.ts` means the href is `` `/sessions/${id}/` `` ---
+   matched against `Astro.url.pathname` exactly (no prefix/trim needed).
+3. *No Exam entry exists yet.* `src/content/assessments/` currently holds
+   only `assignment-1` and `final-project` --- no final exam --- so
+   `examHref` is `null` on every route today. `WeekRail.astro` looks for
+   one by `entry.id === "final-exam"` or a case-insensitive `/exam/i`
+   match on `title`, so Step 6's placeholder entry picks up a real link
+   automatically as long as its id or title names "exam"; if Step 6 gives
+   it neither, amend this match rather than hardcoding a guessed slug.
+
+**Amendment (shell bug found under review, fixed in `rails.css`).** The
+mobile `.gutter-rail-panel`'s `padding: var(--at-spacing-md)` left its
+first rows directly underneath the fixed toggle button (same top offset,
+44px tall) --- invisible, though still first in DOM and still reachable by
+keyboard, since Step 2/3 never had real content there to notice. Fixed with
+`padding-block-start: calc(var(--at-spacing-md) * 2 + 44px)` inside the
+existing `@media (width <= 768px)` block, clearing the toggle. This is a
+`GutterRail`/shell fix, not scope creep into Step 5's territory: it applies
+to both rails identically and neither rail's content model changed.
+
 ### Step 5 --- `PageIndex`
 
 **Goal.** The right rail's real content: an in-page index of the current
