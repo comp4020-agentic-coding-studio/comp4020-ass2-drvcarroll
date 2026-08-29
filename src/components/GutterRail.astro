@@ -1,14 +1,91 @@
 ---
 // Shared shell for both side gutters. Knows nothing about its contents —
 // side and label decide placement/labelling; children are the slot.
+// Below 768px the slot content moves into a slide-out panel behind a
+// toggle button; above it, both are inert/hidden and Step 2's inline
+// layout is unchanged.
 export interface Props {
   side: "start" | "end";
   label: string;
 }
 
 const { side, label } = Astro.props;
+const panelId = `gutter-rail-panel-${side}`;
+// Points toward the content the rail slides in from — mirrored per side.
+const icon = side === "start" ? "›" : "‹";
 ---
 
 <aside class={`gutter-rail gutter-rail--${side}`} aria-label={label}>
-  <slot />
+  <button type="button" class="gutter-rail-toggle" aria-expanded="false" aria-controls={panelId}>
+    <span class="gutter-rail-toggle-icon" aria-hidden="true">{icon}</span>
+    <span class="gutter-rail-toggle-label">{label}</span>
+  </button>
+  <div class="gutter-rail-panel" id={panelId}>
+    <slot />
+  </div>
 </aside>
+
+<script>
+  import { nextRailState } from "../lib/rail-toggle";
+
+  interface Rail {
+    toggle: HTMLButtonElement;
+    panel: HTMLElement;
+    open: boolean;
+  }
+
+  // Reused breakpoint from rails.css — the toggle only does anything here.
+  const mobile = matchMedia("(width <= 768px)");
+
+  const rails: Rail[] = [...document.querySelectorAll<HTMLElement>(".gutter-rail")]
+    .map((rail) => {
+      const toggle = rail.querySelector<HTMLButtonElement>(".gutter-rail-toggle");
+      const panel = rail.querySelector<HTMLElement>(".gutter-rail-panel");
+      return toggle && panel ? { toggle, panel, open: false } : null;
+    })
+    .filter((rail): rail is Rail => rail !== null);
+
+  // Reflects rail.open onto the DOM. inert only applies below the
+  // breakpoint, so desktop's inline links stay reachable without JS games.
+  function render(rail: Rail): void {
+    rail.toggle.setAttribute("aria-expanded", String(rail.open));
+    rail.panel.classList.toggle("is-open", rail.open);
+    rail.panel.toggleAttribute("inert", mobile.matches && !rail.open);
+  }
+
+  function setOpen(rail: Rail, action: "open" | "close" | "toggle"): void {
+    rail.open = nextRailState({ open: rail.open }, action).open;
+    render(rail);
+    if (rail.open) {
+      rail.panel.querySelector<HTMLElement>("a")?.focus();
+    } else {
+      rail.toggle.focus();
+    }
+  }
+
+  // Crossing the breakpoint (resize/rotate) drops any open state so a rail
+  // never arrives on the other side of it mid-open.
+  function syncBreakpoint(): void {
+    for (const rail of rails) {
+      rail.open = mobile.matches && rail.open;
+      render(rail);
+    }
+  }
+
+  for (const rail of rails) {
+    rail.toggle.addEventListener("click", () => setOpen(rail, "toggle"));
+  }
+
+  // Document-level, not scoped to the panel: focus may have moved away
+  // from it (there is nothing focusable in the placeholder rail content
+  // yet), and Escape should still close whichever rail is open.
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape") return;
+    for (const rail of rails) {
+      if (rail.open) setOpen(rail, "close");
+    }
+  });
+
+  mobile.addEventListener("change", syncBreakpoint);
+  syncBreakpoint();
+</script>

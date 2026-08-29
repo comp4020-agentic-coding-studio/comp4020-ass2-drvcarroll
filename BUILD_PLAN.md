@@ -382,6 +382,37 @@ narration-principle sense; it is not reviewed against that section.
 open/close DOM wiring itself is exercised by visual inspection, since it is
 side-effecting glue rather than logic.
 
+**Amendment (post-implementation).** Two things found while building and
+testing this step with chrome-devtools MCP tools:
+
+1. *Both rails open independently.* No mutual exclusion --- opening one does
+   not close the other. They sit on opposite screen edges and share no
+   state, so coupling them would be an addition the brief never asked for
+   (section 2's "GutterRail must not know about its contents" extends
+   naturally to "must not know about its sibling rail").
+2. *Escape is a `document`-level listener, not scoped to the panel.* The
+   scaffold's first cut attached `keydown` to `.gutter-rail-panel` itself,
+   reasoning that focus moves inside it on open. That broke immediately
+   under interactive testing: both rails' slot content is still Step 2's
+   placeholder text with no `<a>` in it, so `panel.querySelector("a")?.focus()`
+   is a no-op and focus stays on the toggle button --- outside the panel ---
+   where the panel's own `keydown` listener never sees the keypress. Fixed
+   by moving the listener to `document` and closing whichever rail(s) report
+   `open`. This also fixes the general case once Steps 4/5 land real links:
+   a visitor who tabs elsewhere after opening a rail should still be able to
+   press Escape and have it close.
+
+**Note for Steps 4 and 5.** `GutterRail`'s slot now renders inside
+`<div class="gutter-rail-panel" id="gutter-rail-panel-{side}">`, and opening
+a rail moves focus to `panel.querySelector("a")` --- the *first* anchor
+element in that div, in DOM order. `WeekRail` and `PageIndex` must each
+render their first navigable row as a real `<a>` (not a heading, a button,
+or inert text) at or before that position, or the open-focus behaviour
+silently does nothing (focus stays on the toggle, which is harmless but
+misses the acceptance criterion this step met against placeholder content).
+D1's inert "week that does not exist" rows are fine to follow the first
+link, never precede it.
+
 ### Step 4 --- `WeekRail`
 
 **Goal.** The left rail's real content: thirteen rows, Weeks 1--12 linked from
