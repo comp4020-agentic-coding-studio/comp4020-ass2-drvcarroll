@@ -2,6 +2,7 @@
 import Card from "astro-theme-university/components/Card.astro";
 import CardGrid from "astro-theme-university/components/CardGrid.astro";
 import ContentLayout from "astro-theme-university/layouts/ContentLayout.astro";
+import PageLayout from "../layouts/PageLayout.astro";
 import heroImage from "../assets/images/hero-home.avif";
 import { courseMeta } from "../course-config";
 import { siteConfig } from "../site-config";
@@ -17,32 +18,36 @@ import { siteConfig } from "../site-config";
   heroImageAlt="A lecture theatre reduced to flat gold and black shapes, rows of seats sweeping past the frame, in a two-ink risograph print"
   {...siteConfig}
 >
-  <ul class="course-tags" aria-label="Course tags">
-    {courseMeta.tags.map((tag) => <li>{tag}</li>)}
-  </ul>
+  <PageLayout>
+    <ul class="course-tags" aria-label="Course tags">
+      {courseMeta.tags.map((tag) => <li>{tag}</li>)}
+    </ul>
 
-  <!-- STARTER_CONTENT: replace the authored page below, then remove this comment. -->
-  <h2>What you will do</h2>
-  <p>
-    Say what a student spends their time on — the making, reading, arguing or
-    measuring that fills the weeks. Name the artefact they walk out with.
-  </p>
+    <!-- STARTER_CONTENT: replace the authored page below, then remove this comment. -->
+    <h2>What you will do</h2>
+    <p>
+      Say what a student spends their time on — the making, reading, arguing
+      or measuring that fills the weeks. Name the artefact they walk out
+      with.
+    </p>
 
-  <h2>Who it is for</h2>
-  <p>
-    Say who this is aimed at and what they need to already know. Be specific
-    enough that someone can rule themselves in or out without emailing you.
-  </p>
+    <h2>Who it is for</h2>
+    <p>
+      Say who this is aimed at and what they need to already know. Be
+      specific enough that someone can rule themselves in or out without
+      emailing you.
+    </p>
 
-  <h2>Where to go next</h2>
-  <CardGrid columns={2}>
-    <Card title="People" href="/people/">
-      <p>Who teaches the course and how to reach them.</p>
-    </Card>
-    <Card title="Policies" href="/policies/">
-      <p>The rules that govern how the course is run and assessed.</p>
-    </Card>
-  </CardGrid>
+    <h2>Where to go next</h2>
+    <CardGrid columns={2}>
+      <Card title="People" href="/people/">
+        <p>Who teaches the course and how to reach them.</p>
+      </Card>
+      <Card title="Policies" href="/policies/">
+        <p>The rules that govern how the course is run and assessed.</p>
+      </Card>
+    </CardGrid>
+  </PageLayout>
 </ContentLayout>
 
 <style>

@@ -1,8 +1,13 @@
 ---
-import MdxPageLayout from "astro-theme-university/layouts/MdxPageLayout.astro";
-import { siteConfig } from "../site-config";
+// Mounts both gutter rails around page content. Content-agnostic: it takes
+// no props beyond the slot, and nests inside whichever theme layout
+// (ContentLayout, MdxPageLayout) already produced the surrounding
+// <html>/<body>/<main> — it never produces the document itself. The single
+// place that knows every page has two rails (BUILD_PLAN.md section 2).
+import GutterRail from "../components/GutterRail.astro";
+import "../styles/rails.css";
 ---
 
-<MdxPageLayout siteConfig={siteConfig} {...Astro.props}>
-  <slot />
-</MdxPageLayout>
+<GutterRail side="start" label="Week rail">Week rail (Step 4)</GutterRail>
+<slot />
+<GutterRail side="end" label="Page index">Page index (Step 5)</GutterRail>

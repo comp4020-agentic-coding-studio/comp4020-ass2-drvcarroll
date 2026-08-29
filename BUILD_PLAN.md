@@ -299,23 +299,67 @@ risk in plan section 7 about `--at-sidebar-inset` colliding with
 unit test. Visual inspection at both viewports is the acceptance check for
 this step, per the loop's step 7.
 
+**Amendment (post-implementation).** Three things the plan's own text got
+wrong or left open, found while building:
+
+1. *`PageLayout.astro` was not on most pages' render path.* Only the three MDX
+   pages (`people/index.mdx`, `policies/index.mdx`, `404.md`) reach a
+   `defaultLayout`; `index.astro` and the four `[slug].astro` routes import
+   `ContentLayout` directly and never touched `PageLayout`. Fixed by splitting
+   the layout in two: `PageLayout.astro` is now content-agnostic (mounts the
+   rails around its slot, nothing else) and a new `src/layouts/
+   MdxDefaultLayout.astro` is the actual `defaultLayout` target (wraps
+   `MdxPageLayout`, nests `PageLayout` inside it). `astro.config.ts` points at
+   the new file; `index.astro` and all four `[slug].astro` files now import
+   `PageLayout` and wrap their existing children in it. Every route mounts the
+   rails through the one place named in the plan's Outputs line.
+2. *Sticky only pinned within one grid row.* `.gutter-rail` had no explicit
+   `grid-row`, so auto-placement's monotonic cursor gave the start rail row 1
+   and the end rail the last row --- each sticky only within that row's height.
+   Fixed with `grid-row: 1 / -1` on `.gutter-rail`.
+3. *At 390x844 the layout did crash*, contrary to this step's "does not crash"
+   floor: `--at-sidebar-inset` on both sides pushed the outer grid tracks'
+   combined floor past the viewport width, squeezing the content column to
+   zero and wrapping text one character per line. `sidebar.css` hits the exact
+   same shape of problem for `.at-sidebar` and resolves it at `width <= 768px`
+   by zeroing the inset, widening `.at-main` back to `inset-start /
+   content-end`, and hiding the sidebar --- `rails.css` now does the same for
+   `.gutter-rail` at the same breakpoint. This is a static `display: none`,
+   not Step 3's toggle/focus-management/slide-out; Step 3 now builds its
+   interactive collapse starting from "hidden below 768px", not "in flow".
+   (One subtlety: the override selector inside that media query has to repeat
+   the full `body:has(.gutter-rail):not(:has(.at-sidebar))` compound, not the
+   bare `body:has(.gutter-rail)` --- both are unlayered, so the more specific
+   selector wins regardless of the media query, and a bare version loses the
+   cascade silently.)
+
+**`--at-sidebar-inset` risk, resolved.** `grep -rn "at-sidebar" src` found no
+consumer of the theme's own sidebar anywhere in this repo today --- the risk is
+dormant, not live. `rails.css` still guards every rule that writes the token
+with `:not(:has(.at-sidebar))`, so if a future step ever mounts `.at-sidebar`
+alongside `GutterRail`, this rule stops applying by selector rather than
+racing `sidebar.css` on source order.
+
 ### Step 3 --- Mobile rail behaviour
 
-**Goal.** Below 640px, each rail collapses to a toggle button and slides out
+**Goal.** Below 768px, each rail collapses to a toggle button and slides out
 over the content on demand, accessibly.
 
 **Scope.** Extends `GutterRail.astro` with a `<button aria-expanded>` toggle
 and an inline `<script>` (or a tiny `src/lib/rail-toggle.ts` imported by it)
 that opens/closes the rail, moves focus into it on open, and returns focus to
 the toggle on close (Escape and toggle-click both close it). Extends
-`rails.css` with the `@media (width < 640px)` collapse and slide-out
-transform.
+`rails.css`'s existing `@media (width <= 768px)` block (added in Step 2 to
+stop the rails crashing the content column, currently a static `display:
+none`) with the toggle button and slide-out transform.
 
 **Dependencies / spec.** Depends on Step 2. Serves S1 (both marking
 viewports).
 
-**Inputs.** The theme's existing 640px breakpoint (`styles/base.css`), matched
-rather than a new one chosen independently.
+**Inputs.** `rails.css`'s `@media (width <= 768px)` block from Step 2 ---
+reuse that breakpoint, not `base.css`'s separate 640px one, so there is no gap
+band between 640 and 768px where the rail is hidden with no toggle to reopen
+it.
 
 **Outputs.** `rail-toggle.ts` (pure: given a rail element and open/closed
 state, computes the next state and the focus target --- side effects of
@@ -545,12 +589,23 @@ complete.
 
 **Two sticky rails plus the sticky nav can trap the content column** on short
 viewports --- a rail taller than the viewport cannot scroll to its own end.
-Step 2 finds out. Fallback: `max-height` on the rail with its own overflow.
+Step 2 found out and applied the fallback: `max-height: calc(100dvh -
+var(--at-nav-height))` with `overflow-y: auto` on `.gutter-rail`.
 
 **`--at-sidebar-inset` is a theme token with an existing consumer** ---
 `sidebar.css` sets it for `.at-sidebar`. If we ever use the theme's own sidebar
-on a page, the two will fight over the same token. Step 2 finds out. Fallback:
-our own token, and set `--at-sidebar-inset` from it.
+on a page, the two will fight over the same token. Step 2 found out: no page
+uses `.at-sidebar` today (dormant risk), and applied the fallback anyway ---
+`rails.css` sets the token under `body:has(.gutter-rail):not(:has(.at-sidebar))`
+so the two rules are mutually exclusive by selector rather than by luck.
+
+**At mobile widths, two rails' reserved space alone can exceed the viewport**
+--- found in Step 2, not anticipated when this plan was written: at 390px,
+`--at-sidebar-inset` on both sides pushed the outer grid tracks' combined
+floor past the viewport width, squeezing the content column to zero. Fixed by
+reusing `sidebar.css`'s own `width <= 768px` breakpoint to zero the inset and
+hide the rails there (see Step 2's amendment); Step 3 builds its toggle on top
+of that breakpoint instead of `base.css`'s 640px one.
 
 **The client-side index is invisible to the marker if JavaScript fails.** D4
 accepts this. Step 5 finds out how much of the page's navigability depends on

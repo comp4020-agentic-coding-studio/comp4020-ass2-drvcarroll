@@ -1,0 +1,15 @@
+---
+// Astro's MDX defaultLayout target (astro.config.ts) for pages with no
+// explicit `layout:` frontmatter. Produces the full document via the
+// theme's MdxPageLayout, then delegates rail-mounting to PageLayout so
+// every route — MDX or ContentLayout-based — shares that one mount point.
+import MdxPageLayout from "astro-theme-university/layouts/MdxPageLayout.astro";
+import { siteConfig } from "../site-config";
+import PageLayout from "./PageLayout.astro";
+---
+
+<MdxPageLayout siteConfig={siteConfig} {...Astro.props}>
+  <PageLayout>
+    <slot />
+  </PageLayout>
+</MdxPageLayout>

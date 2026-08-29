@@ -1,0 +1,14 @@
+---
+// Shared shell for both side gutters. Knows nothing about its contents —
+// side and label decide placement/labelling; children are the slot.
+export interface Props {
+  side: "start" | "end";
+  label: string;
+}
+
+const { side, label } = Astro.props;
+---
+
+<aside class={`gutter-rail gutter-rail--${side}`} aria-label={label}>
+  <slot />
+</aside>

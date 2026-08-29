@@ -1,0 +1,93 @@
+/* Gutter rail shell. Deliberately unlayered (no @layer wrapper): the
+   theme's grid rules live in @layer at.components, and unlayered
+   declarations always beat layered ones regardless of specificity, so this
+   file overrides .at-main and .at-main > * without fighting the layer
+   order — the same technique base.css uses for its astro-island override. */
+
+:root {
+  /* D7: a clamp, not a bare 15vw — 15vw alone gives a ~150px rail on a
+     narrow laptop (wraps "Week 10") and a ~300px rail on an ultrawide
+     (mostly whitespace). */
+  --gutter-rail-width: clamp(11rem, 15vw, 15rem);
+}
+
+/* .at-main defaults to `grid-column: inset-start / content-end` (see
+   base.css) — it does not span the outer full-start/full-end gutters, so a
+   child can't address those line names until main's own subgrid is widened
+   to include them. This is the same move sidebar.css makes for .at-sidebar,
+   done on both sides since we mount a rail in each gutter. */
+.at-main:has(.gutter-rail) {
+  grid-column: full-start / full-end;
+}
+
+/* --at-sidebar-inset risk (BUILD_PLAN.md section 7): sidebar.css sets this
+   same token from `body:has(.at-sidebar)`, equal specificity to the rule
+   below. No page here uses .at-sidebar today (confirmed by grep), but the
+   :not() guard makes the two mutually exclusive by design rather than by
+   luck — if .at-sidebar is ever added to a page that also has GutterRail,
+   this rule stops applying and the theme's own sidebar sizing wins outright
+   instead of racing on source order. */
+body:has(.gutter-rail):not(:has(.at-sidebar)) {
+  --at-sidebar-inset: calc(var(--gutter-rail-width) + var(--at-spacing-lg));
+}
+
+.gutter-rail {
+  width: var(--gutter-rail-width);
+  /* Content flows one top-level child per implicit row, and grid
+     auto-placement's cursor never rewinds — a rail with no row span placed
+     first in the DOM lands in row 1, one placed last lands in the final
+     row, each only stickying within that one row's height. Spanning every
+     row makes the whole page's scroll range the rail's containing block. */
+  grid-row: 1 / -1;
+  align-self: start;
+  position: sticky;
+  inset-block-start: var(--at-nav-height);
+
+  /* A rail taller than the viewport must scroll itself rather than trap
+     the content column (plan section 7's second risk, checked here). */
+  max-height: calc(100dvh - var(--at-nav-height));
+  overflow-y: auto;
+
+  padding: var(--at-spacing-md);
+  border: 1px solid var(--at-divider);
+  border-radius: var(--at-border-radius);
+  background: var(--at-bg-alt);
+  color: var(--at-text-secondary);
+  font-size: var(--at-font-size-sm);
+}
+
+.gutter-rail--start {
+  grid-column: full-start / inset-start;
+  /* Hug the content side of the gutter track, not the viewport edge — the
+     track is `1fr` and can be far wider than the rail on a wide screen. */
+  justify-self: end;
+  margin-inline-end: var(--at-spacing-lg);
+}
+
+.gutter-rail--end {
+  grid-column: content-end / full-end;
+  justify-self: start;
+  margin-inline-start: var(--at-spacing-lg);
+}
+
+/* Below this width the two rails' floor (--gutter-rail-width each side)
+   leaves less room than --at-content-width needs, so content would be
+   squeezed toward zero — the exact collision sidebar.css already avoids
+   for .at-sidebar at the same breakpoint. Hiding the rails here is Step 2's
+   "does not crash" floor, not Step 3's collapse design (a toggle/drawer). */
+@media (width <= 768px) {
+  /* Same compound selector as the rule above (specificity 0,2,1) — a bare
+     `body:has(.gutter-rail)` here is 0,1,1 and loses the cascade to it
+     regardless of media query or source order. */
+  body:has(.gutter-rail):not(:has(.at-sidebar)) {
+    --at-sidebar-inset: 0px;
+  }
+
+  .at-main:has(.gutter-rail) {
+    grid-column: inset-start / content-end;
+  }
+
+  .gutter-rail {
+    display: none;
+  }
+}
