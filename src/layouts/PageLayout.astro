@@ -5,6 +5,7 @@
 // <html>/<body>/<main> — it never produces the document itself. The single
 // place that knows every page has two rails (BUILD_PLAN.md section 2).
 import GutterRail from "../components/GutterRail.astro";
+import PageIndex from "../components/PageIndex.astro";
 import WeekRail from "../components/WeekRail.astro";
 import "../styles/rails.css";
 ---
@@ -13,4 +14,6 @@ import "../styles/rails.css";
   <WeekRail currentPath={Astro.url.pathname} />
 </GutterRail>
 <slot />
-<GutterRail side="end" label="Page index">Page index (Step 5)</GutterRail>
+<GutterRail side="end" label="Page index">
+  <PageIndex />
+</GutterRail>

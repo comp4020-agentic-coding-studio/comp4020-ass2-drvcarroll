@@ -521,6 +521,63 @@ document with a mix of `h1`/`h2`/`h3`/no-heading content, asserting the
 `h1` is excluded, `h2`/`h3` order and text are captured, and an empty
 document yields `[]`.
 
+**Amendment (post-implementation).** Four things confirmed or found while
+building this step:
+
+1. *`#main` is the real selector, confirmed rather than assumed.*
+   `astro-theme-university/layouts/BaseLayout.astro` sets `id="main"` on the
+   theme's own `<main class="at-main">`, the same element `ContentLayout` and
+   `MdxPageLayout` both render into. `buildPageIndex` queries `#main h2,
+   #main h3` as the plan specified, and this is the selector Step 6 and
+   Step 8 should both build on --- it is not going to change.
+2. *`rehype-autolink-headings` appends a real DOM node, not a CSS
+   pseudo-element.* `astro-theme-university/markdown.ts` appends an
+   `aria-hidden`, `tabindex="-1"` anchor containing the literal text `"#"`
+   inside every markdown heading. A naive `textContent` read would have
+   trailed every entry with `"#"`; `buildPageIndex` clones the heading and
+   removes `.at-heading-anchor` before reading text. Worth knowing for
+   anyone touching heading markup later --- the permalink is real content,
+   not decoration a stylesheet can hide from `textContent`.
+3. *The home page is not the headingless example --- `/policies/` is.*
+   `src/pages/index.astro`'s own hand-written `<h2>`s ("What you will do",
+   etc.) have no `id` (rehype-slug never touches literal JSX/Astro markup),
+   so the home page's index lists three unlinkable, muted entries rather
+   than being empty. The same is true of `SpecList`'s "The spec" heading and
+   `RelatedContent`'s "Related" heading --- both theme components, both
+   render an `<h2>` with no `id` --- so every session/lecture/assessment
+   detail page's index carries two inert rows alongside its real, linked
+   markdown headings (see the Week 1 session page in this step's visual
+   check). `Card.astro`'s title (`h2` or `h3` depending on `headingLevel`)
+   is the same story on `/people/` and the home page's card grid. None of
+   this is a bug: `buildPageIndex` does exactly what D4 asks --- reads every
+   `id` as it finds it, invents none --- and `PageIndex.astro` renders an
+   entry with no `id` as inert text, the same convention `WeekRail` already
+   uses for a week with no session. It is a real content gap (those
+   headings could carry an `id`, and rendering as inert text is a reasonable
+   fallback, not a fix), noted here rather than silently patched, since
+   fixing it would mean adding `id`s to theme components and hand-written
+   pages outside this step's scope. `/policies/` (`<h1>` only, no `<h2>`) is
+   the one page in this repo that is genuinely headingless today, and is
+   what the empty-state check used.
+4. *`jsdom` added as an explicit devDependency.* It was already resolved
+   transitively as vitest's optional peer, but not installed or declared;
+   `pnpm add -D jsdom` makes `// @vitest-environment jsdom` in
+   `spec/page-index.test.ts` work without relying on an undeclared
+   transitive install.
+
+**Step 8's dist-level assertion (handed forward).** For every built
+`*.html` file, parse the `#main ... </main>` region and assert every
+`<h2`/`<h3` tag inside it carries a non-empty `id="..."` attribute. This is
+the contract D4 accepts in place of asserting the generated list itself.
+Given finding 3 above, this assertion will currently fail on
+`dist/index.html`, every `dist/sessions/*`, `dist/lectures/*` and
+`dist/assessments/*` page (via `SpecList`/`RelatedContent`), and
+`dist/people/index.html` (via `Card`) --- Step 8 should either write the
+test to go red until those `id`s are added, or that content work should
+land before Step 8 does, per this plan's own "a check goes red until the
+content lands rather than being forgotten" convention (already used for S4
+in section 7).
+
 ### Step 6 --- Timeline page and spine
 
 **Goal.** `/timeline/`, a thickened left-edge rule with a bead per graded
@@ -674,7 +731,12 @@ of that breakpoint instead of `base.css`'s 640px one.
 **The client-side index is invisible to the marker if JavaScript fails.** D4
 accepts this. Step 5 finds out how much of the page's navigability depends on
 it; if the answer is "a lot", the fallback is a static in-page index rendered at
-the top of long collection pages, where `render()` does supply headings.
+the top of long collection pages, where `render()` does supply headings. Found
+while building it: navigability without JS is unaffected either way, since
+every session/lecture/assessment page's markdown headings are still real
+in-page anchors in the static HTML (rehype-slug), and the week rail (no JS
+needed) already gets a reader to the page --- the index is a convenience for
+a long page already open, not the only path to a heading.
 
 **Assessment weights must total 100% (S4), and the beads are placeholders.**
 Fourteen deliverables with no weights cannot be checked yet. The Step 8 test
