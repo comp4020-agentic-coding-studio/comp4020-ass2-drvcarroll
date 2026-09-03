@@ -722,6 +722,40 @@ decided yet).
 Step 8 `dist`-level assertion that the acknowledgement text appears before the
 theme-toggle button in DOM order.
 
+**Amendment (post-implementation).** D6 confirmed exactly as assumed, by
+reading `Footer.astro`: it renders `<div class="at-footer-acknowledgement">`
+(an `<h2>` from `acknowledgement.title` and a `<p>` from `.text`) as the first
+child of `<div class="at-footer-inner at-footer-bottom">`, before the licence
+`<hr>`/`<p>` and before `<nav class="at-footer-legal">`, which is what holds
+`<button class="at-footer-theme-toggle">`. No component or CSS reorder was
+needed --- the whole step is the `acknowledgement` field added to
+`siteConfig` in `src/site-config.ts`:
+
+```ts
+acknowledgement: {
+  title: "Acknowledgement of Country",
+  text: "Slop University acknowledges the Traditional Owners of the "
+    + "land on which it operates, and pays respect to their Elders "
+    + "past and present.",
+},
+```
+
+Generic by construction: it names no real nation, people or place, only "the
+land" the fictional Slop University sits on --- the register a placeholder
+acknowledgement should have before the course's real location is decided.
+
+Confirmed by DOM inspection of the built `dist/` output (checked on
+`/index.html`, and by live-DOM check on `/timeline/`, `/people/`,
+`/policies/` and a session detail page, at both 1920x1080 and 390x844): in
+document order, `.at-footer-acknowledgement` precedes
+`.at-footer-legal button.at-footer-theme-toggle`, both nested under
+`footer.at-footer .at-footer-bottom`. **Step 8's selector**: query
+`.at-footer-acknowledgement` and `.at-footer-theme-toggle` on any page and
+assert the former's position in the parsed HTML precedes the latter's
+(e.g. via `compareDocumentPosition` or a raw index comparison on the
+`.at-footer-bottom` innerHTML) --- both classes are stable theme markup, not
+ours, so the assertion is on structure the theme contracts to keep.
+
 ### Step 8 --- Spec tests
 
 **Goal.** `spec/layout.test.ts`, collecting the `dist`-level contracts named as

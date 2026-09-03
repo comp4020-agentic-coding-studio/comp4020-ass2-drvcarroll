@@ -29,6 +29,12 @@ export const siteConfig = defineSiteConfig({
     { text: "Policies", href: "/policies/" },
   ],
 
+  // Generic placeholder: no real institution or place is decided yet.
+  acknowledgement: {
+    title: "Acknowledgement of Country",
+    text: "Slop University acknowledges the Traditional Owners of the land on which it operates, and pays respect to their Elders past and present.",
+  },
+
   licence: "CC-BY-NC-SA-4.0",
   socialImage: "/src/assets/images/card.png",
   socialImageAlt: `A preview card for ${courseMeta.code}: ${courseMeta.title}`,
