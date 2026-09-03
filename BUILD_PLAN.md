@@ -214,6 +214,18 @@ the whole reason to use its tokens rather than absolute positioning.
 
 ## 6. Steps
 
+**Status: all eight steps of the structural scaffold are complete.**
+`spec/layout.test.ts` (Step 8) now runs the six dist-level contracts from
+Steps 1, 4, 5, 6 and 7 on every `pnpm check`. Four of six are green
+(index-page removal, WeekRail's 13 rows + `aria-current`, the timeline's 13
+beads in order, footer acknowledgement-before-toggle). Two are red by
+design, not defect: every `h2`/`h3` under `#main` having a non-empty `id`
+(Step 5's documented theme-heading gap --- `SpecList`/`RelatedContent`/`Card`
+titles and a few hand-written page headings) and assessment weights summing
+to 100 (currently ≈200%, Step 6's documented placeholder-weight risk). Both
+are content-stage follow-ups deferred by the plan itself, not scaffold
+defects, and `pnpm check` is expected to exit red until real content lands.
+
 Each step ends green on `pnpm check` and is committed on its own. Every step's
 own testing methodology is unit tests over the pure functions it adds
 (`src/lib/**`), per "Test at every stage" --- Step 8 additionally adds the
@@ -794,6 +806,67 @@ not an oversight.
 **Testing methodology.** This step *is* the tests; no further unit test wraps
 it. Confirm each assertion fails if the feature it checks is reverted (a quick
 sanity check, not a permanent mutation test), so the suite is known to bite.
+
+**Amendment (post-implementation).** Three things resolved while building:
+
+1. *`spec/invariants.test.ts` does not exist* --- the repo's existing suite is
+   `data-integrity.test.ts`, `page-index.test.ts`, `rail-toggle.test.ts`,
+   `timeline.test.ts` and `weeks.test.ts`. `layout.test.ts` follows
+   `data-integrity.test.ts`'s pattern (`readFileSync` + a small parse helper,
+   one `describe` block) instead.
+2. **`/decks/week-01/` is a separate template**, rendered by `astromotion`
+   with no `PageLayout`, no `WeekRail`, no `#main` and no footer --- confirmed
+   against the built HTML. It is excluded from the WeekRail, heading-id and
+   footer assertions (all three are chrome the deck page never carries), and
+   is not a scope gap: those assertions cover every page the site chrome
+   actually renders on, which is what the acceptance criteria describe.
+3. **Astro's scoped-style output required a `data-astro-cid-*`-tolerant
+   selector.** `<ul class="week-rail" data-astro-cid-...>` still matches
+   `ul.week-rail` (an attribute selector on class, unaffected by the extra
+   attribute) --- no change needed once confirmed, just noted since a plain
+   string match on the raw HTML (as opposed to a CSS-selector query) would
+   have needed the same care.
+
+**Confirmed results (all six assertions run for real against `pnpm build`
+output):**
+
+- Step 1 (no `sessions`/`lectures`/`assessments` index) --- **green**.
+- Step 4 (13 `<li>` per WeekRail; current row `aria-current="page"`) ---
+  **green**.
+- Step 5 (every `h2`/`h3` under `#main` has a non-empty `id`) --- **red**,
+  exactly as Step 5's amendment predicted: 30 headings across 16 pages lack
+  one (`dist/index.html`'s three hand-written `h2`s and three card `h3`s;
+  `SpecList`'s "The spec" `h2` on all 12 assessment detail pages and both
+  session pages; `RelatedContent`'s "Related" `h2` on 2 assessment pages,
+  both lecture pages and both session pages; `Card`'s title `h2` on both
+  `/people/` entries). Documented content gap, not fixed here.
+- Step 6 (`/timeline/` has 13 beads, documented order, link + empty
+  `span.description` each) --- **green**.
+- Step 7 (`.at-footer-acknowledgement` precedes
+  `.at-footer-legal button.at-footer-theme-toggle` in every page's
+  `.at-footer-bottom`) --- **green**.
+- S4 / §7 risk (assessment weights sum to 100) --- **red**: current total is
+  199.96 (Assignment 1's 40 + `final-project`'s 60 + twelve placeholder
+  entries at 8.33 each). Documented, expected red until real weights land.
+
+**Mutation spot-check** (temporary edits to built `dist/` files, reverted
+immediately after, no source changes): deleting a removed index page back in
+made assertion 1 fail; deleting one WeekRail `<li>` made assertion 2 fail;
+swapping the first two timeline beads' hrefs made assertion 4 fail; moving
+the footer acknowledgement after the theme toggle made assertion 5 fail. All
+four bite as designed.
+
+`pnpm check`'s exit code is **non-zero** with this step committed, because
+two of `layout.test.ts`'s six assertions are red by design (Step 5's and
+Step 6's own documented content gaps, not this step's). That is the correct
+end state per this plan's own "a check goes red until the content lands
+rather than being forgotten" convention (§7) --- fixing the two gaps is
+explicitly out of this step's scope and belongs to the content-writing stage.
+
+**Note on devDependencies.** `@types/jsdom` was added (`pnpm add -D
+@types/jsdom`) so `astro check` can type `import { JSDOM } from "jsdom"` in
+`layout.test.ts` --- `jsdom` itself was already an explicit devDependency
+(Step 5's amendment), but its types were only ever resolved transitively.
 
 ## 7. Risks
 
