@@ -20,9 +20,11 @@ export const siteConfig = defineSiteConfig({
   ...slopBranding,
   name: "Slop University",
 
-  // Timeline joins this list in Step 6, once /timeline/ exists: the
-  // broken-links checker fails the build on a link with no page yet.
+  // Overview duplicates the wordmark's own link under a discoverable
+  // label; Timeline joins now that /timeline/ exists (Step 6).
   links: [
+    { text: "Overview", href: "/" },
+    { text: "Timeline", href: "/timeline/" },
     { text: "People", href: "/people/" },
     { text: "Policies", href: "/policies/" },
   ],

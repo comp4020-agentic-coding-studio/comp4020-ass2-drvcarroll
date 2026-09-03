@@ -61,8 +61,9 @@ Flows:
 - `WeekRail` reads `sessions` at build time; `Astro.url.pathname` decides which
   row is current.
 - `PageIndex` reads the DOM on load; nothing passes it props.
-- `TimelineSpine` reads the `assessments` collection and emits one
-  `TimelineBead` per entry, ordered by `week` then `due`.
+- `TimelineSpine` reads the `assessments` collection, orders it with the pure
+  `orderBeads` against the literal 13-id `BEAD_ORDER` (D9, not a `week`/`due`
+  sort), and emits one `TimelineBead` per ordered entry.
 - `Footer` reads `acknowledgement` from `siteConfig` --- no component of ours.
 
 Couplings deliberately absent:
@@ -157,6 +158,18 @@ as not applicable to this repo and does not check steps against them. Flagged
 here rather than silently skipped, per the harness's own instruction to say
 what would be cut and why.
 
+**D9. The spine's order is an explicit id list, not a `week`/`due` sort.**
+`src/lib/timeline.ts` exports `BEAD_ORDER`, the 13 assessment ids in the
+brief's literal sequence, and a pure `orderBeads(entries)` that filters and
+reorders any entries array to match it. Several of Step 6's placeholder
+labs deliberately share a `week` value (see that step's amendment), so a
+sort key over `week`/`due` cannot reproduce the brief's order on its own;
+an explicit list is the one representation that is exactly the specified
+order, independent of what placeholder scheduling data an entry happens to
+carry. `TimelineBead` still never sees its own position — `orderBeads`
+does the ordering, `TimelineSpine` maps the result, in the same
+division of labour as `buildWeekRows`/`WeekRail`.
+
 ## 5. Architecture
 
 ```
@@ -172,6 +185,7 @@ src/
   lib/
     weeks.ts                # buildWeekRows(sessions) -> WeekRow[]
     page-index.ts           # the DOM-reading function, imported by the script
+    timeline.ts             # BEAD_ORDER, orderBeads(entries) -> ordered entries
   styles/
     rails.css               # both gutters, the box, the mobile slide-out
     timeline.css            # spine and beads
@@ -185,9 +199,10 @@ Deleted: `src/pages/sessions/index.astro`, `src/pages/lectures/index.mdx`,
 `src/pages/assessments/index.mdx`, and the three grid components they used
 (`SessionsGrid`, `LecturesGrid`, `AssessmentsGrid`) once nothing imports them.
 
-Pure vs side-effecting: `weeks.ts` and `page-index.ts` are pure functions over
-data and over a `Document`, so both are unit-testable without a browser. The
-components are rendering only. Nothing else holds state.
+Pure vs side-effecting: `weeks.ts`, `page-index.ts` and `timeline.ts` are pure
+functions over data (or, for `page-index.ts`, over a `Document`), so all three
+are unit-testable without a browser. The components are rendering only.
+Nothing else holds state.
 
 The grid: the theme's `body` is a named-line grid
 (`full-start | inset-start | content-start | content-end | full-end`) that
@@ -587,18 +602,20 @@ deliverable in semester order, description spans empty.
 `src/components/TimelineSpine.astro` (reads ordered bead data, renders the
 rule, maps to `TimelineBead`); new `src/components/TimelineBead.astro` (circle
 + label + empty `<span class="description"></span>`); new
-`src/styles/timeline.css` (the thickened rule, positioned to replace --- on
-this page only --- the theme's `body::after`, per D5); new placeholder
-`assessments` content entries for Labs 1--10, Assignment 1, Assignment 2, Final
-Exam if they do not already exist as distinct entries (Assignment 1 already
-exists in `src/content/assessments/`; Assignment 2 and the ten labs and final
-exam do not and need placeholder frontmatter satisfying the existing
-`assessments` schema --- `week`, `due`, `weight`; per the plan's own opening
-line, "content is deliberately last", so these are structural placeholders
-with minimal valid frontmatter, not written copy). Also edit
-`src/site-config.ts` to add the `Timeline` nav link and
+`src/styles/timeline.css` (the thickened rule, and the rule under D5 that
+suppresses the theme's `body::after` wherever the spine is present); new
+placeholder `assessments` content entries for Labs 1--10, Assignment 2 and
+Final Exam (Assignment 1 already exists in `src/content/assessments/` and is
+untouched). Also edit `src/site-config.ts` to add the `Timeline` nav link and
 `src/pages/index.astro` to add a `Timeline` card, both deferred from Step 1
-per its amendment above since `/timeline/` did not exist yet.
+per its amendment above since `/timeline/` did not exist yet. In the same
+edit, add an `Overview` nav link pointing at `/` (home), placed first, so the
+top nav reads Overview, Timeline, People, Policies --- `at-nav-logo-full`
+already links to the home page, but clicking a wordmark to mean "go to the
+overview" is not a discoverable affordance, and a named link removes the
+ambiguity at negligible cost (one more `<li>`, same pattern as the other
+three). This does not replace the logo's own link, it duplicates the
+destination under a legible label.
 
 **Dependencies / spec.** Depends on Steps 1--3 (page shell). Serves S4's page
 (the page assessment weights will need to sum to 100% once real weights land
@@ -606,31 +623,75 @@ per its amendment above since `/timeline/` did not exist yet.
 plan section 7's risk).
 
 **Inputs.** Ordering rule stated in the prompt: Labs 1--4, Assignment 1, Labs
-5--8, Assignment 2, Labs 9--10, Final Exam --- fourteen beads total, in that
-literal order (re-derived here from "Assignment 1 after the 4th lab,
-Assignment 2 after the 8th lab, and final exam at the end").
+5--8, Assignment 2, Labs 9--10, Final Exam. **Corrected count: 13 beads, not
+fourteen.** The plan's original Inputs line said "fourteen beads total" ---
+an arithmetic error, caught while re-deriving the list: 10 labs + 2
+assignments + 1 final exam = 13, and the literal sequence above lists exactly
+13 names. No 14th deliverable is named anywhere else in the brief, so 13 is
+final, not a further guess.
 
 **Outputs.** `TimelineSpine.astro`, `TimelineBead.astro`, `timeline.css`,
-`/timeline/` page; fourteen `assessments` entries with placeholder weights
-(equal split, `100/14` rounded, flagged in frontmatter or a code comment as
-temporary so Step 8's weight-sum test has something concrete to hold, without
-pretending it is final content).
+`/timeline/` page; 12 new `assessments` entries (Assignment 1 already
+existed) with placeholder weights --- equal split across the 12 new entries,
+`100 / 12 ≈ 8.33` each, each flagged with a code comment in its frontmatter as
+temporary. This is a split of the 12 *new* entries' own share, not a
+recomputed split across the full collection: Assignment 1's existing 40 and
+`final-project`'s existing 60 are untouched (already-existing content, per
+"never remove/rewrite what you were not asked to"), so the collection's
+total is 40 + 60 + 12x8.33 ≈ 200, not 100. This is expected and not a defect
+of this step --- Step 8's weight-sum-to-100 test (section 7's documented
+risk) is written to go red the moment weights exist and stays red until real
+weights replace every placeholder, which is a later step's job, not this
+one's.
 
-**Acceptance.** At 1920x1080 and 390x844: fourteen beads down the page in the
+**Acceptance.** At 1920x1080 and 390x844: 13 beads down the page in the
 documented order, each a circle visibly intersecting the thickened rule, each
 labelled, each with an empty description span beneath, each linking to its
 assessment's detail page. The theme's global `body::after` rule does not
-double up with the page's own spine on this route.
+double up with the page's own spine on this route. Top nav reads Overview,
+Timeline, People, Policies (in that order) on every page, and the Overview
+link resolves to the same destination as the logo.
 
-**Constraints.** D5, D1 (labs are not `sessions` entries and do not compete
-with the twelve-week cap); "`TimelineBead` must not know its position" ---
-ordering and spacing are the spine's job, the bead only renders itself.
+**Constraints.** D5, D9, D1 (labs are not `sessions` entries and do not
+compete with the twelve-week cap); "`TimelineBead` must not know its
+position" --- ordering and spacing are the spine's job, the bead only
+renders itself.
 
-**Testing methodology.** Unit test the ordering/mapping function that turns
-the fourteen assessment entries into spine order (if extracted to
-`src/lib/timeline.ts`) or, if the ordering is simple enough to live directly in
-the `.astro` frontmatter, assert it at the Step 8 `dist` level instead --- the
-step's own scaffold decides which, and states the choice before implementing.
+**Testing methodology.** The ordering/mapping logic is non-trivial (D9: an
+explicit id list, filtered and reordered against whatever the collection
+returns, with missing-id and extra-entry cases to get right), so it is
+extracted to a pure `src/lib/timeline.ts` (`BEAD_ORDER`, `orderBeads`) and
+unit tested in `spec/timeline.test.ts`: reorders shuffled input to
+`BEAD_ORDER`, drops an ordered id with no matching entry rather than
+inventing one, drops an entry not named in the order, and confirms
+`BEAD_ORDER` itself has length 13.
+
+**Amendment (post-implementation).** Four things resolved while building:
+
+1. **D5's coexistence answer.** The spine and the theme's global 1px
+   `body::after` accent rule would otherwise draw two vertical lines on this
+   page at slightly different offsets. `timeline.css` adds
+   `body:has(.timeline-spine)::after { display: none; }` --- the same
+   `:has()` convention `rails.css` already uses, so no route-level body
+   class is needed and every other page keeps the global rule unchanged.
+   Confirmed visually at both viewports: only the spine's own thicker rule
+   is visible on `/timeline/`.
+2. **The Exam bead / WeekRail cross-link, confirmed working.** The new
+   `final-exam.md` entry's id is literally `final-exam`, which is one of
+   WeekRail's two match conditions (Step 4). Built output confirms both the
+   WeekRail Exam row and the timeline's Final Exam bead resolve to the same
+   `/assessments/final-exam/` URL.
+3. **`spec/data-integrity.test.ts` caught an out-of-range placeholder
+   date.** The first draft of `final-exam.md` used a due date after
+   `courseMeta.endDate` (2027-05-28); the existing data-integrity test
+   failed on it immediately. Moved the placeholder due date to
+   2027-05-28T09:00 (same day as `final-project`'s existing due date, both
+   inside the teaching period) --- a real regression the existing suite
+   caught as designed, not a new check written for this step.
+4. **A stale process from the previous, killed attempt at this step held
+   ports 4321/4322**, serving an old build with one bead. Killed both PIDs
+   before the visual check; not a defect in this step's code, but worth
+   naming since it could otherwise look like one.
 
 ### Step 7 --- Acknowledgement of Country
 
@@ -679,7 +740,7 @@ spec` in `pnpm test`, per `package.json`).
 **Outputs.** Assertions, each traceable to one acceptance criterion above:
 no `dist/sessions|lectures|assessments/index.html`; every page's `WeekRail`
 has thirteen `<li>`; every `h2`/`h3` under `#main` has a non-empty `id`;
-`/timeline/index.html` has fourteen bead elements in the documented label
+`/timeline/index.html` has 13 bead elements in the documented label
 order, each with a link and an empty description span; the acknowledgement
 text precedes the theme-toggle button in footer DOM order; assessment weights
 across all `assessments` entries sum to 100 (red until Step 6's placeholder
@@ -739,6 +800,11 @@ needed) already gets a reader to the page --- the index is a convenience for
 a long page already open, not the only path to a heading.
 
 **Assessment weights must total 100% (S4), and the beads are placeholders.**
-Fourteen deliverables with no weights cannot be checked yet. The Step 8 test
-should assert the sum the moment weights exist, so the check goes red until the
-content lands rather than being forgotten.
+13 timeline deliverables plus the pre-existing `final-project` now carry
+weights, but Step 6's 12 new placeholder weights (`100/12 ≈ 8.33` each,
+documented in that step's amendment) were deliberately not netted against
+Assignment 1 and `final-project`'s existing 40+60 --- the collection's total
+is currently ≈200, not 100. The Step 8 test should assert the sum the moment
+it is written, so the check goes red until real weights replace every
+placeholder across all 14 `assessments` entries, rather than being
+forgotten.

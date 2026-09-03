@@ -1,0 +1,22 @@
+---
+// The Timeline page (D2 replaces the /assessments/ index): a vertical
+// spine of graded deliverables, read top to bottom as the semester.
+import ContentLayout from "astro-theme-university/layouts/ContentLayout.astro";
+import PageLayout from "../../layouts/PageLayout.astro";
+import TimelineSpine from "../../components/TimelineSpine.astro";
+import { siteConfig } from "../../site-config";
+---
+
+<ContentLayout
+  title="Timeline"
+  description="Every graded deliverable, in semester order, on one spine."
+  {...siteConfig}
+>
+  <PageLayout>
+    <p>
+      Each bead below is one graded deliverable. Follow it to the assessment's
+      own page for the brief, the due date and how it is marked.
+    </p>
+    <TimelineSpine />
+  </PageLayout>
+</ContentLayout>

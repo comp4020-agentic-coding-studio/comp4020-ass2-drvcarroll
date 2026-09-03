@@ -1,0 +1,16 @@
+---
+// The Timeline page's beaded rule. Reads the assessments collection,
+// orders it with the pure `orderBeads` (src/lib/timeline.ts), and renders
+// one TimelineBead per entry along a thickened vertical line.
+import { getPublishedCollection } from "astro-course-university/content";
+import TimelineBead from "./TimelineBead.astro";
+import { orderBeads } from "../lib/timeline";
+import "../styles/timeline.css";
+
+const assessments = await getPublishedCollection("assessments");
+const beads = orderBeads(assessments);
+---
+
+<ol class="timeline-spine">
+  {beads.map((entry) => <TimelineBead label={entry.data.title} href={`/assessments/${entry.id}/`} />)}
+</ol>

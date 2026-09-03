@@ -1,0 +1,88 @@
+/* Timeline page only: a thickened left-edge rule with a bead per graded
+   deliverable. Scoped to `.timeline-spine`'s presence rather than a route
+   class, matching rails.css's `body:has(...)` convention. */
+
+:root {
+  --timeline-rule-width: 4px;
+  --timeline-dot-size: 1.25rem;
+  /* Distance from the list's edge to the rule's centre — half the dot plus
+     a little breathing room, so the dot's edge never touches the text. */
+  --timeline-rule-offset: calc(var(--timeline-dot-size) / 2 + 0.125rem);
+}
+
+/* D5: the spine is its own element, not a reuse of the theme's global
+   accent rule. The two would otherwise draw two vertical lines at
+   slightly different offsets on this page; hiding the 1px global rule
+   wherever the spine is present keeps them from double-drawing without
+   touching base.css or requiring a route-level body class. Every other
+   page is unaffected — the selector only matches when `.timeline-spine`
+   exists in the document. */
+body:has(.timeline-spine)::after {
+  display: none;
+}
+
+.timeline-spine {
+  position: relative;
+  margin: var(--at-spacing-xl) 0;
+  padding: 0;
+  padding-inline-start: calc(var(--timeline-rule-offset) + var(--at-spacing-lg));
+  list-style: none;
+}
+
+/* The rule itself: one element, per D5, that the dots below sit on top of. */
+.timeline-spine::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: var(--timeline-rule-offset);
+  width: var(--timeline-rule-width);
+  margin-inline-start: calc(var(--timeline-rule-width) / -2);
+  background: var(--at-accent);
+}
+
+.timeline-bead {
+  position: relative;
+  padding-block: var(--at-spacing-md);
+}
+
+.timeline-bead a {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: var(--at-spacing-sm);
+  color: inherit;
+  text-decoration: none;
+}
+
+.timeline-bead a:hover .timeline-bead-label,
+.timeline-bead a:focus-visible .timeline-bead-label {
+  text-decoration: underline;
+}
+
+/* The circle: centred on the rule, above it in paint order. The rule sits
+   `--timeline-rule-offset` from the list's own edge and each bead's `<li>`
+   starts `--at-spacing-lg` further in (the list's padding-inline-start), so
+   relative to the `<li>` the rule's centre is `-1 * --at-spacing-lg` — the
+   `--timeline-rule-offset` term cancels and never needs to appear here. */
+.timeline-bead-dot {
+  position: absolute;
+  inset-inline-start: calc(-1 * var(--at-spacing-lg) - var(--timeline-dot-size) / 2);
+  top: 50%;
+  transform: translateY(-50%);
+  width: var(--timeline-dot-size);
+  height: var(--timeline-dot-size);
+  border-radius: 50%;
+  border: 2px solid var(--at-bg);
+  background: var(--at-accent);
+}
+
+.timeline-bead-label {
+  grid-column: 2;
+  font-weight: 600;
+}
+
+/* Structural placeholder: empty by design (BUILD_PLAN.md Step 6). Kept in
+   the DOM, not omitted, so a written brief has somewhere to land later
+   without a markup change. */
+.timeline-bead .description {
+  grid-column: 2;
+}

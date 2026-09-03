@@ -1,0 +1,20 @@
+---
+// One graded deliverable: a circle on the spine, a label, and an empty
+// description span (structural placeholder — filled with real copy later,
+// never with dummy prose). Never computes its own position; the spine
+// (TimelineSpine.astro) supplies both order and DOM order.
+export interface Props {
+  label: string;
+  href: string;
+}
+
+const { label, href } = Astro.props;
+---
+
+<li class="timeline-bead">
+  <a href={href}>
+    <span class="timeline-bead-dot" aria-hidden="true"></span>
+    <span class="timeline-bead-label">{label}</span>
+    <span class="description"></span>
+  </a>
+</li>
