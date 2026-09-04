@@ -7,6 +7,8 @@ week: 2
 date: 2027-03-01
 teachers:
   - idris-fenn
+lecture: week-02
+lab: lab-02
 spec:
   - work from week 1 is running and can be shown in under two minutes
   - you can name the one decision you are least sure about

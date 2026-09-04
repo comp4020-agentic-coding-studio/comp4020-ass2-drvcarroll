@@ -44,4 +44,35 @@ describe("course data integrity", () => {
       );
     }
   });
+
+  it("resolves every session's lecture/lab/assignment reference", () => {
+    const idsOf = (type: string) =>
+      new Set(api.nodes.filter((node) => node.type === type).map((node) => node.id.split("/")[1]));
+    const lectureIds = idsOf("lectures");
+    const assessmentIds = idsOf("assessments");
+    const sessions = api.nodes.filter((node) => node.type === "sessions");
+    expect(sessions.length).toBe(12);
+
+    for (const node of sessions) {
+      const lecture = node.meta?.lecture;
+      expect(
+        typeof lecture === "string" && lectureIds.has(lecture),
+        `${node.id} lecture "${lecture}" does not resolve`,
+      ).toBe(true);
+
+      const lab = node.meta?.lab;
+      expect(
+        typeof lab === "string" && assessmentIds.has(lab),
+        `${node.id} lab "${lab}" does not resolve`,
+      ).toBe(true);
+
+      const assignment = node.meta?.assignment;
+      if (assignment !== undefined) {
+        expect(
+          typeof assignment === "string" && assessmentIds.has(assignment),
+          `${node.id} assignment "${assignment}" does not resolve`,
+        ).toBe(true);
+      }
+    }
+  });
 });

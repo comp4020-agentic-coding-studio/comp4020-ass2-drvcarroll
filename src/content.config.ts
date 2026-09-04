@@ -39,6 +39,10 @@ export const collections = {
         week: weekSchema,
         date: z.coerce.date(),
         teachers: teacherRefs.optional(),
+        lecture: reference("lectures"),
+        lab: reference("assessments"),
+        // Present only on the Week 4/9 entries (Step 14).
+        assignment: reference("assessments").optional(),
       })
       .loose(),
   }),

@@ -1,0 +1,17 @@
+---
+title: Week 8 lecture
+description:
+  Placeholder — a structural entry for Week 8's lecture, not yet a
+  written outline.
+week: 8
+date: 2027-04-12
+teachers:
+  - idris-fenn
+related:
+  - sessions/08-session
+---
+
+<!-- STARTER_CONTENT: structural placeholder, replace with a real outline. -->
+
+Placeholder lecture page. This entry exists so Week 8's session has a
+real lecture page to link its Lecture card to.

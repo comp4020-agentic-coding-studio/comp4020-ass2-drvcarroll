@@ -75,12 +75,12 @@ describe("layout contracts (BUILD_PLAN.md Step 8)", () => {
     expect(missing, `headings with no id:\n${missing.join("\n")}`).toEqual([]);
   });
 
-  // Step 6 (corrected 13-bead count, D9's documented order).
-  it("renders /timeline/ with 13 beads in the documented semester order", () => {
+  // Step 6/14 (D9's documented order; Step 14 extends it to 15 beads).
+  it("renders /timeline/ with 15 beads in the documented semester order", () => {
     const beads = parse(resolve(DIST, "timeline/index.html")).querySelectorAll(
       "ol.timeline-spine > li.timeline-bead",
     );
-    expect(beads.length).toBe(13);
+    expect(beads.length).toBe(BEAD_ORDER.length);
 
     for (const [index, bead] of [...beads].entries()) {
       const link = bead.querySelector("a[href]");

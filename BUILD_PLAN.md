@@ -261,7 +261,10 @@ the whole reason to use its tokens rather than absolute positioning.
 
 ## 6. Steps
 
-**Status: all eight steps of the structural scaffold are complete.**
+**Status: all fourteen steps are complete** --- the eight-step structural
+scaffold below, plus Steps 9-14's content-stage work (assessment template,
+timeline beads, and this file's Step 14 amendment above turning D10's
+lecture/lab/assignment mapping into real content for every week).
 `spec/layout.test.ts` (Step 8) now runs the six dist-level contracts from
 Steps 1, 4, 5, 6 and 7 on every `pnpm check`. Four of six are green
 (index-page removal, WeekRail's 13 rows + `aria-current`, the timeline's 13
@@ -1256,6 +1259,43 @@ reference-integrity assertion --- every `sessions` entry's `lecture`/`lab`
 (and `assignment`, where present) resolves to a real collection entry, the
 same category of check the suite already runs for other cross-collection
 references; visual inspection at both viewports for card order and content.
+
+**Amendment (post-implementation).** Only weeks 1-2 had a session and a
+lecture on disk when this step began; the risk this plan flagged (Section 7)
+was real. Building it out:
+
+- **10 new sessions and 10 new lectures** (`03`-`12`) were created as
+  placeholder content, each session's `lecture`/`lab` frontmatter pointing at
+  the matching-number entry (`session 03` → `week-03` lecture, `lab-03`), so
+  every week has exactly one of each --- D10's 1:1 mapping realised for the
+  first time rather than just planned.
+- **Two new labs**, `lab-11` and `lab-12`, close the gap: the brief names 12
+  weeks and D10 commits to one lab per week, but only 10 labs existed. They
+  follow `lab-01`'s shape exactly (placeholder `description`, `holistic`
+  marking, `weight: 8.33`), mapped to weeks by id number rather than by each
+  existing lab's own (already-drifted, pre-existing) `week` field, since that
+  field was never reliable enough to key new entries off.
+- **`BEAD_ORDER` grew from 13 to 15**, `lab-11`/`lab-12` appended to the run
+  of labs already immediately before `final-exam` --- the brief names no
+  other placement for them, so extending the nearest same-kind run was the
+  smallest change that keeps the spine's meaning intact. `spec/timeline.test.ts`
+  and the Step 6 bead-count assertion in `spec/layout.test.ts` were updated to
+  match (the latter now reads `BEAD_ORDER.length` rather than a hardcoded
+  number, so it can't drift from this list again).
+- **Weeks 4 and 9 → `assignment-1`/`assignment-2`** per the plan's literal
+  instruction, independent of those assessments' own `week` fields (6 and 11)
+  --- those fields are a separate, already-documented placeholder-data gap
+  (D9) and are not read by the session page or by this mapping.
+- **A11y fix found during build, not planned for**: `Card`'s default
+  `headingLevel="h3"` skipped from the page's `<h1>` straight to `<h3>`,
+  failing the build's axe-core `heading-order` check. All three session-page
+  `Card`s now pass `headingLevel="h2"`, matching the `<h2>`s already used by
+  `TeachingTeam`/`RelatedContent` on the same page.
+- The two pre-existing red assertions this plan already expects (missing
+  heading `id`s; assessment weights not summing to 100) remain the same two
+  categories after this step, just over more content (12 sessions instead of
+  2) --- confirmed by diffing against a pre-step baseline. No new failure
+  category was introduced.
 
 
 ## 7. Risks

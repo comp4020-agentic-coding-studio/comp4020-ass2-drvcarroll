@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { BEAD_ORDER, orderBeads, type AssessmentRef } from "../src/lib/timeline";
 
 describe("orderBeads", () => {
-  it("reorders entries to the documented 13-bead semester order", () => {
+  it("reorders entries to the documented 15-bead semester order", () => {
     const shuffled: AssessmentRef[] = [
       { id: "final-exam" },
       { id: "lab-02" },
@@ -27,9 +27,9 @@ describe("orderBeads", () => {
     expect(orderBeads(entries).map((entry) => entry.id)).toEqual(["lab-01"]);
   });
 
-  it("returns all 13 documented ids when every entry exists", () => {
+  it("returns all 15 documented ids when every entry exists", () => {
     const entries = BEAD_ORDER.map((id) => ({ id }));
     expect(orderBeads(entries).map((entry) => entry.id)).toEqual(BEAD_ORDER);
-    expect(BEAD_ORDER).toHaveLength(13);
+    expect(BEAD_ORDER).toHaveLength(15);
   });
 });

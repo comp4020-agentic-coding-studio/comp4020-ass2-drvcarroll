@@ -1,8 +1,9 @@
 ---
-import { render } from "astro:content";
+import { getEntry } from "astro:content";
 import { getPublishedCollection } from "astro-course-university/content";
 import RelatedContent from "astro-course-university/components/RelatedContent.astro";
-import SpecList from "astro-course-university/components/SpecList.astro";
+import Card from "astro-theme-university/components/Card.astro";
+import CardGrid from "astro-theme-university/components/CardGrid.astro";
 import ContentLayout from "astro-theme-university/layouts/ContentLayout.astro";
 import PageLayout from "../../layouts/PageLayout.astro";
 import TeachingTeam from "../../components/TeachingTeam.astro";
@@ -15,7 +16,9 @@ export async function getStaticPaths() {
 }
 
 const { session } = Astro.props;
-const { Content } = await render(session);
+const lecture = await getEntry(session.data.lecture);
+const lab = await getEntry(session.data.lab);
+const assignment = session.data.assignment ? await getEntry(session.data.assignment) : undefined;
 ---
 
 <ContentLayout
@@ -25,11 +28,21 @@ const { Content } = await render(session);
 >
   <PageLayout>
     <p><strong>{formatCourseDate(session.data.date)}</strong></p>
-    <Content />
-    <SpecList spec={session.data.spec}>
-      What you bring to the session. Written so a reader can tell whether it
-      has been met without asking you.
-    </SpecList>
+    <CardGrid columns={assignment ? 3 : 2}>
+      <Card headingLevel="h2" title={`Lecture ${session.data.week}`} href={`/lectures/${lecture.id}/`}>
+        {lecture.data.description}
+      </Card>
+      <Card headingLevel="h2" title={`Lab ${session.data.week}`} href={`/assessments/${lab.id}/`}>
+        {lab.data.description}
+      </Card>
+      {
+        assignment && (
+          <Card headingLevel="h2" title={assignment.data.title} href={`/assessments/${assignment.id}/`}>
+            {assignment.data.description}
+          </Card>
+        )
+      }
+    </CardGrid>
     <TeachingTeam teachers={session.data.teachers} />
     <RelatedContent entry={session} collections={graphCollections} />
   </PageLayout>
