@@ -44,7 +44,10 @@
   document.addEventListener("astro:page-load", setupPageIndex);
 </script>
 
-<style>
+<style is:global>
+  /* Global: the list/items below are created client-side (script above),
+     so they never carry the data-astro-cid- scoping attribute a normal
+     scoped <style> here relies on to match. */
   .page-index ul {
     list-style: none;
     margin: 0;

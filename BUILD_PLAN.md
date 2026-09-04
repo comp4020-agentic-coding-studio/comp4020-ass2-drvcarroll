@@ -1550,6 +1550,97 @@ documented failures remains (assessment weights), with the heading-id
 assertion now passing. Visual inspection at both viewports per the
 Acceptance section above.
 
+**Amendment (post-implementation).** The Scope text above anticipated
+fixing `Card`, `RelatedContent` and `SpecList` at their call sites, one
+heading location at a time. Reading them first showed why that does not
+work: all three render straight from `astro-course-university`/
+`astro-theme-university` (not editable in this repo) and take no
+`id`/heading-passthrough prop at all --- there is no call-site wrapping
+that reaches inside a component's own template to set an attribute on an
+element it renders. So the actual fix is one level down: a new build-time
+Astro integration, `src/integrations/heading-ids.ts`, hooking
+`astro:build:done` to walk every built file in `dist/` and, for each
+`#main h2, h3` still missing an `id` after rehype-slug and every component
+has rendered, assign one via a new shared `src/lib/slugify.ts`
+(`slugify`/`uniqueSlug`, github-slugger-compatible, matching the
+constraint above) deduped against every `id` already on that page ---
+rehype-slug's own included, so a component heading can never collide with
+a markdown one. This reaches `Card`, `TeachingTeam`, `RelatedContent`,
+`SpecList` and Step 15's new subtitles in one pass, regardless of which
+package renders them, which no per-component fix could do uniformly.
+`jsdom` (already a dependency via Step 5/8's test tooling) does the
+parsing; it moved from `devDependencies` to `dependencies` in
+`package.json` since the integration now needs it at build time, not only
+under `vitest`.
+
+*Dev-server gap, considered and accepted.* `astro:build:done` never fires
+under `pnpm dev` --- only a production build gets the id-filling pass, so
+a session/assessment/people page viewed in dev still shows `Card`'s or
+`RelatedContent`'s heading as `PageIndex`'s inert grey fallback, exactly
+as it did before this step. This is accepted rather than patched: S1 marks
+the deployed Pages site, which is always a build, and `pnpm check` and
+`pnpm build` are both build-time gates too --- nothing that actually gets
+assessed runs through the dev server's live-render path. Building a second,
+dev-time version of the same fix (e.g. a Vite middleware rewriting response
+HTML) would duplicate `fillMissingIds`/`uniqueSlug` behind a second
+trigger for a gap that only ever shows up to someone reading the repo in
+`pnpm dev`, which is over-engineering against this deliverable's own
+"Overall direction" instruction not to grow the model past what the idea
+needs. If a future step needs the dev server to show real ids too (e.g.
+for interactive development of `PageIndex` itself), the fallback is
+already the honest one: D4 already treats a headingless render as
+"empty/inert, not broken," so dev-mode inert entries are a known, named
+state, not a silent defect.
+
+`PageIndex.astro`'s `<style>` block was also changed to `<style is:global>`
+in this step, for a second, independent reason found while confirming the
+Scope's "confirm `list-style: none` holds" instruction: the `<ul>`/`<li>`
+elements are created entirely client-side by `PageIndex.astro`'s own
+`<script>`, so they are never present in the server-rendered markup Astro
+scopes a normal `<style>` block against --- they can never carry the
+`data-astro-cid-*` attribute a scoped style's compiled selector requires
+to match. The existing `list-style: none` (and every other rule in that
+block) was therefore silent dead CSS from the moment `PageIndex` went
+client-side in Step 5, not a regression introduced here; `is:global` is
+the fix, since the alternative (adding `data-astro-cid-*` by hand in the
+script) would be reproducing Astro's own scoping mechanism outside the
+tooling that owns it.
+
+Confirmed results: `pnpm check` runs green except the one documented
+`sums every assessment's weight to 100` failure (currently ≈216.6, ≈217%
+--- Step 16's real placeholder dates/weights moved the total slightly from
+Step 8's ≈200 figure, still the same documented gap, not a new one).
+`pnpm build`'s `dist/` output was inspected directly (via JSDOM, not just
+the test suite) for a session page, an assessment page, `/timeline/`,
+`/people/` and the home page: every `h2`/`h3` under `#main` across all 48
+built pages carries a non-empty, unique `id`, including the "Lab 1"/
+"Lab 1" collision on session pages (Step 15's subtitle and its card title
+share the same text) --- resolved to `lab-1` and `lab-1-1`, confirming the
+dedup registry is whole-page, not per-heading-type. Visual inspection at
+1920x1080 and 390x844 on a session page, an assessment page, `/timeline/`
+and `/people/` (the last two via the mobile page-index disclosure button)
+showed no bullet markers anywhere, every non-empty page index rendering
+only real `<a href="#...">` entries (`/people/`'s Marisol Quaye/Idris
+Fenn card titles included, previously inert), and `/timeline/`'s own
+index correctly showing its unrelated, pre-existing empty state (no
+`h2`/`h3` under `#main` there at all, per D4's contract) rather than a
+regression.
+
+**Steps 9--17 are now complete.** Nine, ten and eleven's session-card and
+assessment-template rework, twelve and thirteen's structural review passes,
+fourteen's Overview/Timeline/People/Policies hero convention, fifteen's
+Lecture/Lab/Assignment subtitle-description-card shape, sixteen's
+timeline-bead title/date/description content, and seventeen's heading-id/
+page-index fix above, close out the whole nine-step extension in the same
+way Step 14 previously marked the original fourteen-step scaffold complete.
+`pnpm check` ends this extension with exactly one documented red assertion
+--- assessment weights summing to ≈217% rather than 100%, unchanged in
+kind since Step 6 first created it and carried forward, not fixed, by
+every step since --- and every other spec-serving check this plan added
+(`spec/layout.test.ts`'s other five assertions, `spec/slugify.test.ts`,
+`spec/timeline.test.ts`, `spec/weeks.test.ts`, `spec/rail-toggle.test.ts`,
+`spec/page-index.test.ts`, `spec/data-integrity.test.ts`) is green.
+
 ## 7. Risks
 
 **The broken-link checker fails the build in Step 1.** Four known inbound links

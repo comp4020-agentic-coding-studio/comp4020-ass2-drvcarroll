@@ -5,6 +5,7 @@ import { astromotion, deckRemarkPlugins } from "astromotion";
 import { courseMeta } from "./src/course-config.ts";
 import { courseApiCollections } from "./src/site-config.ts";
 import { gitOrigin, resolveDeployment } from "./scripts/pages-base.ts";
+import headingIds from "./src/integrations/heading-ids.ts";
 
 // Derived, never hardcoded --- see scripts/pages-base.ts for why.
 const { site, base } = resolveDeployment(process.env, gitOrigin);
@@ -47,5 +48,7 @@ export default defineConfig({
       theme: "./src/decks/theme.css",
       fontVariables: ["--font-public-sans"],
     }),
+    // Step 17 (D17): fills in the #main h2/h3 ids rehype-slug never reaches.
+    headingIds(),
   ],
 });

@@ -21,13 +21,13 @@
     "astro-theme-slop": "github:benswift/astro-theme-slop#v0.1.0",
     "astro-theme-university": "git+https://github.com/ANUcybernetics/astro-theme-university.git#v0.13.2",
     "astromotion": "git+https://github.com/ANUcybernetics/astromotion.git#v0.23.0",
+    "jsdom": "^30.0.1",
     "sharp": "^0.35.3"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
     "@types/jsdom": "^30.0.0",
     "@types/node": "^24.0.0",
-    "jsdom": "^30.0.1",
     "lightningcss": "^1.32.0",
     "pagefind": "^1.5.2",
     "typescript": "^6.0.3",
