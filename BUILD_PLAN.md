@@ -1054,6 +1054,28 @@ own stylesheet reads, not a value `TimelineSpine` computes or passes in.
 visual inspection at both viewports, comparing the line's position against a
 non-Timeline page in the same session.
 
+**Amendment (post-implementation).** Reusing `body::after`'s exact inset
+expression turned out unnecessary: since `.timeline-spine` sits in
+`grid-column: content` with no horizontal margin of its own, the rule
+always resolves to exactly `-1 * var(--at-content-inset)` from the spine's
+own left edge, independent of viewport width, gutter or sidebar inset ---
+proved algebraically from base.css's `grid-template-columns` and confirmed
+by computed-style comparison at 1920x1080 (both pages' rule at 502.5px, dot
+centre also 502.5px). So the dot's offset composes existing shared tokens
+(`--at-content-inset`, `--timeline-dot-size`) rather than duplicating
+`body::after`'s `max()`/`min()` formula, which would resolve against the
+wrong containing-block width if copied verbatim into the bead's own CSS.
+Visual inspection at 390px (the browser's minimum window width; true 390
+isn't reachable, but this still sits inside base.css's `width < 640px`
+breakpoint) surfaced a regression the plan didn't anticipate: below 640px
+base.css hides `body::after` on every page, so the dots --- left positioned
+--- floated unmoored near the viewport edge with no rule to sit on. Fixed by
+hiding `.timeline-bead-dot` at the same `width < 640px` breakpoint, so
+Timeline's mobile view matches every other page's (no accent decoration at
+all below that width) instead of a half-broken one. `pnpm check`'s two
+documented pre-existing failures were confirmed unchanged before and after;
+no new failures were introduced.
+
 ### Step 12 --- Shared `at-hero` for Overview, Timeline, People, Policies
 
 **Goal.** Timeline, People and Policies each show the same `at-hero` element

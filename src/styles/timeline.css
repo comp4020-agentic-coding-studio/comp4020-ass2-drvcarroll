@@ -1,43 +1,18 @@
-/* Timeline page only: a thickened left-edge rule with a bead per graded
-   deliverable. Scoped to `.timeline-spine`'s presence rather than a route
-   class, matching rails.css's `body:has(...)` convention. */
+/* Timeline page only: a bead per graded deliverable, strung on the
+   shared column rule that base.css's body::after already draws. */
 
 :root {
-  --timeline-rule-width: 4px;
   --timeline-dot-size: 1.25rem;
-  /* Distance from the list's edge to the rule's centre — half the dot plus
-     a little breathing room, so the dot's edge never touches the text. */
-  --timeline-rule-offset: calc(var(--timeline-dot-size) / 2 + 0.125rem);
 }
 
-/* D5: the spine is its own element, not a reuse of the theme's global
-   accent rule. The two would otherwise draw two vertical lines at
-   slightly different offsets on this page; hiding the 1px global rule
-   wherever the spine is present keeps them from double-drawing without
-   touching base.css or requiring a route-level body class. Every other
-   page is unaffected — the selector only matches when `.timeline-spine`
-   exists in the document. */
-body:has(.timeline-spine)::after {
-  display: none;
-}
-
+/* D13: the spine no longer draws its own rule — it sits on the theme's
+   shared body::after column rule instead, so no page-local line to draw
+   and nothing to suppress on other pages. */
 .timeline-spine {
   position: relative;
   margin: var(--at-spacing-xl) 0;
   padding: 0;
-  padding-inline-start: calc(var(--timeline-rule-offset) + var(--at-spacing-lg));
   list-style: none;
-}
-
-/* The rule itself: one element, per D5, that the dots below sit on top of. */
-.timeline-spine::before {
-  content: "";
-  position: absolute;
-  inset-block: 0;
-  inset-inline-start: var(--timeline-rule-offset);
-  width: var(--timeline-rule-width);
-  margin-inline-start: calc(var(--timeline-rule-width) / -2);
-  background: var(--at-accent);
 }
 
 .timeline-bead {
@@ -58,14 +33,14 @@ body:has(.timeline-spine)::after {
   text-decoration: underline;
 }
 
-/* The circle: centred on the rule, above it in paint order. The rule sits
-   `--timeline-rule-offset` from the list's own edge and each bead's `<li>`
-   starts `--at-spacing-lg` further in (the list's padding-inline-start), so
-   relative to the `<li>` the rule's centre is `-1 * --at-spacing-lg` — the
-   `--timeline-rule-offset` term cancels and never needs to appear here. */
+/* The circle: centred on the shared column rule (base.css's body::after),
+   above it in paint order. That rule always resolves to one
+   --at-content-inset left of the content column's own edge, which is this
+   list's edge too (no padding-inline-start of its own) — a fixed relation
+   independent of viewport width, so no page-local offset token is needed. */
 .timeline-bead-dot {
   position: absolute;
-  inset-inline-start: calc(-1 * var(--at-spacing-lg) - var(--timeline-dot-size) / 2);
+  inset-inline-start: calc(-1 * var(--at-content-inset) - var(--timeline-dot-size) / 2);
   top: 50%;
   transform: translateY(-50%);
   width: var(--timeline-dot-size);
@@ -73,6 +48,14 @@ body:has(.timeline-spine)::after {
   border-radius: 50%;
   border: 2px solid var(--at-bg);
   background: var(--at-accent);
+}
+
+/* Below 640px base.css hides body::after itself (every page loses the
+   rule there) — the dot has nothing left to sit on, so it hides too. */
+@media (width < 640px) {
+  .timeline-bead-dot {
+    display: none;
+  }
 }
 
 .timeline-bead-label {
