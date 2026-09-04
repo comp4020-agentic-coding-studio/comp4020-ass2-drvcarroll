@@ -8,13 +8,12 @@ const sessions: SessionRef[] = [
 ];
 
 describe("buildWeekRows", () => {
-  it("returns exactly 13 rows, weeks 1-12 in order then Exam last", () => {
+  it("returns exactly 12 rows, weeks 1-12 in order, no exam row", () => {
     const rows = buildWeekRows(sessions, "/");
-    expect(rows).toHaveLength(13);
-    expect(rows.slice(0, 12).map((row) => row.week)).toEqual([
+    expect(rows).toHaveLength(12);
+    expect(rows.map((row) => row.week)).toEqual([
       1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
     ]);
-    expect(rows[12]).toMatchObject({ week: "exam", label: "Exam" });
   });
 
   it("links weeks present in the sessions collection", () => {
@@ -38,20 +37,5 @@ describe("buildWeekRows", () => {
   it("never marks an href-less row as current", () => {
     const rows = buildWeekRows(sessions, "/sessions/does-not-exist/");
     expect(rows.every((row) => !row.current)).toBe(true);
-  });
-
-  it("Exam row uses the supplied href and is never current", () => {
-    const withExam = buildWeekRows(sessions, "/assessments/final-exam/", "/assessments/final-exam/");
-    expect(withExam[12]).toEqual({
-      week: "exam",
-      label: "Exam",
-      href: "/assessments/final-exam/",
-      current: false,
-    });
-  });
-
-  it("Exam row href is null when no exam entry exists yet", () => {
-    const rows = buildWeekRows(sessions, "/");
-    expect(rows[12].href).toBeNull();
   });
 });

@@ -8,7 +8,7 @@ export interface SessionRef {
 }
 
 export interface WeekRow {
-  week: number | "exam";
+  week: number;
   label: string;
   href: string | null;
   current: boolean;
@@ -17,24 +17,17 @@ export interface WeekRow {
 const TOTAL_WEEKS = 12;
 
 /**
- * Builds the week rail's 13 rows: weeks 1-12, each linked to its `sessions`
- * entry when one exists (`href: null` otherwise, rendered as inert text),
- * plus a trailing Exam row. `examHref` is the assessments-collection link
- * for the Exam row, resolved by the caller — `null` until that entry exists.
+ * Builds the week rail's 12 rows: weeks 1-12, each linked to its `sessions`
+ * entry when one exists (`href: null` otherwise, rendered as inert text).
+ * The exam period is not a row here — reachable only from the Timeline (D12).
  */
-export function buildWeekRows(
-  sessions: SessionRef[],
-  currentPath: string,
-  examHref: string | null = null,
-): WeekRow[] {
+export function buildWeekRows(sessions: SessionRef[], currentPath: string): WeekRow[] {
   const byWeek = new Map(sessions.map((session) => [session.week, session]));
 
-  const weekRows: WeekRow[] = Array.from({ length: TOTAL_WEEKS }, (_, index) => {
+  return Array.from({ length: TOTAL_WEEKS }, (_, index) => {
     const week = index + 1;
     const session = byWeek.get(week);
     const href = session ? `/sessions/${session.id}/` : null;
     return { week, label: `Week ${week}`, href, current: href !== null && href === currentPath };
   });
-
-  return [...weekRows, { week: "exam", label: "Exam", href: examHref, current: false }];
 }

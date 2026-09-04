@@ -1,8 +1,8 @@
 ---
-// Left rail's content: 13 rows (Weeks 1-12 + Exam), rendered inside
-// GutterRail's slot. Reads only the sessions/assessments collections and
-// the current path — never the page it is mounted on (BUILD_PLAN.md
-// section 2).
+// Left rail's content: 12 rows (Weeks 1-12), rendered inside GutterRail's
+// slot. Reads only the sessions collection and the current path — never the
+// page it is mounted on (BUILD_PLAN.md section 2).
+// Exam period lives only on the Timeline (D12), not here.
 import { getPublishedCollection } from "astro-course-university/content";
 import { buildWeekRows } from "../lib/weeks";
 
@@ -13,29 +13,17 @@ export interface Props {
 const { currentPath } = Astro.props;
 
 const sessions = await getPublishedCollection("sessions");
-const assessments = await getPublishedCollection("assessments");
-
-// No "final exam" entry exists yet (Step 6 adds one) — matched by id or
-// title so this keeps working once it lands, without guessing its slug.
-const examEntry = assessments.find(
-  (entry) => entry.id === "final-exam" || /exam/i.test(entry.data.title),
-);
-const examHref = examEntry ? `/assessments/${examEntry.id}/` : null;
 
 const rows = buildWeekRows(
   sessions.map((session) => ({ week: session.data.week, id: session.id })),
   currentPath,
-  examHref,
 );
 ---
 
 <ul class="week-rail">
   {
     rows.map((row) => (
-      <li
-        class={row.week === "exam" ? "week-rail-exam" : undefined}
-        aria-current={row.current ? "page" : undefined}
-      >
+      <li aria-current={row.current ? "page" : undefined}>
         {row.href ? <a href={row.href}>{row.label}</a> : <span>{row.label}</span>}
       </li>
     ))
@@ -82,13 +70,5 @@ const rows = buildWeekRows(
 
   .week-rail li[aria-current="page"]::before {
     content: "→ ";
-  }
-
-  /* Exam row: ruled off from the 12 week rows, always last. */
-  .week-rail-exam {
-    margin-top: 0.5rem;
-    padding-top: 0.5rem;
-    border-top: 1px solid var(--at-divider);
-    font-style: italic;
   }
 </style>

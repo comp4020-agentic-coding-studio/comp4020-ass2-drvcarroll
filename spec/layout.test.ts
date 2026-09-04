@@ -38,14 +38,15 @@ describe("layout contracts (BUILD_PLAN.md Step 8)", () => {
     }
   });
 
-  // Step 4: every page carries the 13-row WeekRail (Weeks 1-12 + Exam).
-  it("renders exactly 13 WeekRail rows on every chrome page", () => {
+  // Step 10 (D12): every page carries the 12-row WeekRail (Weeks 1-12);
+  // the Exam row moved to the Timeline.
+  it("renders exactly 12 WeekRail rows on every chrome page", () => {
     expect(chromePages.length).toBeGreaterThan(0);
     for (const path of chromePages) {
       const rail = parse(path).querySelector("ul.week-rail");
       expect(rail, `${path} has no ul.week-rail`).not.toBeNull();
       const rows = rail!.querySelectorAll(":scope > li");
-      expect(rows.length, `${path} has ${rows.length} week-rail rows`).toBe(13);
+      expect(rows.length, `${path} has ${rows.length} week-rail rows`).toBe(12);
     }
   });
 

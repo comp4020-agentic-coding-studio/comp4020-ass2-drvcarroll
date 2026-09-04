@@ -1008,6 +1008,15 @@ violated.
 assertions to assert twelve rows and no exam row --- a modification of an
 existing test file, not a new one, per the one-file-per-concern convention.
 
+**Amendment (post-implementation).** Step 8's `spec/layout.test.ts` also
+hard-coded the old thirteen-row count in a dist-level assertion ("renders
+exactly 13 WeekRail rows on every chrome page") --- not listed in this step's
+own Inputs, but a direct, in-scope consequence of the row count changing, so
+it was updated to 12 alongside the rest rather than left as a new red result.
+`pnpm check`'s two documented pre-existing failures (missing heading ids;
+assessment weights summing to ~200) were confirmed unchanged before and
+after this step; no new failures were introduced.
+
 ### Step 11 --- Timeline spine on the shared column rule
 
 **Goal.** The vertical line on the Timeline page is the same 1px accent rule
