@@ -252,6 +252,23 @@ real `id`, deduplicated per page the same way `rehype-slug` deduplicates
 red assertions in `spec/layout.test.ts`; the assessment-weights-sum-to-200
 failure is untouched and remains the sole documented gap after this step.
 
+**D18. The heading-id fix must work under `pnpm dev`, not only in the built
+site.** Step 17 shipped `fillMissingIds` as an `astro:build:done` hook,
+patching `dist/`'s HTML after the fact --- correct for the deployed/marked
+site, but invisible to anyone browsing `pnpm dev` (that hook never fires
+there), where the page index still shows inert grey text. That gap was
+judged acceptable in Step 17's own Amendment on the theory that only the
+built site is marked --- overridden here: a working page index has to be
+observable in dev too, since that is where this was actually checked and
+found broken. The fix is to reuse, not duplicate, Step 17's logic: extract
+`fillMissingIds` out of `src/integrations/heading-ids.ts` into a plain,
+DOM-in/DOM-out function both the existing build hook and a new Astro
+middleware (`src/middleware.ts`) call — the middleware intercepts every
+HTML response `pnpm dev`'s on-demand rendering produces, runs the same
+`fillMissingIds`, and serves the patched HTML, so dev and the built site
+share one implementation and can never drift apart on what counts as
+"missing."
+
 
 ## 5. Architecture
 
@@ -1640,6 +1657,70 @@ every step since --- and every other spec-serving check this plan added
 (`spec/layout.test.ts`'s other five assertions, `spec/slugify.test.ts`,
 `spec/timeline.test.ts`, `spec/weeks.test.ts`, `spec/rail-toggle.test.ts`,
 `spec/page-index.test.ts`, `spec/data-integrity.test.ts`) is green.
+
+### Step 18 --- Heading ids under `pnpm dev`, not only the built site
+
+**Goal.** The page index shows real, working links on `pnpm dev`, not only
+in the built/previewed site --- a component-rendered heading gets its `id`
+regardless of which server produced the HTML.
+
+**Scope.** `src/integrations/heading-ids.ts` (its `fillMissingIds` function
+is extracted, unchanged in behaviour, into a shared module --- e.g.
+`src/lib/heading-ids.ts` --- that takes no build-only dependency); a new
+`src/middleware.ts` (Astro middleware, `onRequest`), which calls
+`context.next()`, and for any response whose `content-type` includes
+`text/html`, parses the body with `jsdom`, runs the shared `fillMissingIds`,
+and returns a new `Response` with the patched body when anything changed
+(unmodified response untouched, so no needless work on redirects, assets,
+or a page with nothing missing); `astro.config.ts` unchanged (middleware is
+auto-discovered at `src/middleware.ts`, no wiring needed there beyond
+confirming that convention against the installed Astro version).
+
+**Dependencies / spec.** D18. Depends on Step 17's `fillMissingIds`,
+`uniqueSlug`/`slugify` (unchanged) --- this step relocates and reuses them,
+it does not redesign the id algorithm.
+
+**Inputs.** Step 17's `fillMissingIds(document: Document): boolean`
+signature (kept as-is so the build hook's call site barely changes); Astro's
+middleware contract (`onRequest(context, next)`, `MiddlewareHandler` type,
+auto-discovery from `src/middleware.ts` --- confirm the exact convention for
+the installed Astro version by checking its docs/types before assuming).
+
+**Outputs.** `src/integrations/heading-ids.ts` imports `fillMissingIds` from
+its new shared location instead of defining it; `src/middleware.ts` applies
+the same fix to every dev-server (and any future SSR) HTML response;
+`pnpm dev`'s rendered pages carry the same heading `id`s as `pnpm build`'s
+output for the same content, byte-for-byte on the ids assigned.
+
+**Acceptance.** With `pnpm dev` running, fetching a session page, an
+assessment page, `/timeline/`, and `/people/` shows every previously-inert
+`PageIndex` entry now rendered as a real `<a href="#...">`, resolvable by
+directly requesting the page's HTML (not just by eyeballing the browser) ---
+verified by an automated request against a running dev server, not only
+visual inspection. `pnpm build`'s existing behaviour (Step 17) is
+unaffected --- same ids, same dedup, confirmed identical between a dev
+response and the corresponding built HTML file for at least one page.
+
+**Constraints.** Do not duplicate `fillMissingIds`/`uniqueSlug` --- one
+implementation, two call sites (middleware, build hook). Do not change what
+counts as "missing" or the slug algorithm itself (that is Step 17's D17,
+unchanged here). Preserve non-HTML responses (assets, redirects) untouched
+--- do not let the middleware buffer or mutate a response it has no reason
+to touch, and do not break `Content-Length`/streaming for those.
+
+**Testing methodology.** A unit test for the middleware's `onRequest`
+handler: given a fake `next()` returning an HTML `Response` with a
+missing-id heading, assert the returned response's body has the id filled;
+given a non-HTML response, assert it passes through byte-identical. Keep
+`spec/slugify.test.ts` and the build-side `spec/layout.test.ts` assertion
+as-is (still exercising the same shared function via the build path). Then,
+as the step's own acceptance check rather than a unit test: start `pnpm
+dev`, `curl`/`fetch` a session page's actual HTML, and assert in the test
+runner or by direct inspection that its headings carry non-empty `id`s
+matching what `pnpm build`'s output has for the same page --- this is the
+gap a build-only unit test cannot catch, so do not skip it. Visual
+inspection at both viewports on the same four sample pages as Step 17,
+this time against `pnpm dev`.
 
 ## 7. Risks
 
