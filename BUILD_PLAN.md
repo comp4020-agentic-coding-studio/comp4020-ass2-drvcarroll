@@ -1722,6 +1722,72 @@ gap a build-only unit test cannot catch, so do not skip it. Visual
 inspection at both viewports on the same four sample pages as Step 17,
 this time against `pnpm dev`.
 
+**Amendment (post-implementation).** `fillMissingIds` moved unchanged into
+`src/lib/heading-ids.ts`; `src/integrations/heading-ids.ts` now imports it
+instead of defining it, its `astro:build:done` hook otherwise untouched.
+Astro 7.2's actual middleware API, confirmed against the installed
+package's own `.d.ts` (`node_modules/astro/dist/types/public/common.d.ts`,
+`node_modules/astro/client.d.ts`) rather than assumed: `defineMiddleware`
+and the `MiddlewareHandler`/`MiddlewareNext` types live in the virtual
+module `astro:middleware`, only resolvable inside Astro's own Vite
+pipeline --- confirmed the hard way, by first writing `src/middleware.ts`
+with the response-patching logic inline and watching a plain `vitest`
+import of it fail with `Cannot find package 'astro:middleware'`, since
+this repo's `vitest run spec` has no Astro/Vite plugin wired in. The fix
+was to split the file rather than add one: `src/middleware.ts` stayed a
+thin two-line wrapper (`export const onRequest = defineMiddleware((_context,
+next) => patchHtmlResponse(next))`) importing `astro:middleware` only
+there, while the actual logic moved to a new `src/lib/html-middleware.ts`
+(`patchHtmlResponse(next)`, typed against a plain `NextFn` alias instead of
+Astro's own type) with zero Astro imports, so it is directly unit-testable
+under plain `vitest`. `src/middleware.ts` is auto-discovered with no
+`astro.config.ts` wiring, exactly as the Inputs section expected.
+
+`patchHtmlResponse` calls `next()`, checks `content-type` for `text/html`,
+and for anything else returns the response untouched with no buffering (the
+body is never read). For an HTML response it buffers the body, runs
+`fillMissingIds` via JSDOM, and either returns a reconstructed `Response`
+with the identical body string (nothing missing --- avoids `dom.serialize()`
+renormalising whitespace/attribute order so the pass-through is exact) or
+`dom.serialize()`'s patched body with the stale `content-length` header
+stripped so the runtime recomputes it against the new, longer body.
+
+Testing methodology followed exactly as specced: `spec/html-middleware.test.ts`
+covers a missing-id heading getting filled, a non-HTML response coming back
+as the exact same `Response` object (`toBe`, not just equal content), and an
+HTML response with nothing missing returning its body byte-identical. Then
+the acceptance check itself, run for real rather than reasoned about: with
+`pnpm dev` running, `curl` against `/sessions/01-getting-started/`,
+`/assessments/lab-01/`, `/timeline/` and `/people/` showed every `#main`
+`h2`/`h3` carrying a non-empty `id` --- `Lecture 1`/`Lab 1` card titles,
+`Opening lecture`/`Lab 1` (deduped to `lab-1-1`), `Teaching team`, `Related`,
+and `/people/`'s `Marisol Quaye`/`Idris Fenn` card titles, all previously
+inert under dev. `/timeline/` correctly showed no `h2`/`h3` at all (D4's
+documented empty state, not a regression). Comparing the same four pages'
+`dist/` output from `pnpm build` against the dev responses confirmed
+identical ids on every heading, byte-for-byte --- dev and build share one
+`fillMissingIds`, so they cannot drift. `pnpm check` finishes green apart
+from the one pre-existing documented failure (assessment weights, now
+≈216.6/≈217%, unchanged in kind); `pnpm typecheck` (`astro check`) and a
+direct `tsc --noEmit` both report zero errors, confirming the plain
+`.ts` files are covered too. Chrome DevTools MCP against the running
+`pnpm dev` server at 1920x1080 and 390x844 (the latter via the gutter
+rail's mobile disclosure button) on all four sample pages showed no
+bullet markers anywhere and every page-index entry rendered as a real
+`<a href="#...">`, including a click on `/sessions/01-getting-started/`'s
+"Teaching team" entry actually scrolling to `#teaching-team` in the live
+browser.
+
+This corrects Step 17's own record: its *"Dev-server gap, considered and
+accepted"* note judged the dev-only gap acceptable because nothing
+assessed runs through the dev server's render path. That judgement held
+until the user actually ran `pnpm dev` and hit the gap directly --- the
+premise ("nobody reads it live") turned out false the moment someone did,
+so the gap is closed here rather than left standing on a superseded
+assumption. `pnpm dev` and `pnpm build` now render the same ids for the
+same content, and Step 17's amendment note above should be read as
+superseded on this one point, not as still-current guidance.
+
 ## 7. Risks
 
 **The broken-link checker fails the build in Step 1.** Four known inbound links

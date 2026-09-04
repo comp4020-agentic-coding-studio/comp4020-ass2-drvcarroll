@@ -7,14 +7,14 @@
 // every id already on the document (markdown headings included) so a
 // component heading can never collide with one rehype-slug already assigned.
 // Build-only (astro:build:done): dist/ is what CI deploys and what gets
-// marked, so that is the output this rewrites --- see this step's Amendment
-// for why a dev-server equivalent was tried and dropped.
+// marked, so that is the output this rewrites. Step 18 (D18) adds a
+// dev-time equivalent (src/middleware.ts) sharing this same fillMissingIds.
 import { readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { resolve } from "node:path";
 import { JSDOM } from "jsdom";
 import type { AstroIntegration } from "astro";
-import { uniqueSlug } from "../lib/slugify";
+import { fillMissingIds } from "../lib/heading-ids";
 
 function allHtmlFiles(dir: string): string[] {
   const files: string[] = [];
@@ -24,21 +24,6 @@ function allHtmlFiles(dir: string): string[] {
     else if (entry.endsWith(".html")) files.push(path);
   }
   return files;
-}
-
-/** Adds a missing id to one heading, deduped against ids already on the page. */
-function fillMissingIds(document: Document): boolean {
-  const main = document.querySelector("#main");
-  if (!main) return false;
-
-  const used = new Set([...document.querySelectorAll("[id]")].map((el) => el.id));
-  let changed = false;
-  for (const heading of main.querySelectorAll("h2, h3")) {
-    if (heading.id) continue;
-    heading.id = uniqueSlug(heading.textContent?.trim() ?? "", used);
-    changed = true;
-  }
-  return changed;
 }
 
 export default function headingIds(): AstroIntegration {
