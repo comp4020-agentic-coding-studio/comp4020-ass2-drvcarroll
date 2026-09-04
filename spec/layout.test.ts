@@ -127,6 +127,41 @@ describe("layout contracts (BUILD_PLAN.md Step 8)", () => {
     }
   });
 
+  // Step 15 (D15): each session section is subtitle, then description,
+  // then a card, in that DOM order, one card per subtitle.
+  //
+  // The plan's other Step 15 acceptance line — the card's own heading
+  // differs from the subtitle — holds for Lecture/Assignment sections
+  // (confirmed visually) but not universally: every placeholder lab entry's
+  // own `title` is literally "Lab {week}", the same text as its generated
+  // subtitle, a content coincidence pre-dating this step and out of its
+  // scope (content is untouched). Asserting it here would fail on data,
+  // not on this step's markup, so it is left to visual inspection.
+  it("orders each session section as subtitle, then description, then card", () => {
+    const paths = [
+      resolve(DIST, "sessions/01-getting-started/index.html"),
+      resolve(DIST, "sessions/04-session/index.html"),
+    ];
+    for (const path of paths) {
+      const main = parse(path).querySelector("#main")!;
+      const subtitles = [...main.querySelectorAll("h2")].filter((h) =>
+        /^(Lecture|Lab|Assignment) \d+$/.test(h.textContent?.trim() ?? ""),
+      );
+      const cards = [...main.querySelectorAll(".at-card")];
+      expect(subtitles.length, `${path}: section/card count mismatch`).toBe(cards.length);
+
+      for (const [index, subtitle] of subtitles.entries()) {
+        const description = subtitle.nextElementSibling;
+        expect(description?.tagName, `${path}: "${subtitle.textContent}" has no following <p>`).toBe("P");
+
+        const card = cards[index];
+        // 4 = Node.DOCUMENT_POSITION_FOLLOWING: subtitle precedes its card.
+        const position = subtitle.compareDocumentPosition(card);
+        expect(position & 4, `${path}: card precedes subtitle "${subtitle.textContent}"`).toBeTruthy();
+      }
+    }
+  });
+
   // Step 6 / §7 risk: assessment weights must sum to 100% (S4). Expected
   // red until Step 6's 12 placeholder weights are replaced with real ones.
   it("sums every assessment's weight to 100", () => {

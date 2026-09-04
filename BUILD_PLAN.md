@@ -1388,6 +1388,42 @@ for a sample session page's rendered HTML, a subtitle heading, a paragraph,
 and an `.at-card` appear in that DOM order per section. Visual inspection
 at both viewports on Week 1 (2 sections), Week 4 (3 sections).
 
+**Amendment (post-implementation).** Two ambiguities in the Outputs text
+were resolved by looking at the rendered result:
+
+- **Two sibling `CardGrid`s, not one.** `Card.astro`'s CSS targets
+  `.at-card-grid > .at-card` directly for its subgrid row layout, so a
+  section wrapper `<div>` around subtitle + description + `Card` inside the
+  existing `CardGrid` would either break that selector (if `Card` stayed a
+  child of the wrapper) or scatter subtitle/description/card across grid
+  columns (if all three were flattened into the grid alongside the cards).
+  The rendered fix: one `CardGrid` (same `columns` prop) holding a plain
+  `<div>` per section with the `<h2>` subtitle and `<p>` description, then
+  the existing `CardGrid` unchanged, holding just the three `Card`s. Both
+  grids share the same column template, so a section's subtitle/description
+  block and its card land in the same column (confirmed at 1920x1080 on
+  Week 4, where both grids wrap after 2 columns identically) --- visually
+  grouped without touching `Card`/`CardGrid` or their CSS.
+- **Assignment subtitle is `Assignment {week}`, not the assignment's own
+  title.** The Outputs text listed "the assignment's own title" as the
+  subtitle option, but `assignment.data.title` (e.g. "Assignment 1") is
+  exactly the text a `Card` built from "the referenced entry's own title"
+  would also show, which would make the subtitle and its card heading
+  identical --- failing this same step's acceptance criterion that a card's
+  heading not repeat its subtitle. `Assignment {week}` keeps the subtitle
+  parallel to Lecture/Lab's own `{kind} {week}` pattern and lets the card
+  show the assignment's real title, distinct from the subtitle, same as the
+  other two sections.
+- **Lab sections still show a matching subtitle/card heading, by content
+  coincidence, not by markup.** Every placeholder lab entry's own `title` is
+  literally "Lab {week}" (set in Step 14's amendment), the same text this
+  step's generated "Lab {week}" subtitle produces — unlike the lecture
+  entries, which already have distinct titles ("Opening lecture", etc.).
+  Fixing it means renaming 12 lab entries' `title` fields, a content change
+  this step's Scope explicitly excludes; `spec/layout.test.ts`'s new Step 15
+  test therefore checks DOM order only, and this is called out here as a
+  content gap for a future content-focused step, not a markup defect.
+
 ### Step 16 --- Timeline bead: title, date, then description
 
 **Goal.** Each bead on the Timeline shows its title, then a date, then a

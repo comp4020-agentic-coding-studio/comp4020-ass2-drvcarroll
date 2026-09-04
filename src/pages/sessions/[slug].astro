@@ -19,6 +19,16 @@ const { session } = Astro.props;
 const lecture = await getEntry(session.data.lecture);
 const lab = await getEntry(session.data.lab);
 const assignment = session.data.assignment ? await getEntry(session.data.assignment) : undefined;
+
+// Per-section subtitle, referenced entry and its page path (D15).
+const columns = assignment ? 3 : 2;
+const sections = [
+  { subtitle: `Lecture ${session.data.week}`, entry: lecture, href: `/lectures/${lecture.id}/` },
+  { subtitle: `Lab ${session.data.week}`, entry: lab, href: `/assessments/${lab.id}/` },
+  ...(assignment
+    ? [{ subtitle: `Assignment ${session.data.week}`, entry: assignment, href: `/assessments/${assignment.id}/` }]
+    : []),
+];
 ---
 
 <ContentLayout
@@ -28,20 +38,18 @@ const assignment = session.data.assignment ? await getEntry(session.data.assignm
 >
   <PageLayout>
     <p><strong>{formatCourseDate(session.data.date)}</strong></p>
-    <CardGrid columns={assignment ? 3 : 2}>
-      <Card headingLevel="h2" title={`Lecture ${session.data.week}`} href={`/lectures/${lecture.id}/`}>
-        {lecture.data.description}
-      </Card>
-      <Card headingLevel="h2" title={`Lab ${session.data.week}`} href={`/assessments/${lab.id}/`}>
-        {lab.data.description}
-      </Card>
+    <CardGrid columns={columns}>
       {
-        assignment && (
-          <Card headingLevel="h2" title={assignment.data.title} href={`/assessments/${assignment.id}/`}>
-            {assignment.data.description}
-          </Card>
-        )
+        sections.map(({ subtitle, entry }) => (
+          <div>
+            <h2>{subtitle}</h2>
+            <p>{entry.data.description}</p>
+          </div>
+        ))
       }
+    </CardGrid>
+    <CardGrid columns={columns}>
+      {sections.map(({ entry, href }) => <Card headingLevel="h3" title={entry.data.title} href={href} />)}
     </CardGrid>
     <TeachingTeam teachers={session.data.teachers} />
     <RelatedContent entry={session} collections={graphCollections} />
