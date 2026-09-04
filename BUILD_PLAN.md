@@ -1471,6 +1471,22 @@ snapshots `TimelineBead`'s prop shape. Visual inspection at both viewports
 confirming title/date/description order and that the bead grid/spacing on
 `/timeline/` still reads cleanly with three lines per bead instead of one.
 
+**Amendment (post-implementation).** The bead-shape assertion this step's
+testing methodology anticipated actually lived in `spec/layout.test.ts`
+(Step 6's "renders /timeline/ with 15 beads" test), not
+`spec/timeline.test.ts` (which only covers `orderBeads`'s pure ordering
+logic) --- updated the former in place to assert non-empty date and
+description spans in title/date/description DOM order, replacing its old
+assertion of an always-empty `span.description`. Separately, `assessments`
+entries inherit `description` from `courseNodeSchema` as `z.string()
+.nullish()`, not a required field, so `TimelineSpine` passes
+`entry.data.description ?? ""` to satisfy `TimelineBead`'s `description:
+string` prop --- every entry has real placeholder copy today (confirmed by
+inspection), so this is a type-safety fallback only, not a behaviour
+change. `pnpm check`'s two documented pre-existing failures (missing
+heading ids, weights summing to ~217%) were confirmed unchanged before and
+after; no new failures were introduced.
+
 ### Step 17 --- Page index: no bullets, every entry a working link
 
 **Goal.** The on-page index (`PageIndex.astro`, the right gutter rail) shows

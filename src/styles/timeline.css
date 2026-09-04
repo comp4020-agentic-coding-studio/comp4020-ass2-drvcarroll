@@ -63,9 +63,13 @@
   font-weight: 600;
 }
 
-/* Structural placeholder: empty by design (BUILD_PLAN.md Step 6). Kept in
-   the DOM, not omitted, so a written brief has somewhere to land later
-   without a markup change. */
-.timeline-bead .description {
+.timeline-bead-date {
   grid-column: 2;
+  font-size: 0.875em;
+  color: var(--at-text-secondary);
+}
+
+.timeline-bead-description {
+  grid-column: 2;
+  font-size: 0.875em;
 }

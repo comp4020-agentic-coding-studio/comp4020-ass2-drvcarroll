@@ -5,6 +5,7 @@
 import { getPublishedCollection } from "astro-course-university/content";
 import TimelineBead from "./TimelineBead.astro";
 import { orderBeads } from "../lib/timeline";
+import { formatCourseDate } from "../lib/dates";
 import "../styles/timeline.css";
 
 const assessments = await getPublishedCollection("assessments");
@@ -12,5 +13,14 @@ const beads = orderBeads(assessments);
 ---
 
 <ol class="timeline-spine">
-  {beads.map((entry) => <TimelineBead label={entry.data.title} href={`/assessments/${entry.id}/`} />)}
+  {
+    beads.map((entry) => (
+      <TimelineBead
+        label={entry.data.title}
+        href={`/assessments/${entry.id}/`}
+        date={formatCourseDate(entry.data.due)}
+        description={entry.data.description ?? ""}
+      />
+    ))
+  }
 </ol>

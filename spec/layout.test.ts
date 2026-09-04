@@ -76,6 +76,7 @@ describe("layout contracts (BUILD_PLAN.md Step 8)", () => {
   });
 
   // Step 6/14 (D9's documented order; Step 14 extends it to 15 beads).
+  // Step 16 (D16): each bead now shows title, date, then description.
   it("renders /timeline/ with 15 beads in the documented semester order", () => {
     const beads = parse(resolve(DIST, "timeline/index.html")).querySelectorAll(
       "ol.timeline-spine > li.timeline-bead",
@@ -87,9 +88,20 @@ describe("layout contracts (BUILD_PLAN.md Step 8)", () => {
       expect(link, `bead ${index} has no link`).not.toBeNull();
       expect(link!.getAttribute("href")).toBe(`/assessments/${BEAD_ORDER[index]}/`);
 
-      const description = bead.querySelector("span.description");
+      const label = bead.querySelector("span.timeline-bead-label");
+      const date = bead.querySelector("span.timeline-bead-date");
+      const description = bead.querySelector("span.timeline-bead-description");
+      expect(label, `bead ${index} has no label span`).not.toBeNull();
+      expect(date, `bead ${index} has no date span`).not.toBeNull();
       expect(description, `bead ${index} has no description span`).not.toBeNull();
-      expect(description!.textContent).toBe("");
+      expect(date!.textContent).not.toBe("");
+      expect(description!.textContent).not.toBe("");
+
+      // title, then date, then description, in DOM order.
+      const order = [...bead.querySelectorAll("span")].filter((span) =>
+        [label, date, description].includes(span),
+      );
+      expect(order).toEqual([label, date, description]);
     }
   });
 
