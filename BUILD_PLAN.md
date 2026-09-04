@@ -216,6 +216,42 @@ three pages adopt the same `heroTitle`/`heroImage` props `BaseLayout`/
 Timeline/People/Policies (distinct `heroTitle`/`imageAlt` per page) until real
 photography exists, matching this plan's placeholder-content convention.
 
+**D15. A session's Lecture/Lab/Assignment section is subtitle, then
+description, then card --- not a card carrying both.** Step 14 folded the
+title and description into `Card`'s own heading and slot, so the card itself
+was the entire section. The prompt corrects this: each section is a plain
+subtitle heading ("Lecture 4"), a description paragraph beneath it, and then
+a `Card` as the section's link/action element, distinct from the text above
+it rather than a container for it. The card's own title becomes the
+referenced entry's real title (e.g. the lecture's actual title), since the
+description text no longer needs restating inside the card.
+
+**D16. A timeline bead shows title, then date, then a brief description ---
+not a label with an empty placeholder span.** `TimelineBead` was built
+(Step 6) with a deliberately empty `.description` span, reserved for "real
+copy later." That later point is now: every bead gets its assessment's own
+`due` date (already real schema data, formatted with the existing
+`formatCourseDate`) and its `description` field, in that order under the
+title, matching the Lecture/Lab pattern's shape (title, date-or-description,
+then supporting text) rather than a bare label.
+
+**D17. Every heading a reader can jump to gets a real `id`, not just
+markdown headings.** The two pre-existing documented test failures (Section
+7) include headings under `#main` with no `id` --- because `rehype-slug`
+only touches headings written as literal markdown, never ones a component
+renders (`Card`'s title, `TeachingTeam`'s and `RelatedContent`'s `<h2>`s, and
+now D15's new subtitles). `PageIndex` already renders a heading with no `id`
+as inert grey text instead of a link (Step 5's documented, deliberate
+fallback) --- but the prompt now asks for every index entry to be a working
+link, which means the fallback path should stop being exercised at all for
+these components. A small shared `slugify` helper (matching `rehype-slug`'s
+own GitHub-style algorithm: lowercase, strip non-word characters, hyphenate
+spaces) is applied at render time to give each component-rendered heading a
+real `id`, deduplicated per page the same way `rehype-slug` deduplicates
+(`-1`, `-2`, ... suffix on repeat). This closes one of the two pre-existing
+red assertions in `spec/layout.test.ts`; the assessment-weights-sum-to-200
+failure is untouched and remains the sole documented gap after this step.
+
 
 ## 5. Architecture
 
@@ -1297,6 +1333,170 @@ was real. Building it out:
   2) --- confirmed by diffing against a pre-step baseline. No new failure
   category was introduced.
 
+
+### Step 15 --- Session sections: subtitle, description, then card
+
+**Goal.** Each Lecture/Lab/Assignment section on a session page reads as a
+subtitle heading, a description paragraph, and then a `Card` linking to the
+real page --- three distinct elements, not a single `Card` carrying the
+title and description inside itself.
+
+**Scope.** `src/pages/sessions/[slug].astro` only. No schema, content, or
+`Card`/`CardGrid` component changes --- this step restructures markup that
+already has every value it needs (`lecture`/`lab`/`assignment` are already
+fetched entries with `title`/`description`).
+
+**Dependencies / spec.** D15. Depends on Step 14's schema and content
+(already committed); depends on D17 (Step 17) only in that the new subtitles
+must be written as real headings so Step 17's `id` treatment can reach them
+--- but this step must not itself invent an ad hoc `id` scheme; leave the
+subtitle as a plain heading and let Step 17 add the `id`.
+
+**Inputs.** The existing `lecture`/`lab`/`assignment` entries fetched in
+`[slug].astro`'s frontmatter (`.data.title`, `.data.description`); `Card`'s
+prop contract (`title`, `href`, optional `headingLevel`, default slot).
+
+**Outputs.** Per section: a subtitle heading ("Lecture {week}", "Lab
+{week}", or the assignment's own title) at a heading level consistent with
+the page's existing hierarchy (`<h1>` page title, `<h2>` Teaching
+team/Related --- these subtitles sit at the same `<h2>` level, one per
+section); a `<p>` holding that entry's `description` immediately under it;
+then a `Card` whose `title` is the *referenced entry's own title* (not a
+repeat of the subtitle or description) and whose `href` is unchanged,
+`headingLevel="h3"` so it nests correctly under the new `<h2>` subtitle.
+`CardGrid` wraps the three `Card`s exactly as before (column count still
+keyed on whether `assignment` exists) so the visual grid rhythm is
+unchanged; the subtitle and description sit above the grid item or, if that
+reads awkwardly at the grid's column width, above the whole grid in a
+matching repeated block per section --- resolve this by looking at the
+rendered result, not by assumption, and prefer the structure that keeps
+each section's three parts visually grouped together.
+
+**Acceptance.** At both viewports, every session page shows, per section, a
+subtitle, then a description, then a card link, in that visual and DOM
+order; the card's own heading is not the same text as the subtitle; Teaching
+team and Related are unchanged; no regression in the CardGrid's existing
+column behaviour (2 columns for a plain week, 3 for Weeks 4/9).
+
+**Constraints.** "Never remove what you were not asked to remove" ---
+Teaching team, Related, and the Lecture/Lab/Assignment *content* stay; only
+the structure around them changes. Comments stay one line, ≤80 chars.
+
+**Testing methodology.** Extend `spec/layout.test.ts` (or add a focused
+assertion in the existing session-page test if one exists) checking that,
+for a sample session page's rendered HTML, a subtitle heading, a paragraph,
+and an `.at-card` appear in that DOM order per section. Visual inspection
+at both viewports on Week 1 (2 sections), Week 4 (3 sections).
+
+### Step 16 --- Timeline bead: title, date, then description
+
+**Goal.** Each bead on the Timeline shows its title, then a date, then a
+brief description, replacing the current title-plus-empty-placeholder-span
+shape.
+
+**Scope.** `src/components/TimelineBead.astro` (accepts and renders the new
+`date`/`description` props); `src/components/TimelineSpine.astro` (passes
+`entry.data.due` and `entry.data.description` through, formatted with the
+existing `formatCourseDate` from `src/lib/dates.ts`); `src/styles/
+timeline.css` (styling for the new date/description lines, consistent with
+the bead label's existing typography scale, not a new one).
+
+**Dependencies / spec.** D16. Depends on the `assessments` schema's
+existing `due`/`description` fields (Step 13, unchanged) --- no schema
+change needed.
+
+**Inputs.** `formatCourseDate(value: Date | string): string` (`src/lib/
+dates.ts`, already used on session pages); each `assessments` entry's
+`data.due` and `data.description`, already present on every entry (schema
+requires both).
+
+**Outputs.** `TimelineBead`'s `Props` gains `date: string` and
+`description: string` (already-formatted strings in, not raw values ---
+`TimelineBead` stays presentation-only, matching its existing "never
+computes its own position" convention); its markup renders title, then a
+date line, then a description line, inside the existing `<a>` (still one
+link per bead, still keyboard- and screen-reader-navigable as a single
+unit); the empty `.description` placeholder span and its associated comment
+are removed, since the placeholder is now filled.
+
+**Acceptance.** At both viewports, every bead on `/timeline/` shows a
+title, a formatted date, and a non-empty description, in that order; the
+spine's existing dot/line positioning (Step 11) is unaffected; the bead
+remains a single focusable link.
+
+**Constraints.** Dates stay real placeholder data already in the schema
+(`due`), not fabricated new dates --- this step formats and displays
+existing data, it does not invent any. `TimelineBead` keeps its "never
+computes its own position" boundary (Section 2) --- ordering stays
+`TimelineSpine`'s job.
+
+**Testing methodology.** Update or extend `spec/timeline.test.ts` if it
+snapshots `TimelineBead`'s prop shape. Visual inspection at both viewports
+confirming title/date/description order and that the bead grid/spacing on
+`/timeline/` still reads cleanly with three lines per bead instead of one.
+
+### Step 17 --- Page index: no bullets, every entry a working link
+
+**Goal.** The on-page index (`PageIndex.astro`, the right gutter rail) shows
+a plain link list with no bullet markers, and every entry resolves to the
+subtitle/heading it names --- closing the gap where a heading with no `id`
+renders as inert grey text instead of a link.
+
+**Scope.** A new shared `slugify` helper (e.g. `src/lib/slugify.ts`) used to
+give every component-rendered heading under `#main` a real `id`: `Card.astro`
+usages that pass `headingLevel` on session, index, and other card-grid pages
+cannot be edited directly (theme package), so the `id` is set on the calling
+side by wrapping/annotating each such heading location that currently lacks
+one --- concretely, `TeachingTeam.astro`, `RelatedContent.astro` (or the
+`astro-course-university` component it wraps, if editable; otherwise an
+`id` added at the call site via a wrapping element with matching `:target`
+behaviour is out --- prefer fixing at the heading itself), and Step 15's new
+session subtitles. `PageIndex.astro`'s CSS is otherwise already
+`list-style: none`; confirm this holds under the theme's base stylesheet
+(check for a `::marker` override or a conflicting `display` reset) and
+correct if a marker is in fact showing.
+
+**Dependencies / spec.** D17. Depends on Step 15 (new subtitles need an
+`id` too) and should land after it so it can give every session-page
+heading an `id` in one pass; independent of Step 16.
+
+**Inputs.** `spec/layout.test.ts`'s existing missing-heading-id assertion
+(the exact list of failing headings/pages it currently reports, read fresh
+before starting); `buildPageIndex`'s existing contract (`src/lib/
+page-index.ts`) --- an entry with `id: ""` renders as inert `<span>`, so
+closing the gap is entirely a matter of every relevant heading having a
+non-empty `id`, no `PageIndex.astro`/`page-index.ts` logic change required
+beyond what naturally follows.
+
+**Outputs.** A `slugify` utility, unit-tested directly; every `h2`/`h3`
+under `#main` across every page type (session, assessment, people, policies,
+timeline, overview) carries a real, unique `id`; `PageIndex` therefore
+renders every entry as a real `<a href="#...">` link, never the inert
+`<span>` fallback, on any page reachable from the nav; the fallback code
+path in `PageIndex.astro`/`page-index.ts` is kept (a future hand-written
+heading could still lack one) but is no longer exercised anywhere in this
+site's own content.
+
+**Acceptance.** `spec/layout.test.ts`'s missing-heading-id assertion goes
+green (this closes one of the two previously-documented pre-existing red
+assertions --- the assessment-weights one remains, untouched, the sole
+documented gap after this step). At both viewports, the page index on a
+sample of pages (a session page, an assessment page, the Timeline, People)
+shows no bullet markers and every entry is clickable, scrolling to the
+matching heading.
+
+**Constraints.** Do not touch the assessment-weights failure --- out of
+scope, remains documented. Do not invent a second heading-id scheme
+divergent from `rehype-slug`'s own conventions (case, hyphenation,
+duplicate-suffix behaviour) --- match it, so ids stay predictable across
+both markdown and component-rendered headings.
+
+**Testing methodology.** A unit test file for `slugify` (input/output
+pairs, including a duplicate-collision case). Re-run the full
+`spec/layout.test.ts` suite and confirm exactly one of the two previously
+documented failures remains (assessment weights), with the heading-id
+assertion now passing. Visual inspection at both viewports per the
+Acceptance section above.
 
 ## 7. Risks
 
