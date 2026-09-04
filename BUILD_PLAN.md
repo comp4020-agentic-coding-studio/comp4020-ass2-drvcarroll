@@ -1113,6 +1113,26 @@ one assertion (every built page has exactly one `<h1>`; Timeline/People/
 Policies's HTML each contains `.at-hero`); visual inspection at both
 viewports for the rest.
 
+**Amendment (post-implementation).** One correction to this step's own Scope
+line, found while reading `ContentLayout.astro`: `ContentLayout` never reads
+a `heroTitle` prop at all --- its Hero (or fallback `<h1>`) always uses the
+existing `title` prop, and any `heroTitle` passed alongside it is spread
+through to `BaseLayout` where it is inert (`BaseLayout`'s own hero gate needs
+its own `heroImage`, which `ContentLayout` never forwards). So
+`timeline/index.astro` only gained `heroImage`/`heroImageAlt`, not
+`heroTitle` --- its existing `title="Timeline"` already drives the Hero,
+matching `index.astro`'s own pattern of not passing `heroTitle` either.
+`people/index.mdx` and `policies/index.mdx` route through `MdxPageLayout`
+instead, which forwards frontmatter straight to `BaseLayout`, so `heroTitle`
+does matter there and both keep/gain it. No new asset was needed --- all
+three pages reuse `hero-home.avif` (as an import for the `.astro` page, as
+the frontmatter string path `/src/assets/images/hero-home.avif` for the two
+`.mdx` pages), each with a distinct `heroTitle`/alt text, per D14. Two new
+`spec/layout.test.ts` assertions were added (exactly one `<h1>` per chrome
+page; `.at-hero` present on Overview/Timeline/People/Policies), both green;
+`pnpm check`'s two pre-existing documented failures (missing heading ids,
+weights summing to ~200) were confirmed unchanged before and after.
+
 ### Step 13 --- Assessment page template matching the published reference
 
 **Goal.** Every assessment page (lab, assignment or exam alike) is

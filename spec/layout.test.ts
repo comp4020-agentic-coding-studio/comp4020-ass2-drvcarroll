@@ -110,6 +110,23 @@ describe("layout contracts (BUILD_PLAN.md Step 8)", () => {
     }
   });
 
+  // Step 12 (D14): every chrome page has exactly one h1, and Overview,
+  // Timeline, People and Policies each render the shared at-hero element.
+  it("has exactly one h1 per chrome page", () => {
+    for (const path of chromePages) {
+      const h1s = parse(path).querySelectorAll("h1");
+      expect(h1s.length, `${path} has ${h1s.length} h1 elements`).toBe(1);
+    }
+  });
+
+  it("shows a hero on Overview, Timeline, People and Policies", () => {
+    for (const route of ["", "timeline", "people", "policies"]) {
+      const path = resolve(DIST, route, "index.html");
+      const hero = parse(path).querySelector(".at-hero");
+      expect(hero, `${path} has no .at-hero`).not.toBeNull();
+    }
+  });
+
   // Step 6 / §7 risk: assessment weights must sum to 100% (S4). Expected
   // red until Step 6's 12 placeholder weights are replaced with real ones.
   it("sums every assessment's weight to 100", () => {

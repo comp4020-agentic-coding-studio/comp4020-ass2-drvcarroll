@@ -4,12 +4,15 @@
 import ContentLayout from "astro-theme-university/layouts/ContentLayout.astro";
 import PageLayout from "../../layouts/PageLayout.astro";
 import TimelineSpine from "../../components/TimelineSpine.astro";
+import heroImage from "../../assets/images/hero-home.avif";
 import { siteConfig } from "../../site-config";
 ---
 
 <ContentLayout
   title="Timeline"
   description="Every graded deliverable, in semester order, on one spine."
+  heroImage={heroImage}
+  heroImageAlt="A lecture theatre reduced to flat gold and black shapes, rows of seats sweeping past the frame, in a two-ink risograph print"
   {...siteConfig}
 >
   <PageLayout>
