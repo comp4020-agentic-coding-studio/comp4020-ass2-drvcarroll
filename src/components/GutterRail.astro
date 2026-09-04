@@ -37,13 +37,9 @@ const icon = side === "start" ? "›" : "‹";
   // Reused breakpoint from rails.css — the toggle only does anything here.
   const mobile = matchMedia("(width <= 768px)");
 
-  const rails: Rail[] = [...document.querySelectorAll<HTMLElement>(".gutter-rail")]
-    .map((rail) => {
-      const toggle = rail.querySelector<HTMLButtonElement>(".gutter-rail-toggle");
-      const panel = rail.querySelector<HTMLElement>(".gutter-rail-panel");
-      return toggle && panel ? { toggle, panel, open: false } : null;
-    })
-    .filter((rail): rail is Rail => rail !== null);
+  // Rebuilt on every soft navigation; document/mobile listeners below read
+  // this instead of re-subscribing, so they never accumulate across navs.
+  let rails: Rail[] = [];
 
   // Reflects rail.open onto the DOM. inert only applies below the
   // breakpoint, so desktop's inline links stay reachable without JS games.
@@ -72,13 +68,28 @@ const icon = side === "start" ? "›" : "‹";
     }
   }
 
-  for (const rail of rails) {
-    rail.toggle.addEventListener("click", () => setOpen(rail, "toggle"));
+  // Re-run on every soft navigation (Nav/Footer/SearchDialog convention):
+  // rail markup is swapped in fresh, so setup must re-wire it each time.
+  function setupGutterRails(): void {
+    rails = [...document.querySelectorAll<HTMLElement>(".gutter-rail")]
+      .map((rail) => {
+        const toggle = rail.querySelector<HTMLButtonElement>(".gutter-rail-toggle");
+        const panel = rail.querySelector<HTMLElement>(".gutter-rail-panel");
+        return toggle && panel ? { toggle, panel, open: false } : null;
+      })
+      .filter((rail): rail is Rail => rail !== null);
+
+    for (const rail of rails) {
+      rail.toggle.addEventListener("click", () => setOpen(rail, "toggle"));
+    }
+
+    syncBreakpoint();
   }
 
   // Document-level, not scoped to the panel: focus may have moved away
   // from it (there is nothing focusable in the placeholder rail content
-  // yet), and Escape should still close whichever rail is open.
+  // yet), and Escape should still close whichever rail is open. Registered
+  // once — reads the live `rails` array rather than being re-added per nav.
   document.addEventListener("keydown", (event) => {
     if (event.key !== "Escape") return;
     for (const rail of rails) {
@@ -87,5 +98,5 @@ const icon = side === "start" ? "›" : "‹";
   });
 
   mobile.addEventListener("change", syncBreakpoint);
-  syncBreakpoint();
+  document.addEventListener("astro:page-load", setupGutterRails);
 </script>

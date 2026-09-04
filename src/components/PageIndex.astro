@@ -22,8 +22,12 @@
     return li;
   }
 
-  const nav = document.querySelector<HTMLElement>(".page-index");
-  if (nav) {
+  // Re-run on every soft navigation: the DOM's headings have changed, so
+  // the index must be rebuilt rather than left showing the old page's.
+  function setupPageIndex(): void {
+    const nav = document.querySelector<HTMLElement>(".page-index");
+    if (!nav) return;
+    nav.replaceChildren();
     const entries = buildPageIndex(document);
     if (entries.length === 0) {
       const empty = document.createElement("p");
@@ -36,6 +40,8 @@
       nav.append(list);
     }
   }
+
+  document.addEventListener("astro:page-load", setupPageIndex);
 </script>
 
 <style>

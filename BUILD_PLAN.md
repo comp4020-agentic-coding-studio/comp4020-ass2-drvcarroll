@@ -962,6 +962,19 @@ already show the two-line fix.
 **Testing methodology.** No new pure logic, so no new unit test. Acceptance
 is a manual multi-page click-through at both viewports with the console open.
 
+**Amendment (post-implementation).** The plan's literal reading ("wrapped in
+one listener") would have put the `mobile.addEventListener("change", ...)` and
+document-level `keydown` listener inside the per-navigation setup function,
+duplicating them on every soft nav (they never got torn down, since neither
+`mobile` nor `document` is replaced by a navigation). Fixed by hoisting those
+two subscriptions to run once, outside `setupGutterRails`, reading a
+module-level `rails` array that the per-navigation function rebuilds --- so
+only the DOM query, click wiring and breakpoint sync re-run per page.
+`pnpm check`'s two vitest failures (missing heading ids; assessment weights
+summing to ~200) are unrelated pre-existing red, already documented in
+`spec/layout.test.ts`'s own comments and confirmed unchanged by this step
+(verified via `git stash`); out of this step's scope.
+
 ### Step 10 --- Remove the Exam row from WeekRail
 
 **Goal.** `WeekRail` lists exactly the twelve teaching weeks; the exam period
