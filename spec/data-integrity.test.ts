@@ -33,4 +33,15 @@ describe("course data integrity", () => {
       expect(date <= api.course.endDate, `${node.id} falls after teaching ends`).toBe(true);
     }
   });
+
+  it("gives every assessment a non-empty brief", () => {
+    const assessments = api.nodes.filter((node) => node.type === "assessments");
+    expect(assessments.length).toBeGreaterThan(0);
+    for (const node of assessments) {
+      const brief = node.meta?.brief;
+      expect(typeof brief === "string" && brief.trim().length > 0, `${node.id} has no brief`).toBe(
+        true,
+      );
+    }
+  });
 });

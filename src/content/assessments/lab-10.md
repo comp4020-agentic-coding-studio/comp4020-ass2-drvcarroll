@@ -10,6 +10,20 @@ due: 2027-05-21T17:00:00+10:00
 # 100% across the collection with assignment-1/final-project's existing
 # weights — expected, per BUILD_PLAN.md section 7.
 weight: 8.33
+brief:
+  Placeholder — the one-sentence prompt for Lab 10 has not been
+  written yet.
+submissionItems:
+  - Placeholder — the exact deliverable for Lab 10 has not been
+    decided yet.
+marking:
+  mode: holistic
+  description:
+    Placeholder marking note — Lab 10's marking criteria have not been
+    finalised yet.
+keyDates:
+  - label: Submission due
+    date: 2027-05-21T17:00:00+10:00
 spec:
   - submitted by the deadline, in the format named below
 ---

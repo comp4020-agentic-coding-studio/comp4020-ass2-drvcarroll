@@ -1180,6 +1180,29 @@ a checkable content-completeness contract, in the spirit of the existing
 weight-sums-to-100 check; visual inspection at both viewports for layout and
 order.
 
+**Amendment (post-implementation).** Two refinements found while implementing.
+First, `marking` was already an optional existing field, not a new one in this
+step's scope, but "How It's Marked" is one of the six sections the acceptance
+criterion requires on *every* page --- so the ten labs, `final-exam` and
+`assignment-2`, none of which had a `marking:` block before, each gained a
+placeholder holistic `marking` block (same convention as the other new
+placeholder fields), rather than leaving that section absent on eleven of
+fourteen entries. Second, `heroImage`/`heroImageAlt` were added to the schema
+as `/src/assets/...` string paths (D14's existing frontmatter-string
+convention for `resolveHeroImage`, already used by `people`/`policies`) with
+a `superRefine` requiring the alt text when an image is set, mirroring the
+`people` collection's `photo`/`photoAlt` pairing; per this step's own
+Constraints, no placeholder hero imagery was invented, so `heroImage` stays
+unset on every entry for now and only the fallback plain `<h1>` renders.
+`assignment-1.md`/`final-project.md`'s existing "## The brief"/"## What you
+submit" prose headings were folded into the new frontmatter-driven sections
+(their content moved to `brief`/`submissionItems`, matching prose kept as
+supporting body text under the template's own "The brief" heading) rather
+than left as a second, duplicate pair of headings alongside the template's.
+`pnpm check`'s two pre-existing documented failures (missing heading ids,
+weights summing to ~200) were confirmed unchanged before and after, alongside
+the new passing `brief`-non-empty assertion.
+
 ### Step 14 --- Session page: Lecture, Lab and (Weeks 4/9) Assignment cards
 
 **Goal.** Each session page drops "Before the session" / "In the session" /

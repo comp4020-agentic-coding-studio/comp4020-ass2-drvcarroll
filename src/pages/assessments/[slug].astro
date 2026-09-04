@@ -19,17 +19,20 @@ export async function getStaticPaths() {
 }
 
 const { assessment } = Astro.props;
+const { data } = assessment;
 const { Content } = await render(assessment);
 ---
 
 <ContentLayout
-  title={assessment.data.title}
-  description={assessment.data.description}
+  title={data.title}
+  description={data.description}
+  heroImage={data.heroImage}
+  heroImageAlt={data.heroImageAlt}
   {...siteConfig}
 >
   <PageLayout>
     {
-      assessment.data.draft && (
+      data.draft && (
         <Callout type="warning">
           <p>
             <strong>Draft.</strong> This brief is still being finalised and
@@ -38,17 +41,65 @@ const { Content } = await render(assessment);
         </Callout>
       )
     }
+
+    <section aria-labelledby="the-brief">
+      <h2 id="the-brief">The brief</h2>
+      <blockquote>
+        <p>{data.brief}</p>
+      </blockquote>
+      <Content />
+      {
+        data.exemplars && data.exemplars.length > 0 && (
+          <ul>
+            {data.exemplars.map((exemplar) => (
+              <li>
+                <a href={exemplar.url}>{exemplar.title}</a> — {exemplar.description}
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </section>
+
+    {
+      data.submissionItems && data.submissionItems.length > 0 && (
+        <section aria-labelledby="what-you-submit">
+          <h2 id="what-you-submit">What you submit</h2>
+          <ul>
+            {data.submissionItems.map((item) => (
+              <li>{item}</li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
     <p>
-      <strong>Due:</strong> {formatCourseDate(assessment.data.due)} ·
-      <strong>Weight:</strong> {assessment.data.weight}%
+      <strong>Due:</strong> {formatCourseDate(data.due)} ·
+      <strong>Weight:</strong> {data.weight}% of the course grade
     </p>
-    <Content />
-    <SpecList spec={assessment.data.spec}>
+    {data.marking && <MarkingModel marking={data.marking} />}
+
+    {
+      data.keyDates && data.keyDates.length > 0 && (
+        <section aria-labelledby="key-dates">
+          <h2 id="key-dates">Key dates</h2>
+          <ul>
+            {data.keyDates.map((keyDate) => (
+              <li>
+                <strong>{keyDate.label}:</strong> {formatCourseDate(keyDate.date)}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    <SpecList spec={data.spec}>
       The brief poses the problem and leaves room for a response. The spec is
       the fixed part: what a marker checks. Some lines can be checked
       mechanically; the rest call for judgement.
     </SpecList>
-    {assessment.data.marking && <MarkingModel marking={assessment.data.marking} />}
     <RelatedContent entry={assessment} collections={graphCollections} />
   </PageLayout>
 </ContentLayout>

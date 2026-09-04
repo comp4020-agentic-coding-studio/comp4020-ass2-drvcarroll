@@ -11,6 +11,20 @@ due: 2027-05-28T09:00:00+10:00
 # weights — expected, per BUILD_PLAN.md section 7. This entry's id
 # ("final-exam") is what WeekRail's Exam row matches on (Step 4).
 weight: 8.33
+brief:
+  Placeholder — the one-sentence prompt for Final Exam has not been
+  written yet.
+submissionItems:
+  - Placeholder — the exact deliverable for Final Exam has not been
+    decided yet.
+marking:
+  mode: holistic
+  description:
+    Placeholder marking note — Final Exam's marking criteria have not been
+    finalised yet.
+keyDates:
+  - label: Submission due
+    date: 2027-05-28T09:00:00+10:00
 spec:
   - sat during the scheduled exam period
 ---

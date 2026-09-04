@@ -51,8 +51,35 @@ export const collections = {
         due: z.coerce.date(),
         weight: z.coerce.number().positive().max(100),
         marking: z.discriminatedUnion("mode", [weightedMarking, holisticMarking]).optional(),
+        // Hero image, as a "/src/assets/..." string path (resolveHeroImage).
+        heroImage: z.string().trim().min(1).optional(),
+        heroImageAlt: z.string().trim().min(1).optional(),
+        // The blockquote prompt shown under "The Brief" heading.
+        brief: z.string().trim().min(1),
+        exemplars: z
+          .array(
+            z.object({
+              title: z.string().trim().min(1),
+              url: z.url(),
+              description: z.string().trim().min(1),
+            }),
+          )
+          .optional(),
+        submissionItems: z.array(z.string().trim().min(1)).optional(),
+        keyDates: z
+          .array(z.object({ label: z.string().trim().min(1), date: z.coerce.date() }))
+          .optional(),
       })
-      .loose(),
+      .loose()
+      .superRefine((assessment, ctx) => {
+        if (assessment.heroImage && !assessment.heroImageAlt) {
+          ctx.addIssue({
+            code: "custom",
+            path: ["heroImageAlt"],
+            message: "describe the hero image when one is supplied",
+          });
+        }
+      }),
   }),
 
   lectures: defineCollection({
