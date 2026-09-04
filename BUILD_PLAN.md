@@ -170,6 +170,53 @@ carry. `TimelineBead` still never sees its own position — `orderBeads`
 does the ordering, `TimelineSpine` maps the result, in the same
 division of labour as `buildWeekRows`/`WeekRail`.
 
+**D10. Every week gets exactly one lecture and one lab, mapped 1:1 by week
+number.** The session page's new Lecture/Lab cards need a lecture and a lab
+entry for every week 1--12, but `src/content/lectures/` currently only has
+`week-01`/`week-02` and `src/content/assessments/`'s ten labs
+(`lab-01`--`lab-10`) cover only ten of twelve weeks. Rather than leave two
+weeks with no lab card, or invent an eleventh/twelfth lab id that contradicts
+the Timeline's already-committed 13-bead `BEAD_ORDER`, the missing lecture
+entries (week-03--week-12) and two additional lab entries are placeholder
+content, added in Step 14, under the same "content lands later" convention
+already used for dates and weights (Step 6's amendment). `BEAD_ORDER` gains
+the two new lab ids in sequence.
+
+**D11. The assessment page template is one route, redesigned once, not a
+second template.** The reference structure (hero, brief, submission list,
+marking table, key dates, spec, related) is asked for on every lab/assignment/
+exam link, not uniquely for Assignment 1. Per D2's existing "one generic
+`[slug].astro`" architecture, this extension adds fields and sections to the
+one shared assessments schema/template rather than forking a second one.
+
+**D12. The Exam row leaves `WeekRail`; the Timeline is its only entry point.**
+The prompt asks for `week-rail-exam` removed outright ("that will just be in
+the timeline"), which revises D1's "thirteen rows... plus an Exam period row"
+to twelve rows only. `TimelineSpine`'s existing Final Exam bead (D9,
+`BEAD_ORDER`) already resolves to `/assessments/final-exam/`, so no link is
+lost --- only the second, redundant entry point in the rail.
+
+**D13. The Timeline's line is the shared column rule, not a page-local one.**
+D5 built the spine's line as the page's own thicker rule because a page
+cannot thicken a `body`-level global rule for itself alone. The prompt now
+asks for the opposite: the visible vertical line on every page --- including
+Timeline --- should be the one shared `body::after` column border, with the
+beads repositioned onto it, rather than a second, page-specific line existing
+at all. This reverses D5's suppression: Timeline stops hiding the global rule
+and stops drawing its own, and `TimelineBead`'s dot shifts left to the column
+border's own inline-start offset instead of `timeline.css`'s previous
+independent one.
+
+**D14. Overview, Timeline, People and Policies share one hero convention.**
+Only Overview and a person's own page currently pass a `heroImage` to their
+layout; the other three fall back to a plain heading, or, on People, no
+heading at all. Rather than invent a second "section title" pattern, these
+three pages adopt the same `heroTitle`/`heroImage` props `BaseLayout`/
+`ContentLayout` already gate on. One placeholder hero image is reused across
+Timeline/People/Policies (distinct `heroTitle`/`imageAlt` per page) until real
+photography exists, matching this plan's placeholder-content convention.
+
+
 ## 5. Architecture
 
 ```
@@ -868,6 +915,262 @@ explicitly out of this step's scope and belongs to the content-writing stage.
 `layout.test.ts` --- `jsdom` itself was already an explicit devDependency
 (Step 5's amendment), but its types were only ever resolved transitively.
 
+**Steps 9 onward extend the scaffold above with the site-restructure request
+below. None has been executed yet --- this is the plan only, per the loop's
+own "design scaffold" phase happening before implementation.** Each still
+runs the full eight-part loop when built, and each gets its own commit.
+
+### Step 9 --- Re-run client scripts on soft navigation
+
+**Goal.** Every route stays fully interactive after a `ClientRouter` soft
+navigation, with no hard refresh required.
+
+**Scope.** `src/components/GutterRail.astro`'s inline `<script>` (the mobile
+toggle wiring); `src/components/PageIndex.astro`'s inline `<script>` (the
+`buildPageIndex(document)` call and render). No change to `src/lib/
+rail-toggle.ts` or `src/lib/page-index.ts` --- both are already pure; only the
+moment their side-effecting callers run changes.
+
+**Dependencies / spec.** None; independent of every other step below. Fixes
+the reported "index doesn't load properly, requires a refresh" defect, traced
+to both scripts running their setup once at module-evaluation time instead of
+on `astro:page-load` --- the lifecycle event the theme's own `Nav.astro`/
+`Footer.astro`/`SearchDialog.astro` already listen for on every soft
+navigation.
+
+**Inputs.** The existing top-level script bodies in both components; the
+`astro:page-load` event, already used by four theme components for the
+identical problem.
+
+**Outputs.** Both scripts' setup logic wrapped in `document.addEventListener
+("astro:page-load", () => { ... })`, matching the theme's own convention, so
+first load and every later soft navigation both re-wire the toggle and
+rebuild the index.
+
+**Acceptance.** From `/`, click through to a session page, then a lecture
+page, then back to `/`, using only in-page links (no manual reload), at both
+viewports --- the right-rail page index shows each new page's headings, and
+the mobile rail toggle opens/closes correctly on the page currently open,
+with no console error.
+
+**Constraints.** General interface rule "does every action produce visible
+feedback at the object it happened to" --- a stale index has no error to
+signal it. Do not disable `ClientRouter` as a shortcut --- that is a
+site-wide behaviour change nobody asked for, where the theme's own components
+already show the two-line fix.
+
+**Testing methodology.** No new pure logic, so no new unit test. Acceptance
+is a manual multi-page click-through at both viewports with the console open.
+
+### Step 10 --- Remove the Exam row from WeekRail
+
+**Goal.** `WeekRail` lists exactly the twelve teaching weeks; the exam period
+is reachable only from the Timeline.
+
+**Scope.** `src/components/WeekRail.astro` (drop the `examEntry`/`examHref`
+lookup and the `week-rail-exam` row/CSS); `src/lib/weeks.ts`'s
+`buildWeekRows` (drop the `examHref` parameter and the appended exam row).
+Revises D1 per this extension's D12. Does not touch `TimelineSpine`/
+`TimelineBead`/`src/lib/timeline.ts`, which already carry the Final Exam bead
+independently.
+
+**Dependencies / spec.** D12 only. Independent of Steps 9, 11--14.
+
+**Inputs.** Current `buildWeekRows` signature and its one call site;
+`spec/weeks.test.ts`'s existing exam-row fixtures, updated alongside the
+source change rather than left red.
+
+**Outputs.** A twelve-`<li>` `WeekRail`; `.week-rail-exam` CSS removed;
+`weeks.ts` and its test updated to match.
+
+**Acceptance.** Every page's left rail shows exactly twelve rows, none styled
+as "exam"; `/assessments/final-exam/` is unreachable from the rail but still
+reachable from the Timeline's Final Exam bead, unchanged.
+
+**Constraints.** D12; the removal is the prompt's own explicit instruction,
+so "never remove what you were not asked to remove" is satisfied, not
+violated.
+
+**Testing methodology.** Update `spec/weeks.test.ts`'s existing exam-row
+assertions to assert twelve rows and no exam row --- a modification of an
+existing test file, not a new one, per the one-file-per-concern convention.
+
+### Step 11 --- Timeline spine on the shared column rule
+
+**Goal.** The vertical line on the Timeline page is the same 1px accent rule
+every other page already shows at the content column's left edge, not a
+second, page-local line.
+
+**Scope.** `src/styles/timeline.css` (remove `body:has(.timeline-spine)::after
+{ display: none; }` and `.timeline-spine::before`'s own rule-drawing
+declarations; keep only bead-positioning rules); `src/components/
+TimelineBead.astro`'s styles (shift `.timeline-bead-dot`'s inline-start
+offset to the shared rule's own position expression, the same one
+`astro-theme-university/styles/base.css`'s `body::after` uses). Reverses D5
+per this extension's D13.
+
+**Dependencies / spec.** None; independent of Steps 9, 10, 12--14. Serves the
+same S1 (both marking viewports) the original Timeline step served.
+
+**Inputs.** `astro-theme-university/styles/base.css`'s `body::after` rule and
+its custom-property inputs (`--at-gutter`, `--at-sidebar-inset`,
+`--at-content-inset`, `--at-content-width`); the existing
+`--timeline-rule-width`/`--timeline-rule-offset` tokens being retired.
+
+**Outputs.** Updated `timeline.css`; updated bead offset; the global rule
+visible and unbroken on `/timeline/`, exactly as on every other page.
+
+**Acceptance.** At both viewports, `/timeline/` shows one gold vertical line
+at the same horizontal position as every other page's, each bead's dot
+centred on it; no double line, no gap left by the old suppression.
+
+**Constraints.** "`TimelineBead` must not know its position" (section 2)
+still holds --- the shared offset is a fixed CSS custom property the bead's
+own stylesheet reads, not a value `TimelineSpine` computes or passes in.
+
+**Testing methodology.** CSS-only; no pure logic changed. Acceptance is
+visual inspection at both viewports, comparing the line's position against a
+non-Timeline page in the same session.
+
+### Step 12 --- Shared `at-hero` for Overview, Timeline, People, Policies
+
+**Goal.** Timeline, People and Policies each show the same `at-hero` element
+Overview already does, in place of their current plain heading (or, on
+People, no heading at all).
+
+**Scope.** `src/pages/timeline/index.astro` (add `heroTitle`/`heroImage`/
+`heroImageAlt` to its `ContentLayout` call --- this removes the page's
+plain-`<h1>` fallback automatically, since `ContentLayout` only falls back
+when no hero image is given); `src/pages/people/index.mdx` and
+`src/pages/policies/index.mdx` frontmatter (add `heroImage`/`heroImageAlt`;
+`people/index.mdx` already sets `heroTitle`, `policies/index.mdx` gains one,
+and its hand-written `# Policies and support` `<h1>` is removed since the
+hero now supplies the page's `<h1>`); one shared placeholder hero asset if
+`hero-home.avif` is not reused as-is.
+
+**Dependencies / spec.** None; independent of every other step below.
+
+**Inputs.** `astro-theme-university/components/Hero.astro`'s prop contract
+(`title`, `image`, `imageAlt` all required); `BaseLayout`/`ContentLayout`'s
+existing gate (`heroTitle && resolvedHeroImage`), confirmed to already do
+what's needed once both props are supplied.
+
+**Outputs.** Four pages (Overview unchanged, Timeline/People/Policies newly)
+all rendering `<section class="at-hero">`; no page left with two `<h1>`s.
+
+**Acceptance.** At both viewports, Timeline/People/Policies each show a hero
+image with a title overlay, visually consistent with Overview's.
+
+**Constraints.** D14; visual hierarchy --- the hero title must remain the
+page's only top-level heading.
+
+**Testing methodology.** No new pure logic. Extend `spec/layout.test.ts` with
+one assertion (every built page has exactly one `<h1>`; Timeline/People/
+Policies's HTML each contains `.at-hero`); visual inspection at both
+viewports for the rest.
+
+### Step 13 --- Assessment page template matching the published reference
+
+**Goal.** Every assessment page (lab, assignment or exam alike) is
+restructured to the reference's shape: hero, "The Brief" (with exemplars),
+"What You Submit", "How It's Marked", "Key Dates", "The Spec" (existing
+`SpecList`, unchanged), "Related" (existing `RelatedContent`, unchanged).
+
+**Scope.** `src/content.config.ts`'s `assessments` schema (add optional
+`heroImage`/`heroImageAlt`; `brief: string`, the blockquote prompt;
+`exemplars?: {title, url, description}[]`; `submissionItems?: string[]`;
+`keyDates?: {label, date}[]`; existing `marking`/`weight`/`due`/`spec` fields
+untouched, since `MarkingModel` and `SpecList` already serve two of the six
+sections); `src/pages/assessments/[slug].astro` (hero via `ContentLayout`'s
+existing prop path; add "The Brief" blockquote + exemplar list, "What You
+Submit" list, "Key Dates" list, each rendering only when its frontmatter
+field is present, per the site's existing "renders nothing if absent"
+convention already used by `TeachingTeam`/`RelatedContent`).
+
+**Dependencies / spec.** Independent of Steps 9--12. Step 14's Lecture/Lab/
+Assignment cards link into this route, so this step is sequenced ahead of it,
+though neither step's code imports the other's.
+
+**Inputs.** The published reference's field-by-field structure (hero, brief
++ exemplars, submission list, marking table + rationale, key dates, spec
+checklist, related); `src/components/MarkingModel.astro` (unchanged, already
+serves "How It's Marked"'s table); existing `assignment-1.md`/lab/
+`final-exam` content, which gains the new optional fields with placeholder
+values rather than being rewritten wholesale.
+
+**Outputs.** Extended assessments schema; extended `[slug].astro`; every
+existing assessment entry given placeholder `brief`/`submissionItems`/
+`keyDates` values so the new sections render everywhere, not only where a
+later content pass happens to reach.
+
+**Acceptance.** Every assessment detail page, at both viewports, shows the
+six sections in order, each populated (placeholder or real); the page reads
+as one template applied to every entry, not one bespoke page per entry.
+
+**Constraints.** D11; "one generic route" (D2) --- no second
+`[slug].astro`-like file.
+
+**Testing methodology.** Extend `spec/data-integrity.test.ts` (or add one
+focused test) asserting every `assessments` entry has a non-empty `brief` ---
+a checkable content-completeness contract, in the spirit of the existing
+weight-sums-to-100 check; visual inspection at both viewports for layout and
+order.
+
+### Step 14 --- Session page: Lecture, Lab and (Weeks 4/9) Assignment cards
+
+**Goal.** Each session page drops "Before the session" / "In the session" /
+"Afterwards" / "The Spec", replacing them with a "Lecture x" card, a "Lab x"
+card and, for Weeks 4 and 9 only, an "Assignment x" card --- each a title, a
+short description, and an `at-card` link to the real page --- while Teaching
+team and Related stay exactly where they are.
+
+**Scope.** `src/content.config.ts`'s `sessions` schema (add
+`lecture: reference("lectures")`, `lab: reference("assessments")`, and
+`assignment?: reference("assessments")`, the last present only on the two
+Week 4/9 entries; each reference's own `description` supplies the card's
+description, so no duplicate field is added to `sessions`); `src/pages/
+sessions/[slug].astro` (remove `<Content />` and `SpecList`; add three `Card`
+blocks --- `astro-theme-university/components/Card.astro`, the same
+`at-card` element `index.astro`/`PeopleGrid` already use); every
+`src/content/sessions/*.md` entry (add `lecture`/`lab` frontmatter, and
+`assignment` on Weeks 4 and 9); `src/content/lectures/week-03..week-12.md`
+and two new `src/content/assessments/lab-11.md`/`lab-12.md`, created as
+placeholder content per D10, so every session's references resolve.
+
+**Dependencies / spec.** Depends on D10; benefits from Step 13 landing first
+so the cards point at the redesigned assessment template, though the two are
+not code-coupled.
+
+**Inputs.** `Card.astro`'s prop contract (`title`, `href`, default slot for
+the description); the existing 12-week cap in `content.config.ts`
+(unchanged); `src/lib/timeline.ts`'s `BEAD_ORDER` (gains the two new lab ids
+per D10, so the Timeline stays consistent with the new labs).
+
+**Outputs.** Restructured `[slug].astro`; extended `sessions` schema; 12
+lecture entries, 12 lab entries (10 existing + 2 new), all 12 sessions
+referencing both, and 2 sessions additionally referencing an assignment;
+`BEAD_ORDER` updated to 15 entries (13 existing + 2 new labs --- confirm the
+final count against the brief's own labs-per-week reading when this step is
+built, since D10 fills a gap the original 13-id list did not anticipate).
+
+**Acceptance.** At both viewports, every session page shows Lecture/Lab
+cards (and, on Weeks 4 and 9, an Assignment card) in that order, each linking
+to a real, resolvable page; no session page still renders "Before the
+session"/"In the session"/"Afterwards"/"The Spec"; Teaching team and Related
+are unchanged in position and content.
+
+**Constraints.** "Never remove what you were not asked to remove" --- Teaching
+team and Related are explicitly kept per the prompt and must not be touched
+by this step's removal of the other four sections; D10, D11 (cards point at
+Step 13's template).
+
+**Testing methodology.** Extend `spec/data-integrity.test.ts` with a
+reference-integrity assertion --- every `sessions` entry's `lecture`/`lab`
+(and `assignment`, where present) resolves to a real collection entry, the
+same category of check the suite already runs for other cross-collection
+references; visual inspection at both viewports for card order and content.
+
+
 ## 7. Risks
 
 **The broken-link checker fails the build in Step 1.** Four known inbound links
@@ -915,3 +1218,10 @@ is currently ≈200, not 100. The Step 8 test should assert the sum the moment
 it is written, so the check goes red until real weights replace every
 placeholder across all 14 `assessments` entries, rather than being
 forgotten.
+
+**D10's lab count is a guess, not a confirmed reading of the brief.** Twelve
+weeks need twelve labs, but only ten exist and no thirteenth/fourteenth lab
+is named anywhere read so far. Step 14 finds out for certain when it recreates
+`BEAD_ORDER`; if the brief actually specifies fewer than twelve lab sessions,
+the fallback is a week with no Lab card, which is a smaller, more honest gap
+than inventing content the brief never asked for.
