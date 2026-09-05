@@ -269,6 +269,28 @@ HTML response `pnpm dev`'s on-demand rendering produces, runs the same
 share one implementation and can never drift apart on what counts as
 "missing."
 
+**D19. A session page's sections stack vertically, one column, not two
+side-by-side card grids.** Step 15 rendered each session's Lecture/Lab
+subtitle-and-description block in one `CardGrid`, then a second parallel
+`CardGrid` of the matching cards below it --- correct per D15's
+subtitle-then-description-then-card order within a section, but two
+`CardGrid`s side by side reads as a cluttered, horizontally-scanned grid,
+not "Lecture above, Lab underneath" as directly requested. The fix is
+structural, not cosmetic: one section is one unit (subtitle, description,
+card together), and the units stack in document order in a single column,
+so there is exactly one thing on screen to read top to bottom. This also
+removes the doubled `.at-card-grid { margin-block: var(--at-spacing-xl) }`
+that was compounding non-collapsingly under `.at-main`'s grid layout (every
+`.at-main` child is a grid item, so sibling margins never collapse) ---
+with one container instead of two, that particular doubling is gone by
+construction, not patched around. The remaining gap under `p.lead` and the
+oversized space above the session `h1` are addressed by a small,
+session-page-scoped global style (selector keyed off a marker class this
+page alone renders, e.g. `#main:has(.session-sections) > h1`), rather than
+by editing the shared, unowned theme CSS (`base.css`/`components.css`),
+since the request named the session pages specifically and every other
+page using `ContentLayout` should keep the theme's default spacing.
+
 
 ## 5. Architecture
 
@@ -1787,6 +1809,68 @@ so the gap is closed here rather than left standing on a superseded
 assumption. `pnpm dev` and `pnpm build` now render the same ids for the
 same content, and Step 17's amendment note above should be read as
 superseded on this one point, not as still-current guidance.
+
+### Step 19 --- Session page: one vertical column, not two side-by-side grids
+
+**Goal.** A session page reads top to bottom as one column: Lecture's
+subtitle, description and card together, then Lab's, then (Weeks 4/9)
+Assignment's underneath that --- not two `CardGrid`s of matching width
+laid out for horizontal scanning. The gap under `p.lead` and the space
+above the page's `h1` shrink to what their own content needs, on session
+pages only.
+
+**Scope.** `src/pages/sessions/[slug].astro` only, plus a small
+session-page-scoped `<style>` block in that same file. No theme file
+(`node_modules/...astro-theme-university/...`) is touched. No change to
+`Card.astro`, `CardGrid.astro`, or any other collection's page.
+
+**Dependencies / spec.** D19. Builds directly on Step 15's per-section
+data shape (`sections: {subtitle, entry, href}[]`, already computed in
+this file's frontmatter) --- this step changes only how that array is
+rendered, not what it contains.
+
+**Inputs.** The existing `sections` array and its `subtitle`/`entry`/`href`
+fields (unchanged); `Card`'s existing prop contract (`title`, `href`,
+`headingLevel`); the theme's spacing tokens (`--at-spacing-sm` 0.5rem,
+`--at-spacing-md` 1rem, `--at-spacing-lg` 1.5rem) to pick a deliberate,
+scale-based gap rather than a guessed pixel value.
+
+**Outputs.** The two `CardGrid`s are replaced by one wrapper (e.g.
+`<div class="session-sections">`) containing one block per section ---
+subtitle heading, description paragraph, then that section's `Card` ---
+in document order, stacked vertically with a single controlled gap
+between sections (flex column, not CSS grid, so this page opts back into
+normal margin/gap behaviour instead of `.at-card-grid`'s non-collapsing
+one). A page-scoped global style rule tightens the session `h1`'s top
+margin and the `p.lead` bottom margin, matched only on pages that render
+`.session-sections` so no other `ContentLayout` page is affected.
+
+**Acceptance.** On a session page at 1920x1080 and 390x844: Lecture's
+subtitle, description and card appear as one visual block, fully above
+Lab's equivalent block (Assignment's, when present, fully below Lab's);
+no two sections sit side by side at either viewport. The visible gap
+between the date paragraph / `p.lead` and the first section is visibly
+smaller than the current doubled `at-spacing-xl` gap. The `h1` sits close
+above its following content with no obviously oversized empty band above
+it, on session pages only --- every other page's `h1`/`p.lead` spacing is
+pixel-identical to before this step.
+
+**Constraints.** Do not remove the subtitle-then-description-then-card
+order within a section (D15) --- only the cross-section layout (grid
+columns vs. stacked column) changes. Do not touch shared theme CSS files.
+Do not regress `TeachingTeam`/`RelatedContent` below the sections. Keep
+`Card`'s existing props (`headingLevel="h3"`, `title`, `href`) unchanged.
+
+**Testing methodology.** Update `spec/layout.test.ts`'s session-page DOM
+assertion (or add one alongside it) to assert the new structure: each
+section's subtitle/description/card appear together inside one container
+per section, and the containers appear in `sections` order inside a
+single common parent (not two separate `CardGrid` parents) --- this is
+what actually proves "stacked", since a class name alone doesn't. Keep
+the existing subtitle-before-description-before-card ordering assertion
+from Step 15 passing unchanged. `pnpm check` green. Visual inspection at
+both viewports on at least one session page with two sections and one
+with three (Week 4 or 9, to cover the Assignment case).
 
 ## 7. Risks
 

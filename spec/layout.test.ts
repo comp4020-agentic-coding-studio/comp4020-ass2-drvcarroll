@@ -174,6 +174,34 @@ describe("layout contracts (BUILD_PLAN.md Step 8)", () => {
     }
   });
 
+  // Step 19 (D19): sections stack in one column, not two side-by-side
+  // CardGrids — each section's subtitle/description/card share one
+  // container, and those containers sit in `sections` order inside a
+  // single common parent.
+  it("stacks each session section in one column, not two card grids", () => {
+    const paths = [
+      resolve(DIST, "sessions/01-getting-started/index.html"), // Lecture + Lab
+      resolve(DIST, "sessions/04-session/index.html"), // + Assignment
+    ];
+    for (const path of paths) {
+      const main = parse(path).querySelector("#main")!;
+      const wrapper = main.querySelector(".session-sections")!;
+      expect(wrapper, `${path} has no .session-sections wrapper`).not.toBeNull();
+      expect(main.querySelectorAll(".at-card-grid"), `${path} still renders a CardGrid`).toHaveLength(0);
+
+      const sectionEls = [...wrapper.children];
+      expect(sectionEls.length, `${path}: expected at least 2 sections`).toBeGreaterThanOrEqual(2);
+
+      for (const section of sectionEls) {
+        expect(section.parentNode, `${path}: section has no common parent`).toBe(wrapper);
+        const [heading, description, card] = [...section.children];
+        expect(heading?.tagName, `${path}: section's first child isn't a subtitle`).toBe("H2");
+        expect(description?.tagName, `${path}: section's second child isn't a description`).toBe("P");
+        expect(card?.classList.contains("at-card"), `${path}: section's third child isn't a card`).toBe(true);
+      }
+    }
+  });
+
   // Step 6 / §7 risk: assessment weights must sum to 100% (S4). Expected
   // red until Step 6's 12 placeholder weights are replaced with real ones.
   it("sums every assessment's weight to 100", () => {
