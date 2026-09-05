@@ -65,18 +65,25 @@ body:has(.gutter-rail):not(:has(.at-sidebar)) {
   font-size: var(--at-font-size-sm);
 }
 
+/* Chromium quirk (confirmed live, both Chromium & the named-line spec
+   say otherwise): once .gutter-rail is position:absolute (see above), its
+   grid-column/justify-self/margin-inline all resolve against the OPPOSITE
+   physical side of .at-main's subgrid — verified by testing every other
+   explanation (direction, line numbers vs names, isolated axes) and only
+   this full swap reproduces the correct left/right sides. So --start (the
+   physically-left rail, holding WeekRail) is given the values that name
+   the *end* line pair, and vice versa; each still hugs the content side
+   of its own gutter track, just under the mirrored keyword. */
 .gutter-rail--start {
-  grid-column: full-start / inset-start;
-  /* Hug the content side of the gutter track, not the viewport edge — the
-     track is `1fr` and can be far wider than the rail on a wide screen. */
-  justify-self: end;
-  margin-inline-end: var(--at-spacing-lg);
-}
-
-.gutter-rail--end {
   grid-column: content-end / full-end;
   justify-self: start;
   margin-inline-start: var(--at-spacing-lg);
+}
+
+.gutter-rail--end {
+  grid-column: full-start / inset-start;
+  justify-self: end;
+  margin-inline-end: var(--at-spacing-lg);
 }
 
 /* Hidden above the breakpoint; the toggle only exists below it. */
