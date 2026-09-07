@@ -2087,6 +2087,32 @@ exists in the `people` collection --- this is the same fact the build
 already enforces, made explicit and fast to run without a full `astro
 build`. `pnpm check` green.
 
+**Amendment (post-implementation).** Two things this step's own review
+found, neither changing its Scope or Constraints:
+
+1. `git log --follow` at its default similarity threshold does not walk
+   past the rename commit for either file --- the placeholder-to-bio
+   content swap is only 24% similar (`git diff -M`), below the default
+   50% cutoff rename detection uses. `git mv` was still run before editing
+   (so the rename is the true operation, not a delete-and-add), and the
+   history is fully recoverable with a lower threshold (`git log --follow
+   -M20% -- src/content/people/ivan-sidorov.md` reaches the template
+   commit); the default `--follow` invocation just needs that flag when a
+   rename lands in the same commit as a substantial content rewrite.
+2. `role` is set to the literal `"Course Convenor"` / `"Co-Convenor"`
+   strings from `CONTENT.md`, not the pre-existing `convenor`/`tutor` enum
+   value. `TeachingTeam.astro` (unmodified, per Scope) prints
+   `person.data.role` raw on every one of the 24 session/lecture pages
+   that cite a teacher, so the literal string is what makes that
+   sitewide surface read correctly; `PeopleGrid.astro`'s and
+   `[slug].astro`'s own `roleLabels` dictionaries only recognise the old
+   four-value enum, so a role outside it silently drops their role
+   caption. `PeopleGrid.astro` stayed untouched per Scope (its badge is
+   cosmetic; the card's title and description still render). `[slug].astro`
+   is not scope-protected, so its lookup gained a one-line fallback to the
+   raw role string when the enum lookup misses, so the person page's own
+   "Role" row still renders instead of silently disappearing.
+
 ### Step 22 --- Schema: `lab` becomes optional; Weeks 1 and 12 lose their Lab card
 
 **Goal.** `sessions`' schema stops requiring every week to have a lab,
