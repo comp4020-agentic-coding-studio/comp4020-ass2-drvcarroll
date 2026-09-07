@@ -2345,6 +2345,69 @@ green here. `pnpm check` green with zero documented red assertions
 remaining, for the first time in this plan's history --- record that
 explicitly in this step's own Amendment note once it is actually run.
 
+**Amendment (post-implementation).** Five things resolved or found while
+building:
+
+1. **`final-project.md` is the legacy file D24's own Scope line
+   anticipated confirming, and reading it against `CONTENT.md` shows it
+   is exactly that.** CONTENT.md names only Weekly Labs, Assessment 1,
+   Assessment 2 and the Final Examination --- nothing corresponding to a
+   "final project" --- and its own arithmetic (20 + 20 + 20 + 40 = 100)
+   already accounts for the whole mark without it. Its weight (60) would
+   have made the collection-wide sum 160, not 100, if left published.
+   Per D22's precedent for content the real source supersedes,
+   `final-project.md` is set `published: false` (not deleted) --- this
+   removes it from `getPublishedCollection`/the API graph entirely (its
+   own doc comment: "keeps the node out of the graph, listings, and
+   llms.txt"), which is what makes the weight sum exactly 100 rather than
+   ~136 short of it. `assignment-1.md`'s `related: [final-project]` is
+   dropped in the same edit, since a related link to an unpublished,
+   routeless entry would be dead weight, not a fix RelatedContent needs
+   (it already resolves only published entries).
+2. **The existing `assignment-1.md`'s `weighted` marking (60/40 across
+   "Response to the brief"/"Quality of execution") was itself a generic
+   placeholder, not real content to preserve.** Nothing in CONTENT.md's
+   Assessment 1 section gives a criterion breakdown --- only the eight
+   required design elements --- so inventing that 60/40 split as real
+   would have been exactly the "numbers the brief doesn't support" this
+   step's own Constraints line forbids. All three assessments use
+   `holistic` marking, matching Step 23's labs' reasoning.
+3. **Real dates, derived and documented, not guessed independently.**
+   Assignment 1: end of Week 8 (D24) read as the Friday after Week 8's
+   own Tuesday session date --- 2027-10-01. Assignment 2: after Week 12
+   (26 Oct) in the exam-prep window --- 2027-11-02, a week clear of
+   teaching's end and ten days clear of the exam. Final Exam: CONTENT.md
+   states no date at all, only "two-hour, in-person written examination"
+   --- fixed to `courseMeta.endDate` (2027-11-12), already the exam-period
+   date Step 20 provisioned, so the two are equal by construction (this
+   step's own Outputs line) rather than independently chosen and then
+   reconciled.
+4. **The weight-sum check is green for the first time in this plan's
+   history.** `10 labs x 2 + 20 + 20 + 40 = 100` exactly; both
+   `spec/layout.test.ts` assertions ("sums every assessment's weight to
+   100" and "sums the ten real labs' weight to exactly 20") pass. `pnpm
+   check` now has exactly one red assertion, not two:
+   `spec/data-integrity.test.ts`'s course-period check, still failing on
+   `sessions`/`lectures`' stale Feb--May placeholder dates (Steps 25/26's
+   scope, confirmed untouched by this step --- all three of this step's
+   own dates, and every lab's from Step 23, fall inside
+   `courseMeta`'s 2027-07-27--2027-11-12 period).
+5. **Flag for Step 26, not fixed here (out of this step's file scope).**
+   `sessions/04-session.md` and `09-session.md` carry `assignment:
+   assignment-1`/`assignment-2` from Step 14, chosen before any real due
+   date existed. Week 4 (17 Aug) and Week 9 (5 Oct) no longer line up
+   with this step's real due dates (end of Week 8; after Week 12) the
+   way Step 14's placeholder mapping assumed --- a session page's
+   "Assignment N" card still resolves and links correctly, but the
+   week number in its subtitle and its due date now read as unrelated.
+   Step 26's own Acceptance line already flags this pairing as needing
+   reconfirmation ("whichever carries the assignment field per Step 24's
+   final due-week decision"); this is that reconfirmation, and the
+   finding is that neither Week 4 nor Week 9 is still the right home for
+   its `assignment:` reference. Left as Step 26's decision, not moved
+   here, since re-homing a session's frontmatter is outside this step's
+   declared Scope (the three assessment files).
+
 ### Step 25 --- Lecture bodies: twelve weeks of real content
 
 **Goal.** `src/content/lectures/week-01.md` through `week-12.md` carry
@@ -2409,9 +2472,21 @@ present) lab practical in the student's own terms.
 
 **Acceptance.** `grep -rn STARTER_CONTENT src/content/sessions/` returns
 nothing. `pnpm build` succeeds. Visual inspection at both viewports of
-Week 1 (two sections), Week 4 or 9 (whichever carries the `assignment`
-field per Step 24's final due-week decision --- confirm before writing
-this file) and Week 12 (two sections).
+Week 1 (two sections), whichever week now carries the `assignment` field
+after this step decides where it belongs (see Dependencies), and Week 12
+(two sections).
+
+**Carried in from Step 24's Amendment.** Step 14's placement of `assignment:
+assignment-1` on Week 4 and `assignment: assignment-2` on Week 9 predates
+Step 24's real due dates (end of Week 8; after Week 12) and no longer lines
+up with either. This step must decide the `assignment` field's real home
+before writing session bodies, not keep Step 14's guess: candidates are
+Week 8 (the week Assignment 1 is due) for `assignment-1`, and either Week
+11 (the last week its content depends on) or leaving no session carrying
+`assignment-2` at all (its due date falls after every teaching week, in the
+exam-prep window, so no single week's session page is a more honest home
+than another) --- decide and record the reasoning here, the same way D24
+recorded its own due-date reasoning, rather than silently moving the field.
 
 **Constraints.** Do not reintroduce a `lab:` field on Weeks 1/12 (Step
 22's decision). Do not change the `spec:` field's schema or meaning.
@@ -2571,12 +2646,14 @@ it is written, so the check goes red until real weights replace every
 placeholder across all 14 `assessments` entries, rather than being
 forgotten.
 
-*Resolution (planned, Step 24).* The SLOP4000 content this plan integrates
+*Resolution (executed, Step 24).* The SLOP4000 content this plan integrates
 supplies real weights that sum to exactly 100 (10 labs x 2% + Assignment 1
-20% + Assignment 2 20% + Final Exam 40%) --- once Steps 22--24 land,
-`lab-11.md`/`lab-12.md` are `published: false` (excluded from the sum) and
-every remaining published entry carries its real weight, closing this risk
-for the first time since Step 6 opened it. Not yet executed.
+20% + Assignment 2 20% + Final Exam 40%). `lab-11.md`/`lab-12.md` (Step 22)
+and now `final-project.md` (Step 24, a legacy entry CONTENT.md supplies no
+equivalent for) are all `published: false`, excluded from the sum; every
+remaining published entry carries its real weight. Both `spec/layout.test.ts`
+weight-sum assertions pass --- closed, for the first time since Step 6
+opened it.
 
 **D10's lab count is a guess, not a confirmed reading of the brief.** Twelve
 weeks need twelve labs, but only ten exist and no thirteenth/fourteenth lab
@@ -2600,8 +2677,11 @@ Steps 1--19's placeholder Feb--May 2027 dates are still on disk. This is the
 exact shape of the pre-existing weight-sum risk above: a correct check,
 red because content hasn't caught up to a schema/config decision yet.
 
-*Resolution (planned, Steps 23/24/26).* Once the ten real labs, the two
-assessments plus Final Exam, and the twelve session/lecture bodies land
-with their real 2027-07-27--2027-10-26 (teaching) and post-teaching
-(assessment/exam) dates, every dated entry falls back inside
-`courseMeta`'s period and this check goes green again. Not yet executed.
+*Resolution (partially executed, Steps 23/24; remaining, Step 25/26).* The
+ten real labs (Step 23) and Assignment 1/Assignment 2/Final Exam (Step 24)
+now carry real 2027-07-27--2027-11-12 dates, all inside `courseMeta`'s
+period. `spec/data-integrity.test.ts`'s course-period check is still red,
+but on exactly one remaining cause: `sessions`/`lectures` still carry
+Steps 1--19's stale Feb--May placeholder dates, Step 25/26's scope. Once
+those land with D21's real dates, every dated entry falls inside
+`courseMeta`'s period and this check goes green.
