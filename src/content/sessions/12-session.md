@@ -8,7 +8,6 @@ date: 2027-05-10
 teachers:
   - ivan-sidorov
 lecture: week-12
-lab: lab-12
 spec:
   - the work named on the Lecture and Lab cards has been attempted
 ---

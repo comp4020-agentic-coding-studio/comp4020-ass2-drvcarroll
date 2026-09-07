@@ -8,7 +8,7 @@ date: 2027-04-12
 teachers:
   - ivan-sidorov
 lecture: week-08
-lab: lab-08
+lab: lab-07
 spec:
   - the work named on the Lecture and Lab cards has been attempted
 ---

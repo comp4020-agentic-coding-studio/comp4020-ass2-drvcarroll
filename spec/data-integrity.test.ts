@@ -64,11 +64,15 @@ describe("course data integrity", () => {
         `${node.id} lecture "${lecture}" does not resolve`,
       ).toBe(true);
 
+      // Optional since Step 22 (D22): absent on Weeks 1 and 12, the two
+      // weeks the brief's ten labs don't cover.
       const lab = node.meta?.lab;
-      expect(
-        typeof lab === "string" && assessmentIds.has(lab),
-        `${node.id} lab "${lab}" does not resolve`,
-      ).toBe(true);
+      if (lab !== undefined) {
+        expect(
+          typeof lab === "string" && assessmentIds.has(lab),
+          `${node.id} lab "${lab}" does not resolve`,
+        ).toBe(true);
+      }
 
       const assignment = node.meta?.assignment;
       if (assignment !== undefined) {
@@ -76,6 +80,28 @@ describe("course data integrity", () => {
           typeof assignment === "string" && assessmentIds.has(assignment),
           `${node.id} assignment "${assignment}" does not resolve`,
         ).toBe(true);
+      }
+    }
+  });
+
+  // Step 22 / D22: sessions.lab is now optional. This is the schema-level
+  // contract test — a successful build already proves both shapes parse
+  // (weeks with lab present, weeks 1/12 with it absent); this asserts the
+  // exact split rather than just "the build didn't crash".
+  it("gives every week 2-11 a lab and no session a lab-11/lab-12 reference", () => {
+    const sessions = api.nodes.filter((node) => node.type === "sessions");
+    for (const node of sessions) {
+      const week = node.meta?.week;
+      const lab = node.meta?.lab;
+      if (week === 1 || week === 12) {
+        expect(lab, `${node.id} (week ${week}) should have no lab`).toBeUndefined();
+      } else {
+        expect(typeof lab === "string", `${node.id} (week ${week}) should have a lab`).toBe(true);
+      }
+      if (typeof lab === "string") {
+        expect(lab, `${node.id} references the unpublished lab-11/lab-12`).not.toMatch(
+          /^lab-(11|12)$/,
+        );
       }
     }
   });

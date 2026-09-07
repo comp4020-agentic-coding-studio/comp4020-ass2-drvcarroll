@@ -75,9 +75,10 @@ describe("layout contracts (BUILD_PLAN.md Step 8)", () => {
     expect(missing, `headings with no id:\n${missing.join("\n")}`).toEqual([]);
   });
 
-  // Step 6/14 (D9's documented order; Step 14 extends it to 15 beads).
+  // Step 6/14 (D9's documented order); Step 22 (D22) drops lab-11/lab-12,
+  // the two weeks the brief's ten real labs don't cover, to 13 beads.
   // Step 16 (D16): each bead now shows title, date, then description.
-  it("renders /timeline/ with 15 beads in the documented semester order", () => {
+  it("renders /timeline/ with 13 beads in the documented semester order", () => {
     const beads = parse(resolve(DIST, "timeline/index.html")).querySelectorAll(
       "ol.timeline-spine > li.timeline-bead",
     );
@@ -180,7 +181,7 @@ describe("layout contracts (BUILD_PLAN.md Step 8)", () => {
   // single common parent.
   it("stacks each session section in one column, not two card grids", () => {
     const paths = [
-      resolve(DIST, "sessions/01-getting-started/index.html"), // Lecture + Lab
+      resolve(DIST, "sessions/02-first-review/index.html"), // Lecture + Lab
       resolve(DIST, "sessions/04-session/index.html"), // + Assignment
     ];
     for (const path of paths) {
@@ -199,6 +200,18 @@ describe("layout contracts (BUILD_PLAN.md Step 8)", () => {
         expect(description?.tagName, `${path}: section's second child isn't a description`).toBe("P");
         expect(card?.classList.contains("at-card"), `${path}: section's third child isn't a card`).toBe(true);
       }
+    }
+  });
+
+  // Step 22 (D22): Weeks 1 and 12 have no lab, so their session page
+  // renders exactly one section (Lecture only), not a stray empty block.
+  it("renders exactly one section on Weeks 1 and 12, which have no lab", () => {
+    for (const id of ["01-getting-started", "12-session"]) {
+      const main = parse(resolve(DIST, "sessions", id, "index.html")).querySelector("#main")!;
+      const wrapper = main.querySelector(".session-sections")!;
+      expect(wrapper, `${id} has no .session-sections wrapper`).not.toBeNull();
+      expect(wrapper.children.length, `${id}: expected exactly one section`).toBe(1);
+      expect(wrapper.children[0].querySelector("h2")?.textContent).toMatch(/^Lecture \d+$/);
     }
   });
 

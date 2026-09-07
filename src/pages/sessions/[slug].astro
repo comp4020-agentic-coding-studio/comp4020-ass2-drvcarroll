@@ -16,13 +16,16 @@ export async function getStaticPaths() {
 
 const { session } = Astro.props;
 const lecture = await getEntry(session.data.lecture);
-const lab = await getEntry(session.data.lab);
+// Absent on Weeks 1 and 12 (D22): ten labs cover Weeks 2-11 only.
+const lab = session.data.lab ? await getEntry(session.data.lab) : undefined;
 const assignment = session.data.assignment ? await getEntry(session.data.assignment) : undefined;
 
 // Per-section subtitle, referenced entry and its page path (D15).
 const sections = [
   { subtitle: `Lecture ${session.data.week}`, entry: lecture, href: `/lectures/${lecture.id}/` },
-  { subtitle: `Lab ${session.data.week}`, entry: lab, href: `/assessments/${lab.id}/` },
+  ...(lab
+    ? [{ subtitle: `Lab ${session.data.week}`, entry: lab, href: `/assessments/${lab.id}/` }]
+    : []),
   ...(assignment
     ? [{ subtitle: `Assignment ${session.data.week}`, entry: assignment, href: `/assessments/${assignment.id}/` }]
     : []),

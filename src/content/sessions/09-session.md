@@ -8,7 +8,7 @@ date: 2027-04-19
 teachers:
   - fulan-al-fulani
 lecture: week-09
-lab: lab-09
+lab: lab-08
 assignment: assignment-2
 spec:
   - the work named on the Lecture and Lab cards has been attempted

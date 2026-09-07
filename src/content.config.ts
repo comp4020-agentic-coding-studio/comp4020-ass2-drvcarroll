@@ -40,7 +40,9 @@ export const collections = {
         date: z.coerce.date(),
         teachers: teacherRefs.optional(),
         lecture: reference("lectures"),
-        lab: reference("assessments"),
+        // Absent on Weeks 1 and 12 (D22): the brief supplies exactly ten
+        // labs, mapped onto Weeks 2-11 only.
+        lab: reference("assessments").optional(),
         // Present only on the Week 4/9 entries (Step 14).
         assignment: reference("assessments").optional(),
       })

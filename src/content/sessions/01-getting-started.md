@@ -8,7 +8,6 @@ date: 2027-02-22
 teachers:
   - fulan-al-fulani
 lecture: week-01
-lab: lab-01
 spec:
   - your development environment runs the course's toolchain
   - you can build and preview the site locally
