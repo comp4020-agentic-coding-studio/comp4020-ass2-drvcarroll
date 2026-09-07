@@ -2618,6 +2618,41 @@ a `slides:` field resolves to a deck route present in the build output
 check:evidence` confirms zero remaining markers in `src/decks/`. `pnpm
 check` green.
 
+**Amendment (post-implementation).**
+
+1. **Extended `spec/data-integrity.test.ts` rather than adding
+   `spec/decks.test.ts`.** The new assertion reads the same
+   `dist/api/index.json` fixture the file's other four tests already
+   load, and belongs to the same "does a cross-collection reference
+   resolve" family as the existing lecture/lab/assignment checks --- a
+   new file would have duplicated that fixture load for no separation
+   of concern.
+2. **`_class: impact` placement: each week's opening slide, plus Week
+   12's literal "Close" slide only.** The plan's own criterion is
+   title/close emphasis, not "last slide of every deck" --- most weeks'
+   final slides are recaps or bridges ("Takeaways", "Looking Ahead",
+   "Bridge to Distribution"), not closes, so only Week 12's slide named
+   "Close" earns the same treatment as every week's title slide.
+3. **`pnpm check:evidence` is not clean, and Step 27 does not close
+   it.** Two failures pre-date this step and sit outside its scope
+   (`src/decks/`, `src/content/lectures/*.md`, `spec/`): PROCESS.md's
+   still-template overview comment, and two placeholder commit hashes
+   cited somewhere in the repo's process evidence. Confirmed pre-existing
+   by stashing this step's diff and re-running `pnpm check:evidence`
+   against Step 26's committed state --- identical failures. `grep -rn
+   STARTER_CONTENT src/decks/` does return nothing, satisfying this
+   step's own narrower acceptance line. Step 28's "Final sweep" already
+   lists `pnpm check:evidence` exits 0" as its own acceptance criterion,
+   so this is a confirmed finding for that step to fix, not a gap this
+   one introduced.
+4. **Deck content was generated from `CONTENT.md` programmatically, not
+   transcribed by hand**, since its Lecture decks section has a fully
+   regular `**Slide N: Title**` / `- bullet` structure across all twelve
+   weeks. Per-week slide and bullet counts were diffed against the
+   source before any file was written (20--22 slides, 62--82 bullets per
+   week, matching exactly), which is a stronger accuracy guarantee than
+   line-by-line manual review would have been for content this size.
+
 ### Step 28 --- Final sweep: evidence gate, weight sum, whole-site pass
 
 **Goal.** The batch closes: no `STARTER_CONTENT` marker remains anywhere
