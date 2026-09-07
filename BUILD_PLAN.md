@@ -2255,6 +2255,38 @@ closes. `pnpm check:evidence` re-run to confirm the marker count for these
 ten files has dropped to zero without affecting the count for files this
 step does not touch.
 
+**Amendment (post-implementation).** Three things confirmed or found while
+building:
+
+1. **The 20% total needed no deviation.** CONTENT.md's own "Weekly Lab
+   Work --- 20% of course mark" heading matches the plan's 10 x 2% =
+   20% reading exactly; nothing in the source implies an uneven split,
+   so `weight: 2` on every lab is the arithmetic already committed to,
+   not a guess confirmed after the fact.
+2. **`due` was computed directly from CONTENT.md's schedule table, not
+   read from the sessions collection.** The Inputs line's "matching that
+   week's session date" assumed sessions 02--11 already carried D21's
+   real 2027-07-27-onward dates; they still carry Steps 1--19's stale
+   Feb--May placeholder dates (Step 26's scope, untouched here). Using
+   those would have put every lab's `due` outside `courseMeta`'s real
+   period. Each lab's `due` is instead the literal date CONTENT.md's
+   Weekly schedule table gives for that lab's week (e.g. Lab 6 --- Week
+   7 --- 21 September, correctly landing after the mid-semester gap),
+   which is what "the week it is taught" means once D21's calendar, not
+   the placeholder one, is the one in force.
+3. **A new named test, `spec/layout.test.ts`'s "sums the ten real labs'
+   weight to exactly 20"**, added per this step's own testing
+   methodology --- passes (50/52 tests green). `pnpm check` remains red
+   on exactly the two pre-existing, documented assertions: the
+   whole-collection weight sum (now 136.66, not ~200 --- the ten labs'
+   real 20 replaced their share of the old 8.33-each placeholders, but
+   `assignment-2`/`final-exam`/`final-project`'s placeholder weights are
+   Step 24's scope, untouched) and the course-period date range (now
+   failing only on the still-placeholder `sessions`/`lectures` dates,
+   Step 25/26's scope --- all ten labs' real `due` dates fall inside
+   `courseMeta`'s period, confirmed). Both are the same failure reasons
+   as before this step, not new ones it introduced.
+
 ### Step 24 --- Assignment 1, Assignment 2, Final Exam: content, weight, dates
 
 **Goal.** The three large assessments carry their real briefs, weights
