@@ -7,6 +7,7 @@ week: 2
 date: 2027-08-03
 teachers:
   - ivan-sidorov
+slides: /decks/week-02/
 related:
   - sessions/02-first-review
   - assessments/assignment-1

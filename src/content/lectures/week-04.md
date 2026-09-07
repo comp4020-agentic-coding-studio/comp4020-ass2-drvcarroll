@@ -7,6 +7,7 @@ week: 4
 date: 2027-08-17
 teachers:
   - ivan-sidorov
+slides: /decks/week-04/
 related:
   - sessions/04-session
 ---

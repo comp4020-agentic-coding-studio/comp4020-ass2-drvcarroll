@@ -1,0 +1,191 @@
+---
+title: From Idea to Malware
+description: Week 2's deck --- from idea to malware, slide by slide
+---
+
+{/* _class: impact */}
+
+# Week Overview
+
+- Threat models and motivations
+- Malware development lifecycle
+- Anatomy of a malicious program
+- Analysis of historical examples
+
+---
+
+## Why Start with Motivation?
+
+- Technical capability without motive produces toys
+- Motive without capability produces failed attempts
+- Real campaigns begin with a reason
+
+---
+
+## Common Motivations
+
+- Financial gain
+- Espionage
+- Disruption or destruction
+- Ideological or political signalling
+- Personal grievance
+
+---
+
+## Financial Motivation
+
+- Ransomware as product
+- Banking trojans and credential theft
+- Monetisation infrastructure becomes part of the design
+
+---
+
+## Espionage Motivation
+
+- Long-term access preferred over immediate impact
+- Data value often exceeds system damage
+- Operational security requirements rise sharply
+
+---
+
+## Disruption and Destruction
+
+- Visibility is sometimes the goal
+- Collateral damage is frequently accepted
+- Attribution pressure increases
+
+---
+
+## Threat Modelling Basics
+
+- Who is the target?
+- What assets matter?
+- What capabilities does the defender possess?
+- What constraints does the attacker accept?
+
+---
+
+## Attacker Resource Model
+
+- Time available
+- Skill level
+- Infrastructure budget
+- Tolerance for detection
+
+---
+
+## Defender Resource Model
+
+- Monitoring maturity
+- Incident response speed
+- Patching discipline
+- User awareness level
+
+---
+
+## The Malware Development Lifecycle
+
+- Idea and requirements
+- Design and architecture
+- Implementation
+- Testing in controlled environments
+- Deployment and distribution
+- Maintenance and updates
+- Decommissioning or abandonment
+
+---
+
+## Requirements Gathering (Hostile Version)
+
+- What must the software achieve?
+- What must it never reveal?
+- How long must it remain useful?
+- Under what conditions should it self-destruct?
+
+---
+
+## Design Constraints
+
+- Stealth vs capability trade-offs
+- Platform support decisions
+- Update and command channel design
+- Failure modes under analysis
+
+---
+
+## Anatomy of a Malicious Program
+
+- Loader or dropper
+- Core payload
+- Persistence mechanisms
+- Communication module
+- Configuration and staging data
+
+---
+
+## Loader Responsibilities
+
+- Initial execution
+- Environment checks
+- Privilege or capability elevation
+- Handoff to payload
+
+---
+
+## Payload Responsibilities
+
+- Primary hostile function
+- Data collection or system modification
+- Interaction with command infrastructure
+
+---
+
+## Supporting Infrastructure
+
+- Build systems
+- Staging servers
+- Command-and-control hosts
+- Payment or exfiltration endpoints
+
+---
+
+## Historical Example Structure
+
+- Choose a well-documented campaign
+- Identify stated or inferred motivation
+- Map observed components to lifecycle stages
+- Note where engineering quality was high or low
+
+---
+
+## Common Lifecycle Failures
+
+- Over-ambitious scope
+- Insufficient testing against real defences
+- Infrastructure that cannot be replaced
+- Operators who reuse identifiers
+
+---
+
+## Lab Preview — From Idea to Threat Model
+
+- Receive a fictional scenario
+- Extract motivation and constraints
+- Produce a structured lifecycle and threat model
+- Justify each design decision
+
+---
+
+## Key Questions for This Week
+
+- What problem is the malware actually solving for its author?
+- Which lifecycle stage is most likely to fail first?
+- How does motivation shape architecture?
+
+---
+
+## Takeaways
+
+- Malware begins as an idea under constraints
+- Threat modelling is the first engineering step
+- Anatomy follows from purpose, not from fashion

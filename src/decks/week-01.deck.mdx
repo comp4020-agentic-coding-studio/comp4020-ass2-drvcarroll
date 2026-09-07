@@ -1,48 +1,185 @@
 ---
-title: Opening lecture
-description: The placeholder deck — replace it with a real deck for your course
----
-
-# Opening lecture
-
-{/* STARTER_CONTENT: replace this deck, then remove this comment. */}
-
-Replace this deck. It is here to show that slides are part of the site, built
-from the same markdown as everything else.
-
----
-
-## Slides are markdown
-
-A `---` starts a new slide. Everything else is ordinary markdown: headings,
-lists, links, tables, images, fenced code.
-
-- one idea per slide
-- the fewest words that carry it
-- the deck is a performance artefact, so it can say things a page wouldn't
-
+title: Introduction to Malware
+description: Week 1's deck --- introduction to malware, slide by slide
 ---
 
 {/* _class: impact */}
 
-# A slide class
+# Course Title
 
-`{/* _class: impact */}` fills the slide with the brand colour. `quote`,
-`banner` and `centered` are the others the theme styles.
+- SLOP4xxx — Introduction to Malware Production
+- Welcome to the only course that treats malware as a serious software engineering problem
+- Professor Ivan Sidorov & Professor Fulan Al-Fulani
 
 ---
 
-## What else is here
+## Who We Are
 
-```sh
-pnpm dev
-pnpm check
-```
+- Professor Sidorov: malware lifecycle modelling, operational security, institutional management of malicious research
+- Professor Al-Fulani: cyber operations, attribution, distinguishing advanced malware from poorly maintained enterprise software
+- Both have spent careers on the other side of the fence
 
-The second command proves the deck compiles with the rest of the site. Use the
-first to inspect every slide at the desktop and phone marking viewports; slide
-fit and legibility are visual judgements.
+---
 
-The [astromotion](https://github.com/ANUcybernetics/astromotion) README has the
-rest of the syntax: speaker notes, backgrounds, QR codes, fragments, and
-components hydrated per slide.
+## What This Course Is Not
+
+- Not a how-to for real malware
+- Not ethical hacking theatre
+- Not a catalogue of current CVEs
+- A systems course about hostile software as an engineering discipline
+
+---
+
+## Learning Outcomes
+
+- Understand malware as a complete software production problem
+- Map the full lifecycle from idea to operational use
+- Analyse architecture, delivery, persistence and control
+- Evaluate operational security failures with appropriate confidence
+
+---
+
+## What Counts as Malware?
+
+- Software written or deployed with hostile intent
+- Intent matters more than specific techniques
+- The same code can be legitimate tool or malware depending on context and purpose
+
+---
+
+## The Intent Problem
+
+- Remote administration tools vs remote access trojans
+- Keyloggers used by parents vs keyloggers used by criminals
+- Where does "malicious" begin?
+
+---
+
+## Early History
+
+- Experimental self-replicating programs of the 1970s
+- Academic curiosity rather than profit or politics
+- Limited damage, limited ambition
+
+---
+
+## The 1980s Shift
+
+- First widespread personal-computer viruses
+- Floppy disk as primary vector
+- Proof-of-concept becomes real nuisance
+
+---
+
+## Commercialisation and Professionalisation
+
+- Rise of organised groups and later nation-state actors
+- Malware becomes a product with customers, support and update cycles
+- Software engineering practices appear on both sides
+
+---
+
+## Major Categories Overview
+
+- Viruses and worms
+- Trojans and droppers
+- Ransomware
+- Spyware and information stealers
+- Botnets and remote access tools
+
+---
+
+## Viruses and Worms
+
+- Self-replicating code
+- Viruses require a host; worms propagate independently
+- Historical impact largely tied to naive network design
+
+---
+
+## Trojans and Droppers
+
+- Deceptive delivery of secondary payloads
+- Social engineering as primary infection vector
+- The "one more download" problem
+
+---
+
+## Ransomware
+
+- Encryption as a business model
+- Payment infrastructure as critical dependency
+- Recovery difficulty often exceeds technical sophistication
+
+---
+
+## Spyware and Stealers
+
+- Long-term data collection
+- Credential harvesting
+- Silent operation preferred over dramatic effects
+
+---
+
+## Botnets and RATs
+
+- Distributed control of compromised hosts
+- Command infrastructure becomes the real asset
+- Scale changes both capability and risk
+
+---
+
+## Malware as Software Production
+
+- Requirements, design, implementation, testing, deployment, maintenance
+- Version control, modularity, configuration management
+- The same engineering problems appear under different constraints
+
+---
+
+## Why Ordinary Software Engineering Applies
+
+- Reliability under hostile conditions
+- Stealth as a non-functional requirement
+- Update mechanisms that must survive defender scrutiny
+
+---
+
+## Constraints Unique to Malware
+
+- No legitimate support channels
+- Detection is an active adversary
+- Attribution risk is permanent
+
+---
+
+## Course Structure Preview
+
+- Weeks 2–8: production lifecycle
+- Weeks 9–11: analysis, detection, operational security
+- Week 12: synthesis and examination preparation
+
+---
+
+## Assessment Overview
+
+- Weekly labs (20%)
+- Assessment 1: My First Malware (20%)
+- Assessment 2: Don't Get Caught (20%)
+- Final examination (40%)
+
+---
+
+## Expectations
+
+- Deadpan seriousness about a farcical topic
+- All practical work uses deliberately benign samples and simulated environments
+- Curiosity is required; real malice is not
+
+---
+
+## Questions Before We Begin
+
+- What do you already believe about malware?
+- Where does software engineering end and "malicious" begin?
+- Why might a university course on this subject exist?

@@ -1,0 +1,173 @@
+---
+title: Command, Control & Communication
+description: Week 8's deck --- command, control & communication, slide by slide
+---
+
+{/* _class: impact */}
+
+# Week Overview
+
+- Malware communicating with its operator
+- Basic command-and-control concepts
+- Information exchange
+- Infrastructure dependencies
+- What happens when the server gets switched off?
+
+---
+
+## Why C2 Exists
+
+- Static malware has limited usefulness
+- Operators need status, data and control
+- Updates and tasking require a channel
+
+---
+
+## Basic C2 Model
+
+- Implant on target
+- Command server or intermediary
+- Operator console
+- Bidirectional or primarily implant-initiated communication
+
+---
+
+## Communication Directions
+
+- Implant to server (beaconing, exfiltration)
+- Server to implant (tasking, updates)
+- Frequency and volume trade-offs
+
+---
+
+## Common Channel Types
+
+- Direct IP or domain connections
+- Domain generation algorithms
+- Legitimate web services and APIs
+- Peer-to-peer or mesh approaches
+
+---
+
+## Protocol Choices
+
+- Custom binary protocols
+- HTTP/HTTPS mimicry
+- DNS tunnelling
+- Other covert channels
+
+---
+
+## Information Exchange Content
+
+- Heartbeats and status
+- Collected data
+- Commands and configuration
+- Binary updates
+
+---
+
+## Infrastructure Dependencies
+
+- Servers must remain reachable
+- Domains and certificates must be managed
+- Operator access to the infrastructure must be protected
+
+---
+
+## Resilience Techniques
+
+- Multiple fallback channels
+- Domain generation or fast flux
+- Use of high-reputation services
+- Encryption and obfuscation of traffic
+
+---
+
+## What Happens When the Server Is Switched Off?
+
+- Implants may continue local activity
+- Beacons fail and create detectable patterns
+- Operators lose visibility and control
+- Campaign effectively ends for practical purposes
+
+---
+
+## Detection Surface of C2
+
+- Periodic beaconing
+- Unusual destinations or volumes
+- Protocol anomalies
+- Certificate or domain reputation
+
+---
+
+## Lab Preview — C2 Communications Laboratory
+
+- Analyse captured benign C2-style traffic
+- Build a simple request/response simulator
+- Observe patterns and dependencies
+
+---
+
+## Design Goals for C2
+
+- Reliability of reachability
+- Low visibility to network monitoring
+- Ability to task and update
+- Graceful degradation when infrastructure is lost
+
+---
+
+## Trade-offs
+
+- Complexity of channel versus ease of detection
+- Centralised control versus distributed resilience
+- Volume of data versus stealth
+
+---
+
+## Common Failures
+
+- Single hard-coded C2 address
+- Predictable beacon timing
+- Unencrypted or poorly obfuscated traffic
+- Infrastructure that cannot be replaced
+
+---
+
+## Key Questions
+
+- How does the implant discover its controller?
+- What information must travel in each direction?
+- What is the recovery plan when primary C2 is lost?
+
+---
+
+## Relationship to Earlier Stages
+
+- Distribution must deliver a C2-capable implant
+- Persistence must keep the communication module alive
+- Architecture must allow channel replacement
+
+---
+
+## Takeaways
+
+- C2 turns independent implants into a managed system
+- Infrastructure availability is a single point of failure
+- Communication patterns are a primary detection opportunity
+
+---
+
+## Mid-Course Synthesis
+
+- Full production path now covered
+- Remaining weeks shift to analysis, defence and operational security
+
+---
+
+## Looking Ahead
+
+- How do defenders understand what malware is doing?
+- Malware analysis next

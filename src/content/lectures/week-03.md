@@ -7,6 +7,7 @@ week: 3
 date: 2027-08-10
 teachers:
   - fulan-al-fulani
+slides: /decks/week-03/
 related:
   - sessions/03-session
 ---

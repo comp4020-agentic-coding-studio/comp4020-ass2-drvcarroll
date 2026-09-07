@@ -1,0 +1,171 @@
+---
+title: Infiltration
+description: Week 5's deck --- infiltration, slide by slide
+---
+
+{/* _class: impact */}
+
+# Week Overview
+
+- How malware gets into a target environment
+- Social engineering
+- Exploiting software weaknesses
+- Physical and network vectors
+- Case studies in successful infiltration
+
+---
+
+## Initial Access as a Distinct Problem
+
+- Separate from later stages
+- Often the highest-risk moment for the operator
+- Success rate determines campaign viability
+
+---
+
+## Social Engineering Fundamentals
+
+- Manipulation of human decision making
+- Trust, urgency, authority, curiosity
+- Still the most consistent initial access method
+
+---
+
+## Common Social Engineering Forms
+
+- Phishing and spear-phishing
+- Pretexting and impersonation
+- Watering-hole style content
+- Supply-chain social elements
+
+---
+
+## Technical Exploitation
+
+- Known vulnerabilities in software
+- Zero-day versus n-day economics
+- Exploit reliability and stability concerns
+
+---
+
+## Exploit Delivery Methods
+
+- Drive-by downloads
+- Malicious documents
+- Network service attacks
+- Client-side versus server-side
+
+---
+
+## Physical Vectors
+
+- Removable media
+- Hardware implants
+- Physical access to devices
+- Rare but high-impact when available
+
+---
+
+## Network Vectors
+
+- Exposed services
+- Lateral movement precursors
+- Weak authentication and configuration
+
+---
+
+## Supply-Chain Infiltration
+
+- Compromised updates or libraries
+- Trusted distribution channels
+- High trust, high impact, high cost
+
+---
+
+## Choosing a Vector
+
+- Target environment constraints
+- Operator risk tolerance
+- Required privilege level after entry
+- Expected defender monitoring
+
+---
+
+## Case Study Method
+
+- Identify the initial access vector used
+- Note supporting social or technical elements
+- Observe what made detection delayed
+
+---
+
+## Evidence of Infiltration
+
+- Email headers and attachments
+- Web proxy and DNS logs
+- Endpoint process and file events
+- Authentication anomalies
+
+---
+
+## Why Some Campaigns Fail at This Stage
+
+- Poor targeting
+- Overly generic lures
+- Exploits that crash or are patched
+- Monitoring that catches the first attempt
+
+---
+
+## Lab Preview — Infiltration Investigation
+
+- Examine simulated phishing, vulnerability, media, network and supply-chain evidence
+- Identify and compare vectors
+- Reconstruct likely sequence of events
+
+---
+
+## Comparative Analysis
+
+- Which vector left the most artefacts?
+- Which required the least user interaction?
+- Which scaled most easily?
+
+---
+
+## Trade-offs in Vector Selection
+
+- Reliability versus stealth
+- Cost versus reusability
+- Skill required versus success probability
+
+---
+
+## Key Questions
+
+- What is the weakest link in the target environment?
+- How much operator exposure does each vector create?
+- What would cause the infiltration to be noticed immediately?
+
+---
+
+## Design Implications
+
+- Infiltration method shapes later architecture
+- Some vectors constrain payload size or language
+- Others constrain required privileges
+
+---
+
+## Takeaways
+
+- Initial access is a distinct engineering problem
+- Social engineering remains dominant for good reason
+- Every successful infiltration leaves a story in the logs
+
+---
+
+## Looking Ahead
+
+- Once inside, the problem becomes staying inside
+- Persistence is next

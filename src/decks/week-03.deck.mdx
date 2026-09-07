@@ -1,0 +1,169 @@
+---
+title: Malware Architecture
+description: Week 3's deck --- malware architecture, slide by slide
+---
+
+{/* _class: impact */}
+
+# Week Overview
+
+- Components of a malware system
+- Payloads, loaders and supporting infrastructure
+- Designing for modularity
+- Why malware increasingly resembles ordinary software
+
+---
+
+## System vs Single Binary
+
+- Modern malware is rarely a single executable
+- Multiple cooperating components
+- Infrastructure is part of the system
+
+---
+
+## Core Architectural Layers
+
+- Delivery and installation
+- Execution and payload
+- Persistence
+- Command and control
+- Supporting services
+
+---
+
+## Loader / Dropper Role
+
+- First code that runs
+- Responsible for environment preparation
+- Often disposable or frequently changed
+
+---
+
+## Payload Role
+
+- Implements the actual hostile function
+- May be staged in multiple pieces
+- Often the most carefully protected component
+
+---
+
+## Configuration Data
+
+- Hard-coded vs dynamically retrieved
+- Encryption and obfuscation of settings
+- Ability to change behaviour without recompilation
+
+---
+
+## Supporting Infrastructure Components
+
+- Build and packaging systems
+- Staging and distribution servers
+- Command servers
+- Exfiltration or payment endpoints
+
+---
+
+## Modularity Benefits
+
+- Independent update of components
+- Reduced blast radius when one piece is detected
+- Specialisation of development effort
+
+---
+
+## Modularity Costs
+
+- Increased complexity of coordination
+- More network or filesystem artefacts
+- Greater chance of inconsistent versions
+
+---
+
+## Interface Design Between Modules
+
+- Clear contracts for data and control flow
+- Versioning of interfaces
+- Failure handling when a module is missing
+
+---
+
+## Why Malware Looks Like Ordinary Software
+
+- Same languages and build tools
+- Same need for reliability and maintainability
+- Same pressure to ship updates
+
+---
+
+## Shared Engineering Practices
+
+- Source control
+- Automated builds
+- Staged testing
+- Configuration management
+
+---
+
+## Differences That Remain
+
+- No public issue tracker
+- Detection is an active opponent
+- Attribution risk shapes every design choice
+
+---
+
+## Design for Replacement
+
+- Assume any single host or binary will be burned
+- Prefer designs that allow rapid redeployment
+- Avoid single points of failure in infrastructure
+
+---
+
+## Case Study Approach
+
+- Examine a modular family
+- Identify loader, payload, C2 and configuration
+- Note how modules evolved over time
+
+---
+
+## Anti-Patterns in Architecture
+
+- Monolithic binaries that do everything
+- Hard-coded infrastructure that cannot change
+- Tight coupling that forces full rebuilds
+
+---
+
+## Lab Preview — Build a Malware Blueprint
+
+- Design a modular, non-functional architecture
+- Define modules, interfaces and responsibilities
+- Justify modularity decisions
+
+---
+
+## Evaluation Criteria for Architecture
+
+- Clarity of component roles
+- Ease of independent update
+- Resilience to partial compromise
+
+---
+
+## Key Questions
+
+- Which component is most likely to be detected first?
+- How would you replace a burned module?
+- Where does complexity actually help?
+
+---
+
+## Takeaways
+
+- Architecture is a first-class concern
+- Modularity is both strength and liability
+- Good malware design looks increasingly like good software design under hostile constraints

@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
@@ -103,6 +103,20 @@ describe("course data integrity", () => {
           /^lab-(11|12)$/,
         );
       }
+    }
+  });
+
+  // Step 27: every lecture's `slides` field must resolve to a deck route
+  // that actually built, not merely satisfy the schema's URL-shape regex.
+  it("resolves every lecture's slides field to a built deck route", () => {
+    const lectures = api.nodes.filter((node) => node.type === "lectures");
+    expect(lectures.length).toBe(12);
+    for (const node of lectures) {
+      const slides = node.meta?.slides;
+      expect(typeof slides === "string", `${node.id} has no slides field`).toBe(true);
+      const route = String(slides).replace(/^\//, "").replace(/\/$/, "");
+      const builtPath = resolve("dist", route, "index.html");
+      expect(existsSync(builtPath), `${node.id} slides route "${slides}" did not build`).toBe(true);
     }
   });
 });

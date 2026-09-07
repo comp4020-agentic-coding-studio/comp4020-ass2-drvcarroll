@@ -7,6 +7,7 @@ week: 11
 date: 2027-10-19
 teachers:
   - fulan-al-fulani
+slides: /decks/week-11/
 related:
   - sessions/11-session
 ---

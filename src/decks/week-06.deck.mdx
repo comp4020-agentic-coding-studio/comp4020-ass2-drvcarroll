@@ -1,0 +1,167 @@
+---
+title: Persistence
+description: Week 6's deck --- persistence, slide by slide
+---
+
+{/* _class: impact */}
+
+# Week Overview
+
+- Surviving reboots and interruptions
+- Maintaining access
+- Persistence strategies
+- Why removing malware is harder than finding it
+
+---
+
+## Why Persistence Matters
+
+- Single execution is rarely enough
+- Reboots, logoffs and process terminations are normal
+- Long-term objectives require surviving normal system life
+
+---
+
+## Categories of Persistence
+
+- Autostart mechanisms
+- Service and scheduled task installation
+- Modification of existing legitimate programs
+- Firmware or boot-level techniques
+
+---
+
+## Simple Autostart Locations
+
+- Run keys and startup folders
+- Well-known, heavily monitored
+- Easy to implement, easy to detect
+
+---
+
+## Service-Based Persistence
+
+- Windows services, systemd units, launch agents
+- Privilege and restart behaviour advantages
+- More artefacts but greater resilience
+
+---
+
+## Scheduled and Event-Driven Persistence
+
+- Time-based or condition-based re-execution
+- Can appear less continuous
+- Useful for low-and-slow activity
+
+---
+
+## Hijacking Legitimate Programs
+
+- DLL search order
+- Application shimming
+- Shortcut or configuration modification
+- Blends with normal system behaviour
+
+---
+
+## Boot and Firmware Persistence
+
+- High privilege, high impact, high complexity
+- Difficult to remove without specialised tools
+- Rare in ordinary campaigns
+
+---
+
+## Multiple Persistence Mechanisms
+
+- Redundancy against partial cleanup
+- Different mechanisms for different privilege levels
+- Risk of increased detection surface
+
+---
+
+## Persistence and Privilege
+
+- User-level versus system-level
+- What survives user logoff
+- What survives system reimage
+
+---
+
+## Why Removal Is Hard
+
+- Incomplete knowledge of all mechanisms
+- Legitimate software that has been modified
+- Re-infection from remaining components
+
+---
+
+## Defender View of Persistence
+
+- Enumeration of known locations
+- Behavioural detection of unusual autostart
+- Integrity checking of system components
+
+---
+
+## Artefacts of Persistence
+
+- Registry or configuration changes
+- New services or tasks
+- Modified binaries or scripts
+- Unexpected network activity after reboot
+
+---
+
+## Lab Preview — Persistence Laboratory
+
+- Analyse simulated persistence mechanisms in a prepared VM
+- Identify and document each method
+- Consider removal difficulty without deploying real persistence
+
+---
+
+## Evaluation of Strategies
+
+- Reliability across reboots
+- Visibility to common monitoring
+- Complexity of implementation and maintenance
+
+---
+
+## Common Mistakes
+
+- Using only the most obvious locations
+- Failing to handle privilege correctly
+- Leaving clear text configuration
+
+---
+
+## Key Questions
+
+- How many independent mechanisms are justified?
+- What survives a competent cleanup attempt?
+- What evidence does the chosen method generate?
+
+---
+
+## Design Trade-offs
+
+- Stealth versus resilience
+- Simplicity versus longevity
+- User-level convenience versus system-level power
+
+---
+
+## Takeaways
+
+- Persistence turns a one-time execution into an ongoing presence
+- Removal difficulty often exceeds initial detection difficulty
+- Good persistence design anticipates defender response
+
+---
+
+## Bridge to Distribution
+
+- Persistence on one host is local
+- Campaigns require getting the software to many hosts

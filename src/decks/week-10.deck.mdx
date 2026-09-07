@@ -1,0 +1,166 @@
+---
+title: Detection & Evasion
+description: Week 10's deck --- detection & evasion, slide by slide
+---
+
+{/* _class: impact */}
+
+# Week Overview
+
+- How defenders identify malware
+- Signature-based detection
+- Behavioural detection
+- Why malware authors care about being noticed
+
+---
+
+## Detection as an Adversarial Process
+
+- Defenders write rules and models
+- Authors attempt to avoid them
+- Continuous adaptation on both sides
+
+---
+
+## Signature-Based Detection
+
+- Exact or approximate matching of known artefacts
+- Hashes, byte patterns, strings, YARA-style rules
+- Fast and precise when signatures exist
+
+---
+
+## Strengths of Signatures
+
+- Low false-positive rate for good signatures
+- Efficient scanning
+- Clear attribution to known families
+
+---
+
+## Weaknesses of Signatures
+
+- Brittle against minor changes
+- Require prior knowledge of the sample
+- Struggle with polymorphism and packing
+
+---
+
+## Behavioural Detection
+
+- Observation of actions and sequences
+- Process behaviour, network patterns, system changes
+- Can catch previously unseen samples
+
+---
+
+## Strengths of Behavioural Approaches
+
+- Less dependent on exact code
+- Can generalise across variants
+- Useful for anomaly detection
+
+---
+
+## Weaknesses of Behavioural Approaches
+
+- Higher false-positive potential
+- Requires sufficient observation time
+- Can be evaded by living-off-the-land techniques
+
+---
+
+## Why Authors Care About Detection
+
+- Detected implants are cleaned or isolated
+- Infrastructure may be burned
+- Operator exposure increases
+- Campaign value drops
+
+---
+
+## Common Evasion Goals
+
+- Avoid static signatures
+- Appear normal under behavioural monitoring
+- Delay or conditionalise malicious actions
+- Blend with legitimate software patterns
+
+---
+
+## Evasion Techniques (Conceptual)
+
+- Code polymorphism and encryption
+- Use of legitimate system tools
+- Timing and environment checks
+- Traffic mimicry
+
+---
+
+## Detection Trade-offs for Defenders
+
+- Coverage versus false positives
+- Performance impact
+- Update and maintenance cost
+
+---
+
+## Lab Preview — Detection & Evasion Laboratory
+
+- Test and improve signatures and behavioural rules against benign simulated behaviours
+- Observe false positives and false negatives
+- Iterate on rule quality
+
+---
+
+## Evaluating Detection Rules
+
+- True positive rate on known samples
+- False positive rate on clean systems
+- Resilience to minor variations
+
+---
+
+## Key Questions
+
+- What artefacts are most stable across variants?
+- Which behaviours are hardest to hide?
+- How quickly can a new signature be deployed?
+
+---
+
+## Author Perspective on Detection
+
+- Every detection method is a design constraint
+- Over-evasion can reduce reliability
+- Simple and quiet often outperforms clever and noisy
+
+---
+
+## Relationship to Earlier Stages
+
+- Architecture and C2 choices create detectable patterns
+- Persistence mechanisms are high-value detection points
+- Distribution infrastructure appears in network logs
+
+---
+
+## Takeaways
+
+- Detection and evasion form a continuous contest
+- Signatures and behaviour each have clear limits
+- Authors who ignore detection do not remain effective
+
+---
+
+## Bridge to Operational Security
+
+- Technical detection is only one way campaigns end
+- Human and procedural failures matter
+- Operational security next
+
+---
+
+## Practical Note
+
+- In this course all detection work uses simulated benign behaviour only

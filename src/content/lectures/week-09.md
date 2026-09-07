@@ -7,6 +7,7 @@ week: 9
 date: 2027-10-05
 teachers:
   - fulan-al-fulani
+slides: /decks/week-09/
 related:
   - sessions/09-session
 ---

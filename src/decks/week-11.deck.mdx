@@ -1,0 +1,168 @@
+---
+title: Operational Security
+description: Week 11's deck --- operational security, slide by slide
+---
+
+{/* _class: impact */}
+
+# Week Overview
+
+- Attribution
+- Infrastructure hygiene
+- Logs, metadata and mistakes
+- Human error
+- Famous operational-security failures
+- "How did they get caught?"
+
+---
+
+## What Operational Security Means Here
+
+- Practices that reduce the chance of identification and disruption
+- Applies to both technical infrastructure and human behaviour
+- Failures are often more decisive than technical detection
+
+---
+
+## Attribution Basics
+
+- Linking activity to a person, group or state
+- Technical, infrastructural and human evidence
+- Confidence is rarely absolute
+
+---
+
+## Sources of Attribution Evidence
+
+- Reused infrastructure or code
+- Language, timezone and working-hour patterns
+- Operational mistakes that reveal identity
+- External intelligence
+
+---
+
+## Infrastructure Hygiene
+
+- Separation of identities and payment methods
+- Avoidance of reuse across campaigns
+- Monitoring for takedown and replacement readiness
+
+---
+
+## Logs and Metadata
+
+- Every service generates records
+- Timestamps, IP addresses, account details
+- Metadata often outlives the primary artefacts
+
+---
+
+## Common Metadata Leaks
+
+- Compilation paths and usernames
+- Debug information left in binaries
+- Certificate and domain registration data
+- Cloud and hosting account linkages
+
+---
+
+## Human Error Patterns
+
+- Reuse of handles, emails or wallets
+- Logging into personal accounts from operational systems
+- Discussing work in insufficiently private channels
+- Inconsistent cover stories
+
+---
+
+## Why Failures Occur
+
+- Fatigue and time pressure
+- Overconfidence after early success
+- Complexity that exceeds process discipline
+- Lack of separation between identities
+
+---
+
+## Case Study Approach
+
+- Examine a publicly documented failure
+- Identify the specific OPSEC mistake
+- Note how the mistake linked technical activity to identity
+
+---
+
+## "How Did They Get Caught?" Framework
+
+- What technical evidence existed?
+- What infrastructural links were present?
+- What human or procedural error occurred?
+- How was confidence established?
+
+---
+
+## Lab Preview — "How Did They Get Caught?"
+
+- Reconstruct a fictional actor from logs, metadata, infrastructure evidence and OPSEC mistakes
+- Assess attribution evidence with stated confidence levels
+- Identify the decisive failures
+
+---
+
+## Confidence in Attribution
+
+- Low: generic techniques only
+- Medium: recurring infrastructure or code
+- High: direct identity linkage through error or intelligence
+
+---
+
+## Defensive Value of OPSEC Failures
+
+- Provide detection and disruption opportunities
+- Support legal and intelligence processes
+- Reveal broader campaign structure
+
+---
+
+## Key Questions
+
+- Which single mistake would be most damaging?
+- How many independent identity layers exist?
+- What evidence would survive a careful cleanup?
+
+---
+
+## Design Implications
+
+- Architecture and infrastructure must support hygiene
+- Processes must be simple enough to follow under pressure
+- Automation can reduce some classes of human error
+
+---
+
+## Limits of Technical Measures Alone
+
+- Perfect code with poor OPSEC still fails
+- Human factors remain the persistent weakness
+
+---
+
+## Takeaways
+
+- Operational security is a first-class requirement
+- Most public failures combine technical artefacts with human mistakes
+- Attribution is probabilistic and evidence-driven
+
+---
+
+## Course Arc Completion
+
+- Full lifecycle from idea to operational use and eventual failure modes now covered
+
+---
+
+## Looking Ahead
+
+- Synthesis and examination preparation
+- Week 12 review

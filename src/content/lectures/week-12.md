@@ -7,6 +7,7 @@ week: 12
 date: 2027-10-26
 teachers:
   - ivan-sidorov
+slides: /decks/week-12/
 related:
   - sessions/12-session
 ---

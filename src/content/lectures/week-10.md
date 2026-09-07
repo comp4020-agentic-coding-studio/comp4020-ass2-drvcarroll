@@ -7,6 +7,7 @@ week: 10
 date: 2027-10-12
 teachers:
   - ivan-sidorov
+slides: /decks/week-10/
 related:
   - sessions/10-session
 ---

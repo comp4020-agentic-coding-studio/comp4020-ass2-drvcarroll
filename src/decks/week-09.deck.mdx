@@ -1,0 +1,170 @@
+---
+title: Malware Analysis
+description: Week 9's deck --- malware analysis, slide by slide
+---
+
+{/* _class: impact */}
+
+# Week Overview
+
+- Static vs dynamic analysis
+- Reverse engineering as an investigative process
+- Indicators of compromise
+- Reconstructing what malware was intended to do
+
+---
+
+## Purpose of Analysis
+
+- Understand behaviour and intent
+- Extract indicators for detection
+- Support attribution and response
+- Inform defensive improvements
+
+---
+
+## Static Analysis
+
+- Examination without execution
+- Strings, imports, structure, embedded data
+- Disassembly and decompilation
+- Safe but limited by obfuscation
+
+---
+
+## Dynamic Analysis
+
+- Execution in controlled environment
+- Observation of behaviour and artefacts
+- Network, file, process and registry activity
+- Risk of incomplete or deceptive behaviour
+
+---
+
+## Complementary Strengths
+
+- Static reveals structure and possible paths
+- Dynamic reveals actual behaviour under conditions
+- Combined analysis reduces blind spots
+
+---
+
+## Reverse Engineering Process
+
+- Initial triage and classification
+- Identification of interesting functions
+- Reconstruction of control and data flow
+- Hypothesis formation and testing
+
+---
+
+## Common Obfuscation and Anti-Analysis
+
+- Packing and encryption of payloads
+- Anti-disassembly tricks
+- Environment checks and delayed execution
+- Misleading strings and decoy code
+
+---
+
+## Indicators of Compromise
+
+- File hashes and names
+- Network destinations and patterns
+- Registry or configuration artefacts
+- Behavioural sequences
+
+---
+
+## Quality of Indicators
+
+- Uniqueness versus longevity
+- Host-based versus network-based
+- Atomic versus behavioural
+
+---
+
+## Reconstructing Intent
+
+- Observed actions versus possible actions
+- Configuration and command handling
+- Targeting logic and data selection
+- Error handling and failure modes
+
+---
+
+## Limits of Analysis
+
+- Incomplete samples
+- Missing command-and-control responses
+- Environment-specific behaviour
+- Deliberate deception by the author
+
+---
+
+## Lab Preview — Malware Analysis Laboratory
+
+- Analyse a deliberately benign sample
+- Apply static and dynamic techniques
+- Produce investigation notes, IOCs and distinction between observed and inferred behaviour
+
+---
+
+## Documentation Standards
+
+- Clear separation of fact and interpretation
+- Confidence levels on conclusions
+- Reproducible steps
+
+---
+
+## Tools and Environment Considerations
+
+- Isolated analysis systems
+- Snapshot and revert capability
+- Network simulation or containment
+
+---
+
+## Key Questions
+
+- What did the sample actually do in the observed environment?
+- What was it capable of doing under different conditions?
+- Which indicators are robust enough for detection?
+
+---
+
+## Common Analysis Pitfalls
+
+- Over-interpreting decoy content
+- Assuming all strings are meaningful
+- Treating a single execution as complete behaviour
+
+---
+
+## Relationship to Production
+
+- Analysis is the mirror of design decisions
+- Good architecture and operational security make analysis harder
+- Poor tradecraft makes analysis easier
+
+---
+
+## Takeaways
+
+- Analysis is an investigative process, not a single technique
+- Static and dynamic methods answer different questions
+- Intent reconstruction always involves inference
+
+---
+
+## Bridge to Detection
+
+- Indicators and behavioural understanding feed detection
+- Detection and evasion next
+
+---
+
+## Preparation Note
+
+- Keep analysis notes clear; they become evidence in later assessments

@@ -1,0 +1,170 @@
+---
+title: Distribution
+description: Week 7's deck --- distribution, slide by slide
+---
+
+{/* _class: impact */}
+
+# Week Overview
+
+- Getting malware from its creator to its targets
+- Infrastructure
+- Delivery mechanisms
+- Scaling an operation
+- Mid-semester retrospective and assessment discussion
+
+---
+
+## Distribution as a Systems Problem
+
+- Code must move from build environment to targets
+- Multiple stages and intermediaries are common
+- Infrastructure becomes a critical asset and liability
+
+---
+
+## Typical Distribution Chain
+
+- Build system
+- Staging servers
+- Delivery servers or channels
+- Target endpoints
+- Optional update channels
+
+---
+
+## Delivery Mechanisms
+
+- Email attachments and links
+- Web-based downloads
+- Removable media
+- Compromised legitimate software updates
+- Peer-to-peer or lateral movement
+
+---
+
+## Infrastructure Requirements
+
+- Hosting that tolerates abuse reports
+- Domain and IP agility
+- Capacity for expected volume
+- Separation from operator identity
+
+---
+
+## Scaling Considerations
+
+- Number of potential targets
+- Geographic and network diversity
+- Rate limiting and detection thresholds
+- Cost of infrastructure versus value of access
+
+---
+
+## Reliability vs Stealth in Delivery
+
+- High-volume noisy campaigns
+- Low-volume targeted delivery
+- Different infrastructure footprints
+
+---
+
+## Failure Points in Distribution
+
+- Takedown of staging or delivery servers
+- Blocking of domains or IPs
+- Email or web filtering
+- User non-compliance with lures
+
+---
+
+## Redundancy Strategies
+
+- Multiple independent delivery paths
+- Fallback domains and servers
+- Ability to regenerate infrastructure quickly
+
+---
+
+## Cost and Operational Overhead
+
+- Domain registration and hosting fees
+- Time spent maintaining infrastructure
+- Risk of infrastructure reuse across campaigns
+
+---
+
+## Mid-Semester Checkpoint
+
+- Lifecycle so far: idea → architecture → execution → infiltration → persistence → distribution
+- Remaining: command and control, analysis, detection, operational security
+
+---
+
+## Assessment 1 Reminder
+
+- My First Malware design document
+- Purpose, target, architecture, lifecycle, persistence, communication, detection risks, operational requirements
+
+---
+
+## Lab Preview — Distribution & Infrastructure
+
+- Design and analyse a simulated distribution infrastructure
+- Identify costs, dependencies and failure points
+- Propose mitigations for common takedown scenarios
+
+---
+
+## Evaluating a Distribution Design
+
+- How easily can a single server loss be absorbed?
+- What artefacts link stages together?
+- How does the design scale?
+
+---
+
+## Historical Distribution Patterns
+
+- Early: physical media and simple email
+- Later: large botnets and fast-flux
+- Current: mixed targeted and opportunistic with heavy use of legitimate services
+
+---
+
+## Key Questions
+
+- What is the weakest link in the distribution chain?
+- How quickly can burned infrastructure be replaced?
+- What does the defender see at each stage?
+
+---
+
+## Design Implications for Later Stages
+
+- Distribution method influences payload size and packaging
+- Infrastructure choices affect command-and-control options
+- Scaling decisions shape operational security requirements
+
+---
+
+## Common Anti-Patterns
+
+- Single hard-coded delivery server
+- Reuse of infrastructure across unrelated campaigns
+- No monitoring of delivery success rates
+
+---
+
+## Takeaways
+
+- Distribution turns a local program into a campaign
+- Infrastructure is both enabler and exposure
+- Scaling introduces new failure modes
+
+---
+
+## Looking Ahead
+
+- Once delivered and running, the malware must talk back
+- Command, control and communication next
