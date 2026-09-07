@@ -291,6 +291,91 @@ by editing the shared, unowned theme CSS (`base.css`/`components.css`),
 since the request named the session pages specifically and every other
 page using `ContentLayout` should keep the theme's default spacing.
 
+**D20. The course record becomes SLOP4000, not the template's SLOP1000.**
+`git log -p --follow` on `src/course-config.ts` shows exactly one commit ---
+the template's own --- so this repo's pre-assigned three digits (README's
+rule: fixed per repo, never renumbered) are `000`; nothing has ever claimed
+a different suffix. The supplied content names the course "SLOP4xxx"
+throughout (bios, lecture decks), and the schema's own `superRefine` ties
+`level` to the digit immediately after "SLOP", so the only code consistent
+with both constraints is `SLOP4000` with `level: 4`. `title`, `description`
+and `tags` are drawn directly from `CONTENT.md`'s course record and Process
+notes (Beat 1's framing --- "a course that taught students how to make and
+produce malware," "farcical," treated with deadpan seriousness) rather than
+paraphrased, so the about-page copy stays traceable to one source document
+instead of a second, drifting paraphrase of it.
+
+**D21. The course runs in 2027, weekly from 27 July to 26 October, with the
+gap the source dates imply kept as a real gap.** The brief gives day/month
+only, no year. `2027` matches every other date already committed in this
+repo's placeholder sessions (`2027-02-22` onward), so reusing it avoids a
+mismatched second calendar existing beside the site's other content for no
+reason. Read literally, the week dates run weekly from Week 1 (27 Jul) to
+Week 6 (31 Aug), then jump three weeks to Week 7 (21 Sep, corrected from the
+source's malformed "21th Sep") before resuming weekly through Week 12 (26
+Oct) --- Week 7's own slide 11 calls itself a "mid-semester checkpoint,"
+which is exactly what a three-week gap between Weeks 6 and 7 would be. The
+gap is therefore kept, not smoothed into a continuous weekly run: smoothing
+it would contradict the content's own internal description of itself.
+`course-config.ts`'s `startDate`/`endDate` must span 27 Jul through the
+Final Examination date decided in D24 below, since `spec/data-integrity.test.ts`
+checks every dated entry falls within the course period.
+
+**D22. Only ten of the scaffold's twelve `lab-NN` slots correspond to a real
+lab in the brief, and Weeks 1 and 12 get no Lab card.** This is the exact
+situation Section 7's pre-existing "D10's lab count is a guess" risk
+anticipated and already named the fallback for: "a week with no Lab card,
+which is a smaller, more honest gap than inventing content the brief never
+asked for." The brief names exactly ten labs (Lab 1 through Lab 10), mapped
+one-to-one onto Weeks 2--11; Week 1 (Introduction) and Week 12 (Review) have
+no lab anywhere in the source. Inventing an eleventh and twelfth lab to keep
+D10's "every week gets exactly one lecture and one lab" convention intact
+would put content on the site the brief never supplied, which `CONTENT.md`'s
+own content notes already flagged as the wrong move. The fix is schema-level,
+mirroring the precedent already set for `assignment` (`reference("assessments")
+.optional()`, present only on the weeks that have one): `sessions`'
+`lab` field becomes `.optional()` in `src/content.config.ts`, and only Weeks
+1 and 12's session entries omit it. `WeekRail`/the session page template
+already render conditionally per-section (D19's `sections` array is built
+from whichever of lecture/lab/assignment exist on that entry) so no template
+code changes --- an absent `lab` produces one fewer section, not a broken
+one. The two now-unreferenced files, `lab-11.md` and `lab-12.md`, are not
+deleted (no removal was asked for): they are set `published: false`, the
+existing documented convention for taking a placeholder out of the built
+site while keeping the file and its history in place.
+
+**D23. The two convenors replace the two existing placeholder people, and
+their files are renamed rather than left under the old placeholder names.**
+The brief supplies exactly two people (Professor Sidorov, Course Convenor;
+Professor Al-Fulani, Co-Convenor) and the scaffold has exactly two `people`
+slots (`idris-fenn`, `marisol-quaye`) referenced from every lecture's and
+session's `teachers:` array --- modifying in place rather than adding two
+more entries follows directly from "prefer modifying over adding," and
+leaves no orphaned placeholder file. The files themselves are renamed
+(`ivan-sidorov.md`, `fulan-al-fulani.md`) rather than kept under
+`idris-fenn.md`/`marisol-quaye.md` with new content inside: the filename is
+the `reference()` slug, and a permanent SLOP4000 course page whose person
+URLs still read `/people/idris-fenn/` would misname the very people it
+introduces. The rename's risk --- a missed reference among the 24
+lecture/session files that cite these slugs --- is exactly what the build's
+existing dangling-reference check (README, Risks) already catches loudly,
+so the rename is verified by `pnpm build` failing on anything missed, not
+by manual grep alone (grep is still run first, as the cheaper check).
+
+**D24. Assessment 1 is due at the end of Week 8; Assessment 2 is due after
+Week 12, in the examination-preparation window.** Neither assessment has a
+stated week or due date in the brief, only a weight and a syllabus. Both
+dates are fixed from evidence inside the lecture decks themselves rather
+than guessed independently: Week 7's own slide 12 is titled "Assessment 1
+Reminder," which only makes sense if Assessment 1's due date has not yet
+passed by Week 7 --- so it is placed shortly after, at the end of Week 8,
+giving the reminder a purpose instead of arriving after the fact. Assessment
+2 similarly gets its own "Assessment 2 Reminder" on Week 12's slide 15, and
+its brief requires content through Week 11 (Operational Security) to
+attempt honestly, so it is placed after the teaching weeks end, in the same
+examination-preparation window as the Final Examination, rather than during
+a teaching week that has not yet covered its own prerequisites.
+
 
 ## 5. Architecture
 
@@ -1872,6 +1957,462 @@ from Step 15 passing unchanged. `pnpm check` green. Visual inspection at
 both viewports on at least one session page with two sections and one
 with three (Week 4 or 9, to cover the Assignment case).
 
+**Steps 20--28 below are newly planned, not yet built.** They exist to
+satisfy the user's instruction to produce the plan and `CONTENT.md` only ---
+*"update the build markdown file with steps on integrating this into the
+current website structure ... but don't start building just yet"*. No
+subagent has been dispatched against them, no content file they name has
+been touched, and Phase 3 of `/execute_plan` (fresh-subagent-per-step
+execution) must not begin until the user asks for it. They are written in
+the same Goal/Scope/Dependencies/Inputs/Outputs/Acceptance/Constraints/
+Testing-methodology shape as Steps 1--19 so that, when execution is
+authorised, each can be handed to a fresh subagent exactly as it stands,
+without first being rewritten.
+
+### Step 20 --- Course record: `SLOP4000`, real title, real dates
+
+**Goal.** `src/course-config.ts` stops describing a placeholder course and
+describes SLOP4000, Introduction to Malware Production, so every page that
+reads `courseMeta` (nav, home page, `<title>`, the about/policies copy) is
+already correct once this step lands, with no template strings left behind.
+
+**Scope.** `src/course-config.ts` only. No change to `src/site-config.ts`'s
+structure (nav links, Acknowledgement of Country) --- only its copy, if any
+of it names the placeholder course by title rather than by generic label
+(confirm by reading the file's current strings before editing; do not
+touch strings that are already generic).
+
+**Dependencies / spec.** D20, D21. Depends on nothing else in this
+extension; every later step in this batch assumes `courseMeta.code` reads
+`SLOP4000` and the course period covers 2027-07-27 through the Final
+Examination date fixed in Step 24 (D24), so this step must land first.
+
+**Inputs.** `CONTENT.md`'s "Course record" section (code, title, one-line
+framing) and Process notes Beat 1 (for a description paragraph that stays
+traceable to the source rather than inventing new framing); the existing
+`slopCourseMetaSchema`/`CourseMetaInput` types (unchanged); D21's fixed
+2027 weekly dates.
+
+**Outputs.** `courseMeta` parses to `{ code: "SLOP4000", title:
+"Introduction to Malware Production", session: <unchanged unless the
+brief implies otherwise>, year: 2027, level: 4, startDate: "2027-07-27",
+endDate: <the Final Examination's date, from Step 24>, description: <one
+paragraph from CONTENT.md's framing plus Beat 1's "farcical," "deadpan
+seriousness" register>, tags: [<a small set drawn from the brief's own
+vocabulary, e.g. "malware", "software-engineering", "security">] }`.
+
+**Acceptance.** `courseMeta` still validates against `slopCourseMetaSchema`
+(no schema change in this step). The home page, nav and page `<title>`
+render "SLOP4000" and "Introduction to Malware Production" instead of the
+placeholder text, confirmed by visual inspection at 1920x1080 and 390x844
+on `/` and one other page that reads `courseMeta` in its `<title>`.
+
+**Constraints.** Do not touch `src/content.config.ts` in this step (D22's
+schema change is Step 22's, kept separate so each step's diff matches one
+decision). Do not rename `courseMeta`'s fields or the schema import.
+
+**Testing methodology.** Extend or add to `spec/data-integrity.test.ts`
+(already the shipped check for "dates within the course period") to assert
+`courseMeta.startDate <= every dated entry <= courseMeta.endDate` for the
+current, real dataset --- this is the assertion that will actually fail
+loudly later in this batch if any subsequent step's date slips outside the
+period. `pnpm check` green. Visual inspection as above.
+
+### Step 21 --- People: the two convenors, filenames included
+
+**Goal.** `src/people/idris-fenn.md` and `src/people/marisol-quaye.md`
+become `ivan-sidorov.md` and `fulan-al-fulani.md`, with the two convenors'
+real bios, and every `teachers:` reference across the content collections
+is repointed to the new slugs with none missed.
+
+**Scope.** `src/content/people/idris-fenn.md` -> `ivan-sidorov.md`;
+`src/content/people/marisol-quaye.md` -> `fulan-al-fulani.md`; every
+`src/content/{sessions,lectures}/*.md` file's `teachers:` frontmatter list.
+No change to `PeopleGrid.astro`, `TeachingTeam.astro`, or the `people`
+schema in `src/content.config.ts`.
+
+**Dependencies / spec.** D23. Independent of Steps 20/22 (can run before or
+after them); listed here because it touches the same "identity" surface as
+Step 20 and is easiest to review as one adjacent pair of steps.
+
+**Inputs.** `CONTENT.md`'s two convenor bios verbatim; a `git grep -rn
+"idris-fenn\|marisol-quaye" src/content` to enumerate every reference
+before editing, so the rename's completeness is checked against a known
+list rather than against memory.
+
+**Outputs.** Two renamed files with real `title` (person's name), `role`
+("Course Convenor" / "Co-Convenor"), and `description` (the bio, meeting
+the schema's 40-character minimum) fields; the enumerated `teachers:`
+references updated to `ivan-sidorov` / `fulan-al-fulani` with the same
+count of references before and after the rename (a dropped or duplicated
+reference is a review finding, not a detail to wave through).
+
+**Acceptance.** `pnpm build` succeeds --- the existing dangling-reference
+checker fails loudly on any missed `teachers:` entry, which is the
+authoritative proof this rename is complete, not the grep alone.
+`/people/` shows both convenors under their new URLs; visiting the old
+`/people/idris-fenn/`/`/people/marisol-quaye/` 404s (expected: the slug
+changed, the page did not stay at two addresses). Visual inspection of
+`/people/` and one session page's "Teaching team" block at both viewports.
+
+**Constraints.** Do not add a third or fourth person file --- the brief
+names exactly two people and the scaffold has exactly two slots (D23). Do
+not change the `people` schema.
+
+**Testing methodology.** `pnpm build`'s dangling-reference check is the
+primary test (see Acceptance). Add a narrow assertion to
+`spec/data-integrity.test.ts` or a new `spec/people.test.ts` that every
+`sessions`/`lectures` entry's `teachers` array resolves to a person that
+exists in the `people` collection --- this is the same fact the build
+already enforces, made explicit and fast to run without a full `astro
+build`. `pnpm check` green.
+
+### Step 22 --- Schema: `lab` becomes optional; Weeks 1 and 12 lose their Lab card
+
+**Goal.** `sessions`' schema stops requiring every week to have a lab,
+matching D22's finding that the brief supplies exactly ten labs for twelve
+weeks; Weeks 1 and 12's session entries render with one fewer section
+(Lecture only) instead of pointing at invented content.
+
+**Scope.** `src/content.config.ts` (the `sessions` collection's `lab`
+field, `reference("assessments")` -> `reference("assessments").optional()`,
+mirroring the existing `assignment` field immediately below it);
+`src/content/sessions/01-getting-started.md` and `.../12-session.md` (drop
+`lab:` frontmatter key); `src/content/assessments/lab-11.md` and
+`lab-12.md` (`published: false`, added to their frontmatter, content
+otherwise untouched --- these two files are not deleted). No change to
+`src/pages/sessions/[slug].astro`'s `sections` construction --- D19's
+existing pattern (build one entry per field that exists) already handles
+an absent `lab` correctly by producing fewer sections, which is exactly why
+no template code changes here.
+
+**Dependencies / spec.** D22. Must land before Step 26 (session content),
+since that step writes Week 1 and Week 12's bodies against a two-section
+(not three-section) page.
+
+**Inputs.** The existing `assignment` field's exact type
+(`reference("assessments").optional()`) as the pattern to copy; the current
+`[slug].astro` frontmatter logic that builds `sections` (read it, do not
+guess its shape) to confirm an absent `lab` is already handled by the
+existing conditional construction rather than a new branch.
+
+**Outputs.** `sessions.lab` optional in the schema; Weeks 1 and 12 have no
+`lab:` key; `lab-11.md`/`lab-12.md` marked `published: false` and no longer
+linked from any session (confirmed by the same `git grep` technique as Step
+21).
+
+**Acceptance.** `pnpm build` succeeds with no dangling-reference failure
+from the removed `lab:` keys (nothing references a slug that no longer
+exists in a way the build would catch --- the two files still exist, only
+their frontmatter and publish flag changed). `/sessions/01-getting-started/`
+and `/sessions/12-session/` render with exactly one section (Lecture); no
+other session page's section count changes. `lab-11`/`lab-12` no longer
+appear in the built site's assessment listing/timeline. Visual inspection
+at both viewports on Weeks 1 and 12's session pages, confirming D19's
+single-column layout still looks correct with only one section rather than
+leaving a stray empty block where Lab used to be.
+
+**Constraints.** Do not delete `lab-11.md`/`lab-12.md` (no removal was
+asked for; `published: false` is the existing, correct mechanism). Do not
+touch any other week's `lab:` reference. Do not change `assignment`'s
+existing optionality or shape.
+
+**Testing methodology.** A schema-level test (or extension of an existing
+one) asserting `sessions` parses correctly both with and without `lab`
+present. `spec/timeline.test.ts`/`weeks.test.ts` re-run to confirm
+`BEAD_ORDER`/`buildWeekRows` still produce a full 13-row week rail with
+Weeks 1 and 12 showing no Lab entry rather than erroring on the absent
+field. `pnpm check` green.
+
+### Step 23 --- The ten real labs: content, weight, marking
+
+**Goal.** `lab-01.md` through `lab-10.md` carry the real Lab 1--10 content
+(main concept, practical, outcome) from `CONTENT.md`, each weighted 2% (20%
+total / 10 labs, an even split being the only reading that does not invent
+a per-lab weighting the brief never gave), with every `STARTER_CONTENT`
+marker removed.
+
+**Scope.** `src/content/assessments/lab-01.md` through `lab-10.md` only.
+No change to `lab-11.md`/`lab-12.md` beyond Step 22's `published: false`
+(already done). No schema change (weight, due, marking, brief already
+exist as fields; this step fills them with real values).
+
+**Dependencies / spec.** Depends on Step 22 (the ten real labs' identity
+as "the ones sessions 02--11 reference" is what Step 22 establishes); D21's
+weekly dates fix each lab's `due` (the week's own session date, since a
+lab is due in the week it is taught, matching the existing `lab-01.md`
+placeholder's own convention of `due` equal to its week's date).
+
+**Inputs.** `CONTENT.md`'s "Weekly Lab Work" section, ten entries in
+order; the existing `lab-01.md` placeholder's field shape (`week`, `due`,
+`weight`, `marking`, `brief`) as the template to fill rather than
+restructure.
+
+**Outputs.** Ten files, each: `week` 2--11 respectively; `due` matching
+that week's session date (D21); `weight: 2`; `marking: { mode: "holistic",
+description: <a >=40-character sentence drawn from the lab's stated
+outcome, since the brief gives no per-criterion breakdown to make a
+`weighted` marking honest> }`; `brief` set to the lab's own "Practical"
+line as the blockquote prompt; body content covering "Main concept" and
+"Outcome" in prose, replacing the `STARTER_CONTENT` placeholder body
+entirely.
+
+**Acceptance.** `grep -rn STARTER_CONTENT src/content/assessments/lab-0*.md`
+returns nothing. `pnpm build` succeeds. Ten lab pages render with real
+titles, briefs and bodies; visual inspection of `lab-01` and `lab-10` at
+both viewports (first and last, to catch any copy-paste drift between
+them).
+
+**Constraints.** Do not change `lab-01.md`--`lab-10.md`'s `week`/`due` to
+anything other than matching their session's existing date (D21). Do not
+give any lab a `weighted` marking scheme --- the brief supplies no
+criteria to weight, so `holistic` (already precedented by `lab-01.md`'s
+placeholder) is the honest choice, not a shortcut.
+
+**Testing methodology.** `spec/data-integrity.test.ts`'s date-within-period
+assertion, re-run, now against real (not placeholder) dates. A targeted
+check --- new or extended --- that the ten labs' weights sum to exactly 20,
+as a named sub-total distinct from the whole-collection 100% check Step 24
+closes. `pnpm check:evidence` re-run to confirm the marker count for these
+ten files has dropped to zero without affecting the count for files this
+step does not touch.
+
+### Step 24 --- Assignment 1, Assignment 2, Final Exam: content, weight, dates
+
+**Goal.** The three large assessments carry their real briefs, weights
+(20/20/40, summing with the ten labs' 20% to exactly 100%), and D24's dates,
+closing the plan's longest-standing documented red check
+(assessment-weights-sum-to-100).
+
+**Scope.** `src/content/assessments/assignment-1.md`, `assignment-2.md`,
+`final-exam.md`. `final-exam.md`'s `id`/filename is unchanged (WeekRail's
+existing Exam-row match depends on it, per D12). No change to
+`final-project.md` unless reading it first shows it is a legacy file this
+brief's content makes redundant (confirm before touching; do not assume).
+
+**Dependencies / spec.** D24 (due dates), S4 (weights sum to 100 --- check
+Section 3 for this id's exact wording before writing the test). Depends on
+Step 20 (course period must already cover the Final Examination's date
+before this step fixes it).
+
+**Inputs.** `CONTENT.md`'s "Assessment 1", "Assessment 2" and "Final
+Examination" sections; the existing `assignment-1.md` real (non-placeholder)
+example as the field-shape template (`brief`, `submissionItems`, `keyDates`
+if used, `marking`).
+
+**Outputs.** `assignment-1.md`: weight 20, due end of Week 8 (D24), brief
+= "My First Malware" prompt, body listing the eight required design
+elements (purpose, target, architecture, infection lifecycle, persistence
+strategy, communication model, detection risks, operational requirements),
+marking left `holistic` (no criteria given) unless a review pass finds a
+defensible split that does not invent numbers. `assignment-2.md`: weight
+20, due after Week 12 in the exam-prep window (D24), brief = "Don't Get
+Caught," body describing the CTF mechanics (per-student target VM, infect,
+retrieve flag, persist undetected, report covering OSINT/recon/infection/
+persistence/comms/avoidance). `final-exam.md`: weight 40, held at the date
+fixed here (also becomes `courseMeta.endDate` --- if Step 20 ran first with
+a provisional end date, this step corrects it as a follow-up edit to
+`course-config.ts`, so the two files never disagree), brief describing the
+two-hour in-person written format and coverage.
+
+**Acceptance.** `grep -rn STARTER_CONTENT` on these three files returns
+nothing. The collection-wide weight sum (10 labs x 2 + 20 + 20 + 40) equals
+exactly 100, verified by the test written in this step. `pnpm build`
+succeeds. Visual inspection of all three pages at both viewports.
+
+**Constraints.** Do not rename `final-exam.md`'s id (D12 dependency). Do
+not invent marking criteria numbers for `assignment-1`/`assignment-2` that
+the brief does not support --- `holistic` is the honest default per the
+same reasoning as Step 23's labs.
+
+**Testing methodology.** The test this step exists to make pass: a
+collection-wide assertion (new, e.g. `spec/marking-weights.test.ts`, or an
+extension of `spec/data-integrity.test.ts`) that every `assessments` entry
+with `published !== false` has a `weight`, and that the sum across all
+published entries equals 100 exactly --- this is the check Section 7's
+Risks section has flagged as red since Step 6 and expects to finally go
+green here. `pnpm check` green with zero documented red assertions
+remaining, for the first time in this plan's history --- record that
+explicitly in this step's own Amendment note once it is actually run.
+
+### Step 25 --- Lecture bodies: twelve weeks of real content
+
+**Goal.** `src/content/lectures/week-01.md` through `week-12.md` carry
+real per-week topic summaries drawn from `CONTENT.md`'s weekly content
+list, replacing the placeholder body, with no `slides:` field yet (Step 27
+adds it once the decks it points to exist).
+
+**Scope.** `src/content/lectures/week-01.md` through `week-12.md` only.
+No change to `slides:` in this step --- leaving it absent (or, for
+`week-01.md`, keeping its existing value only if Step 27 will not need to
+change it) is deliberate, so this step's diff is pure content and Step 27's
+diff is purely about decks.
+
+**Dependencies / spec.** Depends on Step 20 (`week`/`date` fields use
+D21's real 2027 dates, which must already be the plan's fixed calendar).
+
+**Inputs.** `CONTENT.md`'s twelve "Weekly content" entries (topic bullet
+lists per week); the existing `week-01.md` real (non-placeholder) example
+for field shape (`title`, `description`, `week`, `date`, `teachers`,
+optionally `related`).
+
+**Outputs.** Twelve files, each with a real `description` (one sentence
+naming the week's topic) and a body that presents that week's bullet list
+as prose or a short list, matching the register CONTENT.md's Content notes
+establish (deadpan seriousness about a farcical subject) rather than
+comic exaggeration invented beyond the source.
+
+**Acceptance.** `grep -rn STARTER_CONTENT src/content/lectures/` returns
+nothing. `pnpm build` succeeds. Visual inspection of `week-01` and `week-07`
+(the mid-semester-break week, to confirm its date/content reads sensibly
+next to the gap) at both viewports.
+
+**Constraints.** Do not add `slides:` here (Step 27's scope). Do not alter
+`week`/`teachers` beyond what D21/Step 21 already fixed.
+
+**Testing methodology.** `spec/data-integrity.test.ts` re-run against the
+real dates. `pnpm check:evidence` confirms zero remaining markers in
+`src/content/lectures/`. `pnpm check` green.
+
+### Step 26 --- Session bodies: twelve weeks, D19's stacked layout, real specs
+
+**Goal.** `src/content/sessions/01-getting-started.md` through
+`12-session.md` carry real `spec:` lines and body copy describing what
+happens that week, consistent with Step 22's Week 1/12 two-section pages
+and every other week's three- or two-section page.
+
+**Scope.** `src/content/sessions/*.md`, all twelve. No change to
+`[slug].astro` (D19's layout is already correct; this step is content
+only).
+
+**Dependencies / spec.** Depends on Steps 22 (Week 1/12's dropped `lab:`
+field), 23 (labs exist to describe), 25 (lectures exist to describe).
+
+**Inputs.** `CONTENT.md`'s weekly topic and lab summaries; the existing
+`01-getting-started.md` real example's "Before/In/Afterwards" body
+convention as the shape to keep, reworded per week rather than copied.
+
+**Outputs.** Twelve session files with real, checkable `spec:` lines (per
+the existing convention: "a reader can tell whether it has been met
+without asking you") and bodies naming that week's lecture topic and (where
+present) lab practical in the student's own terms.
+
+**Acceptance.** `grep -rn STARTER_CONTENT src/content/sessions/` returns
+nothing. `pnpm build` succeeds. Visual inspection at both viewports of
+Week 1 (two sections), Week 4 or 9 (whichever carries the `assignment`
+field per Step 24's final due-week decision --- confirm before writing
+this file) and Week 12 (two sections).
+
+**Constraints.** Do not reintroduce a `lab:` field on Weeks 1/12 (Step
+22's decision). Do not change the `spec:` field's schema or meaning.
+
+**Testing methodology.** `spec/layout.test.ts`'s existing session-page DOM
+assertions (Steps 15/19) re-run unchanged --- this step must not require
+touching that test, since it changes content, not structure; if it turns
+out to require a test change, that is itself a finding that scope leaked
+into structure and belongs back in Step 1 of the loop. `pnpm check:evidence`
+confirms zero remaining markers in `src/content/sessions/`.
+
+### Step 27 --- Slide decks: twelve `.deck.mdx` files, wired from their lectures
+
+**Goal.** `src/decks/week-01.deck.mdx` through `week-12.deck.mdx` carry the
+real slide-by-slide content from `CONTENT.md`'s lecture decks, and each
+`week-NN.md` lecture's `slides:` field points at its deck.
+
+**Scope.** `src/decks/week-01.deck.mdx` (rewritten) plus eleven new
+`week-02.deck.mdx` through `week-12.deck.mdx` files, built from the
+existing `week-01.deck.mdx`'s astromotion conventions (`---` slide
+separator, `{/* _class: impact */}` slide classes where the source calls
+for emphasis, e.g. title/close slides); `src/content/lectures/*.md`'s
+`slides:` field (all twelve, added or corrected to `/decks/week-NN/`).
+
+**Dependencies / spec.** Depends on Step 25 (lectures must already exist
+with real content before this step wires `slides:` onto them, so the two
+diffs stay separable and reviewable independently).
+
+**Inputs.** `CONTENT.md`'s twelve lecture-deck sections (20--22 slides
+each, as supplied); the existing `week-01.deck.mdx`'s exact MDX/astromotion
+syntax as the only authoritative template (confirm the `slides:` regex,
+`^/decks/[a-z0-9-]+/$`, against the actual directory-per-deck routing
+convention before writing the other eleven, rather than assuming it from
+the field name alone).
+
+**Outputs.** Twelve deck files, each slide from `CONTENT.md` reproduced as
+its own astromotion slide; each lecture's `slides:` field set and
+resolving to a real, building route.
+
+**Acceptance.** `grep -rn STARTER_CONTENT src/decks/` returns nothing.
+`pnpm build` succeeds --- twelve deck routes present in `dist/`. Visual
+inspection (in the deck viewer, not just the raw MDX) of `week-01`'s deck
+at both viewports, stepping through at least the first, a middle, and the
+last slide to confirm astromotion renders the `_class` markers and slide
+separators correctly for content this size (20--22 slides is more than the
+one placeholder deck exercised).
+
+**Constraints.** Do not change astromotion's own configuration/plugin
+setup --- only the deck content files and the `slides:` field. Do not
+leave any lecture's `slides:` field pointing at a route that does not
+exist (the regex validates shape, not existence --- confirm existence
+manually via `pnpm build`'s route listing).
+
+**Testing methodology.** A targeted check that every `lectures` entry with
+a `slides:` field resolves to a deck route present in the build output
+(extend `spec/data-integrity.test.ts` or add `spec/decks.test.ts`). `pnpm
+check:evidence` confirms zero remaining markers in `src/decks/`. `pnpm
+check` green.
+
+### Step 28 --- Final sweep: evidence gate, weight sum, whole-site pass
+
+**Goal.** The batch closes: no `STARTER_CONTENT` marker remains anywhere
+Steps 20--27 touched, `pnpm check:evidence` passes clean, and a full,
+final visual pass across the site confirms the integrated content reads
+correctly end to end, not just page by page.
+
+**Scope.** No new content changes are expected in this step --- it is a
+verification-and-fix-forward step. Any marker or check failure it finds
+gets fixed here directly (this step's own mandatory review loop handles
+that), rather than deferred to a Step 29 that would just repeat this one.
+
+**Dependencies / spec.** Depends on all of Steps 20--27 having landed.
+Serves S4 (weights sum to 100, closed in Step 24, re-verified here) and
+the evidence-gate requirement (README, `scripts/check-evidence.ts`) as a
+whole-repo check rather than the per-step checks each earlier step already
+ran.
+
+**Inputs.** `pnpm check`, `pnpm check:evidence`, `pnpm build`'s full route
+list, `git grep -c STARTER_CONTENT` repo-wide (the same technique used
+during this plan's own research phase, re-run now against the finished
+state instead of the placeholder state).
+
+**Outputs.** A clean `pnpm check` and `pnpm check:evidence`; zero
+`STARTER_CONTENT` matches anywhere under `src/content/`, `src/decks/`, and
+`src/course-config.ts`; `src/pages/policies/index.mdx` and
+`src/pages/index.astro`'s two markers noted as out of this batch's scope
+(they were never part of the content this batch integrates) unless a
+review pass finds they should be --- if so, that is a new, separately
+justified step, not a silent addition here.
+
+**Acceptance.** `pnpm check` green with no documented red assertions
+remaining. `pnpm check:evidence` exits 0. Visual inspection at 1920x1080
+and 390x844 of: the home page, `/timeline/` (all thirteen beads, D21's
+mid-semester gap visible in the spacing/dates), `/people/` (two convenors),
+one full session page with three sections, one with two, one lecture page
+with a working deck link, and `/policies/` (unchanged, confirmed still
+correct rather than assumed).
+
+**Constraints.** Do not touch `src/pages/policies/index.mdx` or
+`src/pages/index.astro`'s markers as part of this step (out of scope, see
+Outputs). Do not mark this step complete on a green `pnpm check` alone ---
+the visual pass is what this step is actually for, per the loop's own
+"a green suite is not a substitute for looking" rule.
+
+**Testing methodology.** Re-run the full `spec/` suite once, as a batch,
+rather than trusting each earlier step's individual green run to still
+hold after every later step's edits --- this is the step that catches one
+step's change quietly breaking an earlier step's assertion. `pnpm
+check:evidence`'s own output is the test for the marker sweep; do not
+re-implement it with a parallel grep.
+
 ## 7. Risks
 
 **The broken-link checker fails the build in Step 1.** Four known inbound links
@@ -1920,9 +2461,21 @@ it is written, so the check goes red until real weights replace every
 placeholder across all 14 `assessments` entries, rather than being
 forgotten.
 
+*Resolution (planned, Step 24).* The SLOP4000 content this plan integrates
+supplies real weights that sum to exactly 100 (10 labs x 2% + Assignment 1
+20% + Assignment 2 20% + Final Exam 40%) --- once Steps 22--24 land,
+`lab-11.md`/`lab-12.md` are `published: false` (excluded from the sum) and
+every remaining published entry carries its real weight, closing this risk
+for the first time since Step 6 opened it. Not yet executed.
+
 **D10's lab count is a guess, not a confirmed reading of the brief.** Twelve
 weeks need twelve labs, but only ten exist and no thirteenth/fourteenth lab
 is named anywhere read so far. Step 14 finds out for certain when it recreates
 `BEAD_ORDER`; if the brief actually specifies fewer than twelve lab sessions,
 the fallback is a week with no Lab card, which is a smaller, more honest gap
 than inventing content the brief never asked for.
+
+*Resolution (planned, D22/Step 22).* Confirmed against the actual SLOP4000
+content: exactly ten labs, mapped to Weeks 2--11. The anticipated fallback
+is the one taken --- Weeks 1 and 12 get no Lab card, via an optional `lab`
+field rather than an invented eleventh/twelfth lab. Not yet executed.
