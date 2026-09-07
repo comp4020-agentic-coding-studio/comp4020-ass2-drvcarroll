@@ -2018,6 +2018,26 @@ current, real dataset --- this is the assertion that will actually fail
 loudly later in this batch if any subsequent step's date slips outside the
 period. `pnpm check` green. Visual inspection as above.
 
+**Amendment (post-implementation): a second documented red, alongside the
+existing weight-sum one.** `courseMeta` now spans the real
+2027-07-27--2027-11-12 period (D21's teaching dates, plus a provisional
+exam-period end pending Step 24), but `src/content/{sessions,lectures,
+assessments}` still carry Steps 1--19's placeholder Feb--May 2027 dates,
+untouched by this step's scope (`src/course-config.ts` only). This makes
+`spec/data-integrity.test.ts`'s existing "keeps every scheduled date inside
+the teaching period" assertion fail --- correctly: every placeholder date is
+genuinely now outside the real course period, and the test is doing exactly
+its job. This is not a new kind of gap; it is the same shape as the
+already-documented weight-sum-to-100 failure (Step 6's amendment, §7): a
+check written correctly against real `course-config.ts`/schema rules, red
+until later steps (23/24/26) replace the placeholder content dates with the
+SLOP4000 schedule's real ones. `pnpm check` therefore exits red on two known,
+named assertions after this step, not zero --- documented here and in §7
+rather than papered over by loosening the test or the course period. The
+home page and a session page's `<title>`/`og:image:alt` were confirmed
+correct at both marking viewports (this step's actual acceptance criterion)
+independently of this pre-existing check-suite gap.
+
 ### Step 21 --- People: the two convenors, filenames included
 
 **Goal.** `src/people/idris-fenn.md` and `src/people/marisol-quaye.md`
@@ -2479,3 +2499,19 @@ than inventing content the brief never asked for.
 content: exactly ten labs, mapped to Weeks 2--11. The anticipated fallback
 is the one taken --- Weeks 1 and 12 get no Lab card, via an optional `lab`
 field rather than an invented eleventh/twelfth lab. Not yet executed.
+
+**Step 20 moves `courseMeta`'s dates to the real 2027-07-27 period before the
+content's own dates are updated, so the course-period check goes red.**
+`spec/data-integrity.test.ts`'s "keeps every scheduled date inside the
+teaching period" test compares every `sessions`/`lectures`/`assessments`
+date against `courseMeta.startDate`/`endDate`; Step 20 is scoped to
+`course-config.ts` only (D20), so it lands the real period first while
+Steps 1--19's placeholder Feb--May 2027 dates are still on disk. This is the
+exact shape of the pre-existing weight-sum risk above: a correct check,
+red because content hasn't caught up to a schema/config decision yet.
+
+*Resolution (planned, Steps 23/24/26).* Once the ten real labs, the two
+assessments plus Final Exam, and the twelve session/lecture bodies land
+with their real 2027-07-27--2027-10-26 (teaching) and post-teaching
+(assessment/exam) dates, every dated entry falls back inside
+`courseMeta`'s period and this check goes green again. Not yet executed.

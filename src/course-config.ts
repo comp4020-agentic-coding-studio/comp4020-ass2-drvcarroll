@@ -40,23 +40,26 @@ export const slopCourseMetaSchema = z
 
 // The single source of truth for the course record. The generated homepage,
 // navigation label and /api/index.json all read this object.
-// Replace every placeholder value, but keep the shape: the catalogue ingests
-// this API contract when the course is published.
 //
 // The code's last three digits were assigned to this repo when it was
-// provisioned, and no other course in the cohort has them. Change the first
-// digit to your course's level (and `level` to match); keep the other three.
-// STARTER_CONTENT: replace this course record, then remove this comment.
+// provisioned (see BUILD_PLAN.md D20); `000` is ours, kept, with the level
+// digit set to match SLOP4xxx's own materials (CONTENT.md).
 export const courseMeta = slopCourseMetaSchema.parse({
-  code: "SLOP1000",
-  title: "Course Title Goes Here",
-  session: "Semester 1",
+  code: "SLOP4000",
+  title: "Introduction to Malware Production",
+  // Jul-Oct teaching matches ANU's Semester 2, not Semester 1 (Feb-Jun).
+  session: "Semester 2",
   year: 2027,
-  level: 1,
-  startDate: "2027-02-22",
-  endDate: "2027-05-28",
+  level: 4,
+  startDate: "2027-07-27",
+  // Teaching runs to 26 Oct (D21); this end-of-exam-period date is
+  // provisional until Step 24 fixes the real Final Examination date.
+  endDate: "2027-11-12",
   description:
-    "One concise paragraph explaining what this course is, who it is for, " +
-    "and why somebody would choose to spend a semester taking it.",
-  tags: ["replace me"],
+    "A course that teaches students how to make and produce malware, " +
+    "treated with deadpan seriousness despite its farcical premise: " +
+    "hostile software as engineering, tracing the production lifecycle " +
+    "from idea to operational use, with practical work confined to " +
+    "benign samples and simulated environments.",
+  tags: ["malware", "software-engineering", "security"],
 }) satisfies CourseMetaInput;

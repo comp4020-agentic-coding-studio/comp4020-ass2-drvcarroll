@@ -21,6 +21,10 @@ const api = JSON.parse(readFileSync(resolve("dist/api/index.json"), "utf8")) as 
 const dateOnly = (value: unknown): string => String(value).slice(0, 10);
 
 describe("course data integrity", () => {
+  // Step 20 / BUILD_PLAN §7 risk: courseMeta now spans the real 2027-07-27
+  // teaching period, but sessions/lectures/assessments still carry Steps
+  // 1-19's placeholder Feb-May dates. Expected red until Steps 23/24/26
+  // replace those placeholders with the SLOP4000 content's real dates.
   it("keeps every scheduled date inside the teaching period", () => {
     const dated = api.nodes.filter((node) =>
       ["sessions", "lectures", "assessments"].includes(node.type),
