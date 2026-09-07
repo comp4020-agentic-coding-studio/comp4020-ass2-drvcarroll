@@ -6,7 +6,7 @@ description:
 week: 4
 date: 2027-03-15
 teachers:
-  - idris-fenn
+  - ivan-sidorov
 lecture: week-04
 lab: lab-04
 assignment: assignment-1

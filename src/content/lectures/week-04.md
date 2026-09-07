@@ -6,7 +6,7 @@ description:
 week: 4
 date: 2027-03-15
 teachers:
-  - idris-fenn
+  - ivan-sidorov
 related:
   - sessions/04-session
 ---

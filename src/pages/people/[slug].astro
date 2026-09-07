@@ -21,7 +21,11 @@ const roleLabels: Record<string, string> = {
   guest: "Guest lecturer",
   other: "",
 };
-const roleLabel = person.data.role ? roleLabels[person.data.role] : undefined;
+// Falls back to the raw value for a role outside the four-value enum (e.g.
+// Step 21's "Course Convenor"/"Co-Convenor"), rather than hiding the row.
+const roleLabel = person.data.role
+  ? (roleLabels[person.data.role] ?? person.data.role)
+  : undefined;
 // Astro's generated type does not retain the image/alt refinement relationship,
 // so narrow the alt at the rendering boundary as well.
 const rawPhotoAlt = (person.data as { photoAlt?: unknown }).photoAlt;

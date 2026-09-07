@@ -6,7 +6,7 @@ description:
 week: 8
 date: 2027-04-12
 teachers:
-  - idris-fenn
+  - ivan-sidorov
 lecture: week-08
 lab: lab-08
 spec:

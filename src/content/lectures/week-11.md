@@ -6,7 +6,7 @@ description:
 week: 11
 date: 2027-05-03
 teachers:
-  - marisol-quaye
+  - fulan-al-fulani
 related:
   - sessions/11-session
 ---

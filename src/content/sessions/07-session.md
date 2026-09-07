@@ -6,7 +6,7 @@ description:
 week: 7
 date: 2027-04-05
 teachers:
-  - marisol-quaye
+  - fulan-al-fulani
 lecture: week-07
 lab: lab-07
 spec:

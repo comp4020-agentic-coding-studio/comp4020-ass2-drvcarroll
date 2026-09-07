@@ -6,7 +6,7 @@ description:
 week: 6
 date: 2027-03-29
 teachers:
-  - idris-fenn
+  - ivan-sidorov
 lecture: week-06
 lab: lab-06
 spec:
