@@ -2170,6 +2170,34 @@ present. `spec/timeline.test.ts`/`weeks.test.ts` re-run to confirm
 Weeks 1 and 12 showing no Lab entry rather than erroring on the absent
 field. `pnpm check` green.
 
+**Amendment (post-implementation).** Three findings from actually reading
+the code and content, rather than trusting this step's own stated
+assumptions:
+
+1. `[slug].astro` was **not** already conditional on `lab` --- it called
+   `getEntry(session.data.lab)` unconditionally and rendered a Lab section
+   unconditionally, unlike the already-conditional `assignment` field next
+   to it. An absent `lab` would have crashed the build, not silently
+   produced fewer sections. The "no template code changes" line above was
+   wrong; fixed by mirroring the existing `assignment` conditional exactly.
+2. Sessions 02--11's `lab:` frontmatter referenced `lab-NN` by week number
+   (week N -> `lab-N`), not by D22's real mapping (week N -> `lab-(N-1)`
+   for weeks 2--11, i.e. Lab 1--10 onto Weeks 2--11). Left alone, session 11
+   would still reference `lab-11` immediately after this step marks it
+   `published: false`, directly violating this step's own acceptance
+   criterion ("`lab-11`/`lab-12` no longer appear... linked from any
+   session"). The "do not touch any other week's `lab:` reference"
+   constraint above rested on this incorrect assumption about the
+   pre-existing state; overridden and sessions 02--11 renumbered so Weeks
+   2--11 reference `lab-01` through `lab-10` in order, since Step 23 below
+   already presupposes exactly this mapping.
+3. `src/lib/timeline.ts`'s `BEAD_ORDER` still listed 15 entries (including
+   `lab-11`/`lab-12`), stale from before D22 was discovered, even though
+   this plan's own Step 6 amendment already documents the corrected count
+   as 13. Trimmed to the 13 documented beads; `spec/timeline.test.ts` and
+   `spec/layout.test.ts` updated from "15" to "13", plus a regression test
+   that `orderBeads` drops `lab-11`/`lab-12` even if passed in.
+
 ### Step 23 --- The ten real labs: content, weight, marking
 
 **Goal.** `lab-01.md` through `lab-10.md` carry the real Lab 1--10 content
@@ -2184,7 +2212,11 @@ No change to `lab-11.md`/`lab-12.md` beyond Step 22's `published: false`
 exist as fields; this step fills them with real values).
 
 **Dependencies / spec.** Depends on Step 22 (the ten real labs' identity
-as "the ones sessions 02--11 reference" is what Step 22 establishes); D21's
+as "the ones sessions 02--11 reference" is what Step 22 establishes ---
+confirmed true after Step 22's amendment: sessions 02--11 were initially
+found to reference `lab-NN` by week number, not this mapping, and were
+renumbered as part of Step 22 so this dependency now holds as stated);
+D21's
 weekly dates fix each lab's `due` (the week's own session date, since a
 lab is due in the week it is taught, matching the existing `lab-01.md`
 placeholder's own convention of `due` equal to its week's date).
