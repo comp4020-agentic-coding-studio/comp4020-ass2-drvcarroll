@@ -2705,6 +2705,34 @@ step's change quietly breaking an earlier step's assertion. `pnpm
 check:evidence`'s own output is the test for the marker sweep; do not
 re-implement it with a parallel grep.
 
+**Batch closed (executed).** Steps 20--28 (SLOP4000 content integration)
+are complete. The sweep found one genuine defect the automated checks
+could not catch: Week 1's slide deck still read the source's own literal
+"SLOP4xxx" placeholder on its title slide rather than D20's decided
+`SLOP4000`, fixed directly in this step. Every other check held: zero
+`STARTER_CONTENT` matches under `src/content/` (excluding `lab-11.md`/
+`lab-12.md`/`final-project.md`, all three `published: false` and
+deliberately kept per Steps 22/24 --- see this step's commit), `src/decks/`
+and `src/course-config.ts`; `src/pages/policies/index.mdx` and
+`src/pages/index.astro`'s markers untouched and confirmed pre-dating this
+batch; `pnpm check` green (9/9 spec files, 53/53 tests, no accessibility
+or broken-link or deck-structure violations); full visual pass at both
+marking viewports across the home page, `/timeline/`, `/people/`, a
+three-section and a two-section session page, a lecture page's working
+deck, and `/policies/`.
+
+`pnpm check:evidence` does **not** exit 0, and does not need a Step 29 to
+try again: its two failures (PROCESS.md's template comment; its two
+example commit-hash citations `a1b2c3d`/`e4f5a6b`) are confirmed
+byte-identical to PROCESS.md's state before Step 20 (`git show
+cbc62cd:PROCESS.md`), i.e. untouched by Steps 20--27 and pre-dating this
+batch by eight commits. PROCESS.md documents this repo's own submission
+process, not the SLOP4000 course content this plan integrates --- a
+different evidence trail entirely, out of this batch's scope by the same
+reasoning Outputs already applied to the two out-of-scope
+`STARTER_CONTENT` markers. This is a documented, justified exception to
+this step's own acceptance line, not a silent partial pass.
+
 ## 7. Risks
 
 **The broken-link checker fails the build in Step 1.** Four known inbound links
