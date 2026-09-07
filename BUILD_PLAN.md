@@ -2447,6 +2447,33 @@ next to the gap) at both viewports.
 real dates. `pnpm check:evidence` confirms zero remaining markers in
 `src/content/lectures/`. `pnpm check` green.
 
+**Amendment (post-implementation): the `date` field was still Steps
+1--19's Feb--May placeholder, not D21's real calendar, and this step
+fixed it.** This step's own Dependencies line assumed "`week`/`date`
+fields use D21's real 2027 dates, which must already be the plan's fixed
+calendar" by the time Step 25 runs, on the strength of Step 20 landing
+first. That assumption was wrong: Step 20's Scope was `src/course-config.ts`
+only, and its own Amendment already documented that `sessions`/`lectures`/
+`assessments` would keep their placeholder dates until later steps closed
+the gap file by file. Steps 23/24 closed it for assessments; nothing in
+Steps 20--24 touched lecture dates, so `week-01.md` through `week-12.md`
+were all still dated Feb--May 2027 going into this step. Since `date` is
+part of this step's own file scope (not excluded by its Constraints, which
+name only `slides`/`week`/`teachers`) and Step 7's own Acceptance line
+cannot be satisfied without it (the Week 7 gap being visually confirmable
+requires Week 7 to actually carry a date three weeks after Week 6's), this
+step set all twelve `date` fields to D21's real weekly calendar (27 Jul,
+weekly to 31 Aug, then 21 Sep, weekly to 26 Oct) rather than leaving them
+for an unnamed future step. Titles for weeks 2--12 were also changed from
+the scaffold's generic "Week N lecture" to the real topic name from
+CONTENT.md's schedule table, since title carried no constraint and the
+generic form read as leftover placeholder beside the new real body copy;
+`week-01`'s title was left untouched. `week`/`teachers`/`slides` were not
+touched. `pnpm check` after this step shows exactly one red assertion,
+`spec/data-integrity.test.ts`'s course-period check, now failing only on
+`sessions/*.md`'s dates (still Feb--May, confirmed untouched by this
+step) --- Step 26's scope, not moved here.
+
 ### Step 26 --- Session bodies: twelve weeks, D19's stacked layout, real specs
 
 **Goal.** `src/content/sessions/01-getting-started.md` through
