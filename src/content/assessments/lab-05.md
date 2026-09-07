@@ -1,34 +1,37 @@
 ---
-title: Lab 5
+title: "Lab 5: Persistence Laboratory"
 description:
-  Placeholder — a structural entry for the timeline spine, not yet a written
-  brief.
-week: 7
-due: 2027-04-16T17:00:00+10:00
-# Placeholder weight: 100 / 12 new entries ≈ 8.33% each (BUILD_PLAN.md Step
-# 6 amendment). Provisional until real weights land; does not yet sum to
-# 100% across the collection with assignment-1/final-project's existing
-# weights — expected, per BUILD_PLAN.md section 7.
-weight: 8.33
-brief:
-  Placeholder — the one-sentence prompt for Lab 5 has not been
-  written yet.
+  Detect and analyse simulated persistence mechanisms in a prepared
+  virtual machine, without deploying real persistence.
+week: 6
+due: 2027-08-31T17:00:00+10:00
+# 2% (10 labs x 2% = 20% of course total; BUILD_PLAN.md D24).
+weight: 2
+brief: >
+  Detect and analyse the simulated persistence mechanisms planted in a
+  prepared virtual machine, and explain how each survives a reboot.
 submissionItems:
-  - Placeholder — the exact deliverable for Lab 5 has not been
-    decided yet.
+  - A list of persistence mechanisms found in the prepared VM
+  - An explanation of how each mechanism survives interruption or reboot
 marking:
   mode: holistic
   description:
-    Placeholder marking note — Lab 5's marking criteria have not been
-    finalised yet.
+    Assessed on whether the analysis correctly identifies each planted
+    persistence mechanism and explains how it survives interruption.
 keyDates:
   - label: Submission due
-    date: 2027-04-16T17:00:00+10:00
+    date: 2027-08-31T17:00:00+10:00
 spec:
   - submitted by the deadline, in the format named below
+  - each persistence mechanism found is explained, not just listed
 ---
 
-<!-- STARTER_CONTENT: structural placeholder, replace with a real brief. -->
+Getting in once is not the same as staying in. This lab is about
+persistence: the strategies malware uses to survive a reboot or an
+interruption, and why removing an established piece of malware is
+routinely harder than finding it in the first place.
 
-Placeholder lab brief. This entry exists so the timeline spine has a real
-page to link its Lab 5 bead to.
+Rather than build any real persistence mechanism, students are handed a
+prepared virtual machine with several already planted, and the task is
+detection and analysis: find each one, and explain in concrete terms how
+it survives the events that would otherwise remove it.

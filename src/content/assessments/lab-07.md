@@ -1,34 +1,39 @@
 ---
-title: Lab 7
+title: "Lab 7: C2 Communications Laboratory"
 description:
-  Placeholder — a structural entry for the timeline spine, not yet a written
-  brief.
-week: 9
-due: 2027-04-30T17:00:00+10:00
-# Placeholder weight: 100 / 12 new entries ≈ 8.33% each (BUILD_PLAN.md Step
-# 6 amendment). Provisional until real weights land; does not yet sum to
-# 100% across the collection with assignment-1/final-project's existing
-# weights — expected, per BUILD_PLAN.md section 7.
-weight: 8.33
-brief:
-  Placeholder — the one-sentence prompt for Lab 7 has not been
-  written yet.
+  Analyse captured command-and-control traffic and build a benign
+  request/response simulator.
+week: 8
+due: 2027-09-28T17:00:00+10:00
+# 2% (10 labs x 2% = 20% of course total; BUILD_PLAN.md D24).
+weight: 2
+brief: >
+  Analyse a set of captured command-and-control traffic, then build a
+  benign simulator that reproduces its request/response pattern.
 submissionItems:
-  - Placeholder — the exact deliverable for Lab 7 has not been
-    decided yet.
+  - A written analysis of the captured C2 traffic's communication pattern
+  - A benign request/response simulator reproducing that pattern
 marking:
   mode: holistic
   description:
-    Placeholder marking note — Lab 7's marking criteria have not been
-    finalised yet.
+    Assessed on whether the analysis and simulator correctly capture the
+    C2 architecture and communication pattern of the traffic given.
 keyDates:
   - label: Submission due
-    date: 2027-04-30T17:00:00+10:00
+    date: 2027-09-28T17:00:00+10:00
 spec:
   - submitted by the deadline, in the format named below
+  - the simulator's request/response pattern matches the analysis of the
+    captured traffic
 ---
 
-<!-- STARTER_CONTENT: structural placeholder, replace with a real brief. -->
+Once malware is running on a target, it typically needs to talk to its
+operator. This lab covers that channel: the basic concepts behind
+command-and-control, the shapes information exchange between operator and
+target can take, and the infrastructure dependencies that channel relies
+on — including what happens when the server on the other end goes dark.
 
-Placeholder lab brief. This entry exists so the timeline spine has a real
-page to link its Lab 7 bead to.
+Students analyse a set of captured C2 traffic to work out its
+communication pattern, then build a benign simulator reproducing that
+same request/response behaviour, connecting analysis to construction
+rather than treating them as separate skills.

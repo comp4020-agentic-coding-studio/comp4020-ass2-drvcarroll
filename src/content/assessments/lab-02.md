@@ -1,34 +1,39 @@
 ---
-title: Lab 2
+title: "Lab 2: Build a Malware Blueprint"
 description:
-  Placeholder — a structural entry for the timeline spine, not yet a written
-  brief.
-week: 2
-due: 2027-03-05T17:00:00+10:00
-# Placeholder weight: 100 / 12 new entries ≈ 8.33% each (BUILD_PLAN.md Step
-# 6 amendment). Provisional until real weights land; does not yet sum to
-# 100% across the collection with assignment-1/final-project's existing
-# weights — expected, per BUILD_PLAN.md section 7.
-weight: 8.33
-brief:
-  Placeholder — the one-sentence prompt for Lab 2 has not been
-  written yet.
+  Design a modular malware architecture on paper, without writing a
+  functioning payload.
+week: 3
+due: 2027-08-10T17:00:00+10:00
+# 2% (10 labs x 2% = 20% of course total; BUILD_PLAN.md D24).
+weight: 2
+brief: >
+  Design a modular, non-functional malware architecture: its loaders,
+  payloads, supporting modules and the infrastructure they depend on.
 submissionItems:
-  - Placeholder — the exact deliverable for Lab 2 has not been
-    decided yet.
+  - An architecture diagram naming each component and its role
+  - A short justification of the modularity choices made
 marking:
   mode: holistic
   description:
-    Placeholder marking note — Lab 2's marking criteria have not been
-    finalised yet.
+    Assessed on whether the design shows a working understanding of
+    loaders, payloads, modules and infrastructure as separable components.
 keyDates:
   - label: Submission due
-    date: 2027-03-05T17:00:00+10:00
+    date: 2027-08-10T17:00:00+10:00
 spec:
   - submitted by the deadline, in the format named below
+  - the architecture separates loaders, payloads, modules and
+    infrastructure rather than describing one undifferentiated blob
 ---
 
-<!-- STARTER_CONTENT: structural placeholder, replace with a real brief. -->
+Once a lifecycle exists, it needs an architecture: the pieces a real
+system would be built from, and how they fit together. This lab asks for
+that blueprint — a design only, never a running program — laying out
+loaders, payloads and the modules and infrastructure they call on.
 
-Placeholder lab brief. This entry exists so the timeline spine has a real
-page to link its Lab 2 bead to.
+The design work here mirrors ordinary software architecture more than it
+mirrors a single exploit: the same pressures toward modularity, separation
+of concerns and maintainability apply, which is exactly the point the
+lecture makes about why malware increasingly resembles the software
+engineering it borrows from.

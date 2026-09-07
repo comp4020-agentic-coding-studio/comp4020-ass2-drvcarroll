@@ -1,34 +1,40 @@
 ---
-title: Lab 4
+title: "Lab 4: Infiltration Investigation"
 description:
-  Placeholder — a structural entry for the timeline spine, not yet a written
-  brief.
-week: 4
-due: 2027-03-19T17:00:00+10:00
-# Placeholder weight: 100 / 12 new entries ≈ 8.33% each (BUILD_PLAN.md Step
-# 6 amendment). Provisional until real weights land; does not yet sum to
-# 100% across the collection with assignment-1/final-project's existing
-# weights — expected, per BUILD_PLAN.md section 7.
-weight: 8.33
-brief:
-  Placeholder — the one-sentence prompt for Lab 4 has not been
-  written yet.
+  Investigate simulated phishing, vulnerability and supply-chain scenarios
+  using prepared evidence.
+week: 5
+due: 2027-08-24T17:00:00+10:00
+# 2% (10 labs x 2% = 20% of course total; BUILD_PLAN.md D24).
+weight: 2
+brief: >
+  Investigate a set of simulated infiltration scenarios — phishing,
+  vulnerability exploitation, removable media, network and supply-chain —
+  using the prepared evidence provided, and compare the vectors involved.
 submissionItems:
-  - Placeholder — the exact deliverable for Lab 4 has not been
-    decided yet.
+  - A short investigation report per scenario, using the prepared evidence
+  - A comparison naming the infiltration vector each scenario relies on
 marking:
   mode: holistic
   description:
-    Placeholder marking note — Lab 4's marking criteria have not been
-    finalised yet.
+    Assessed on whether the investigation correctly identifies and
+    compares the infiltration vector at work in each prepared scenario.
 keyDates:
   - label: Submission due
-    date: 2027-03-19T17:00:00+10:00
+    date: 2027-08-24T17:00:00+10:00
 spec:
   - submitted by the deadline, in the format named below
+  - each scenario's infiltration vector is identified and compared to the
+    others, not treated in isolation
 ---
 
-<!-- STARTER_CONTENT: structural placeholder, replace with a real brief. -->
+Getting malware into a target environment is a separate problem from
+getting it to execute once there. This lab looks at initial access from
+the investigator's side: a set of prepared, simulated scenarios covering
+phishing, exploited vulnerabilities, removable media, network vectors and
+supply-chain compromise, each with its own evidence trail to work through.
 
-Placeholder lab brief. This entry exists so the timeline spine has a real
-page to link its Lab 4 bead to.
+No infiltration is performed — the scenarios and their evidence are
+supplied — so the work is identification and comparison: which vector was
+used, what evidence points to it, and how the vectors differ in what they
+need from an attacker and what they leave behind.

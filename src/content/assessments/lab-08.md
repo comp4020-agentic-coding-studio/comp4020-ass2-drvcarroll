@@ -1,34 +1,40 @@
 ---
-title: Lab 8
+title: "Lab 8: Malware Analysis Laboratory"
 description:
-  Placeholder — a structural entry for the timeline spine, not yet a written
-  brief.
-week: 10
-due: 2027-05-07T17:00:00+10:00
-# Placeholder weight: 100 / 12 new entries ≈ 8.33% each (BUILD_PLAN.md Step
-# 6 amendment). Provisional until real weights land; does not yet sum to
-# 100% across the collection with assignment-1/final-project's existing
-# weights — expected, per BUILD_PLAN.md section 7.
-weight: 8.33
-brief:
-  Placeholder — the one-sentence prompt for Lab 8 has not been
-  written yet.
+  Analyse a deliberately benign sample using static and dynamic
+  techniques, and separate observed from inferred behaviour.
+week: 9
+due: 2027-10-05T17:00:00+10:00
+# 2% (10 labs x 2% = 20% of course total; BUILD_PLAN.md D24).
+weight: 2
+brief: >
+  Analyse a deliberately benign sample using both static and dynamic
+  analysis, and produce an investigation that identifies its indicators
+  of compromise.
 submissionItems:
-  - Placeholder — the exact deliverable for Lab 8 has not been
-    decided yet.
+  - A static analysis of the sample
+  - A dynamic analysis of the sample, run in a controlled environment
+  - A written investigation listing the indicators of compromise found
 marking:
   mode: holistic
   description:
-    Placeholder marking note — Lab 8's marking criteria have not been
-    finalised yet.
+    Assessed on whether the investigation distinguishes directly observed
+    behaviour from inferred behaviour and correctly identifies IOCs.
 keyDates:
   - label: Submission due
-    date: 2027-05-07T17:00:00+10:00
+    date: 2027-10-05T17:00:00+10:00
 spec:
   - submitted by the deadline, in the format named below
+  - clearly separates observed behaviour from inferred behaviour
 ---
 
-<!-- STARTER_CONTENT: structural placeholder, replace with a real brief. -->
+Having spent the semester building malware conceptually, this lab flips
+the perspective to the investigator's: static and dynamic analysis as an
+investigative process, working backward from a sample to reconstruct what
+it was intended to do.
 
-Placeholder lab brief. This entry exists so the timeline spine has a real
-page to link its Lab 8 bead to.
+Students analyse a deliberately benign sample using both techniques, and
+write up the investigation as they would for a real one — identifying
+indicators of compromise, and being explicit throughout about the
+difference between what the analysis directly observed and what it only
+infers.

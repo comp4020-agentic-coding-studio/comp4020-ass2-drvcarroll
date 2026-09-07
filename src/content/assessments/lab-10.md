@@ -1,34 +1,40 @@
 ---
-title: Lab 10
+title: 'Lab 10: "How Did They Get Caught?"'
 description:
-  Placeholder — a structural entry for the timeline spine, not yet a written
-  brief.
-week: 12
-due: 2027-05-21T17:00:00+10:00
-# Placeholder weight: 100 / 12 new entries ≈ 8.33% each (BUILD_PLAN.md Step
-# 6 amendment). Provisional until real weights land; does not yet sum to
-# 100% across the collection with assignment-1/final-project's existing
-# weights — expected, per BUILD_PLAN.md section 7.
-weight: 8.33
-brief:
-  Placeholder — the one-sentence prompt for Lab 10 has not been
-  written yet.
+  Reconstruct a fictional actor from logs, metadata and operational-security
+  mistakes, and assess the attribution evidence.
+week: 11
+due: 2027-10-19T17:00:00+10:00
+# 2% (10 labs x 2% = 20% of course total; BUILD_PLAN.md D24).
+weight: 2
+brief: >
+  Reconstruct a fictional threat actor from a set of logs, infrastructure
+  metadata and operational-security mistakes, and assess how confidently
+  the evidence supports that attribution.
 submissionItems:
-  - Placeholder — the exact deliverable for Lab 10 has not been
-    decided yet.
+  - A reconstruction of the actor from the supplied logs and metadata
+  - A written assessment of the attribution's confidence level
 marking:
   mode: holistic
   description:
-    Placeholder marking note — Lab 10's marking criteria have not been
-    finalised yet.
+    Assessed on whether the attribution is supported by the evidence
+    given, with confidence stated honestly rather than overclaimed.
 keyDates:
   - label: Submission due
-    date: 2027-05-21T17:00:00+10:00
+    date: 2027-10-19T17:00:00+10:00
 spec:
   - submitted by the deadline, in the format named below
+  - the stated confidence in the attribution matches the strength of the
+    supporting evidence
 ---
 
-<!-- STARTER_CONTENT: structural placeholder, replace with a real brief. -->
+The course's final lab turns to the mistake side of operational security:
+attribution, infrastructure hygiene, and the logs, metadata and human
+errors that let defenders work backward from an operation to the people
+running it.
 
-Placeholder lab brief. This entry exists so the timeline spine has a real
-page to link its Lab 10 bead to.
+Given a set of famous operational-security failures as a model, students
+reconstruct a fictional actor from supplied evidence and write an
+assessment of how confidently that evidence actually supports the
+attribution — the same question every real "how did they get caught?"
+case ultimately turns on.

@@ -225,4 +225,19 @@ describe("layout contracts (BUILD_PLAN.md Step 8)", () => {
     const total = weights.reduce((sum, weight) => sum + weight, 0);
     expect(total, `assessment weights currently sum to ${total}, not 100`).toBeCloseTo(100, 1);
   });
+
+  // Step 23: the ten real labs (2% each) are their own named sub-total,
+  // distinct from the whole-collection 100% check above (still red until
+  // Step 24 lands assignment-2/final-exam/final-project's real weights).
+  it("sums the ten real labs' weight to exactly 20", () => {
+    const api = JSON.parse(readFileSync(resolve(DIST, "api/index.json"), "utf8")) as {
+      nodes: { type: string; id: string; meta?: Record<string, unknown> }[];
+    };
+    const labWeights = api.nodes
+      .filter((node) => node.type === "assessments" && /\/lab-(0[1-9]|10)$/.test(node.id))
+      .map((node) => Number(node.meta?.weight));
+    expect(labWeights, "expected exactly ten real labs").toHaveLength(10);
+    const total = labWeights.reduce((sum, weight) => sum + weight, 0);
+    expect(total, `lab-01..lab-10 weights currently sum to ${total}, not 20`).toBeCloseTo(20, 1);
+  });
 });
