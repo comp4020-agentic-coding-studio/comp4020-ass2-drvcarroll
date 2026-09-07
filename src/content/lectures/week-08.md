@@ -1,17 +1,25 @@
 ---
-title: Week 8 lecture
+title: Command, Control & Communication
 description:
-  Placeholder — a structural entry for Week 8's lecture, not yet a
-  written outline.
+  How malware communicates with its operator once it is running, and what
+  happens when that channel disappears
 week: 8
-date: 2027-04-12
+date: 2027-09-28
 teachers:
   - ivan-sidorov
 related:
   - sessions/08-session
 ---
 
-<!-- STARTER_CONTENT: structural placeholder, replace with a real outline. -->
+Distributed malware still needs to be told what to do. This lecture covers
+the basic concepts of command-and-control, how information moves between
+operator and infection, and what happens when the server on the other end
+gets switched off.
 
-Placeholder lecture page. This entry exists so Week 8's session has a
-real lecture page to link its Lecture card to.
+## Outline
+
+- malware communicating with its operator
+- basic command-and-control concepts
+- information exchange
+- infrastructure dependencies
+- what happens when the server gets switched off?

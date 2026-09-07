@@ -1,9 +1,10 @@
 ---
-title: Second lecture
+title: From Idea to Malware
 description:
-  Week 2 — the first substantive material, and the run-up to the first review
+  How a threat model and a motivation become a working malicious program,
+  traced through the malware development lifecycle
 week: 2
-date: 2027-03-01
+date: 2027-08-03
 teachers:
   - ivan-sidorov
 related:
@@ -11,13 +12,13 @@ related:
   - assessments/assignment-1
 ---
 
-<!-- STARTER_CONTENT: replace this lecture, then remove this comment. -->
-
-Replace this page. It exists so the lectures listing sorts by week and the
-related block has more than one edge to draw.
+Every malicious program starts somewhere short of malicious: a threat model,
+a motivation, and a plan. This lecture follows that plan through the
+malware development lifecycle to a finished, working program.
 
 ## Outline
 
-- the first substantive material, and where it shows up in practice
-- what the first review is looking for
-- reading before next week
+- threat models and motivations
+- malware development lifecycle
+- anatomy of a malicious program
+- analysis of historical examples

@@ -1,17 +1,26 @@
 ---
-title: Week 7 lecture
+title: Distribution
 description:
-  Placeholder — a structural entry for Week 7's lecture, not yet a
-  written outline.
+  Getting malware from its creator to its targets at scale, held at the
+  semester's mid-point retro and assessment discussion
 week: 7
-date: 2027-04-05
+date: 2027-09-21
 teachers:
   - fulan-al-fulani
 related:
   - sessions/07-session
 ---
 
-<!-- STARTER_CONTENT: structural placeholder, replace with a real outline. -->
+A three-week gap separates this lecture from the last: a mid-semester
+checkpoint before the course turns from getting malware onto one machine to
+getting it onto many. This lecture covers the infrastructure and delivery
+mechanisms that scale an operation, alongside a retro on the semester so
+far and a discussion of assessment.
 
-Placeholder lecture page. This entry exists so Week 7's session has a
-real lecture page to link its Lecture card to.
+## Outline
+
+- getting malware from its creator to its targets
+- infrastructure
+- delivery mechanisms
+- scaling an operation
+- mid-semester retro / assessment discussion

@@ -1,17 +1,24 @@
 ---
-title: Week 9 lecture
+title: Malware Analysis
 description:
-  Placeholder — a structural entry for Week 9's lecture, not yet a
-  written outline.
+  Reverse engineering as an investigative process, from static and dynamic
+  analysis to reconstructing intent
 week: 9
-date: 2027-04-19
+date: 2027-10-05
 teachers:
   - fulan-al-fulani
 related:
   - sessions/09-session
 ---
 
-<!-- STARTER_CONTENT: structural placeholder, replace with a real outline. -->
+Having built and distributed malware for eight weeks, the course turns to
+taking it apart. This lecture covers static and dynamic analysis, reverse
+engineering as an investigative process, and reconstructing what a piece of
+malware was intended to do from the indicators it leaves behind.
 
-Placeholder lecture page. This entry exists so Week 9's session has a
-real lecture page to link its Lecture card to.
+## Outline
+
+- static vs dynamic analysis
+- reverse engineering as an investigative process
+- indicators of compromise
+- reconstructing what malware was intended to do

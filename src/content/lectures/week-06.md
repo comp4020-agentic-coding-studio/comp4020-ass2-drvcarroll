@@ -1,17 +1,23 @@
 ---
-title: Week 6 lecture
+title: Persistence
 description:
-  Placeholder — a structural entry for Week 6's lecture, not yet a
-  written outline.
+  How malware survives reboots and interruptions, and why removing it is
+  harder than finding it
 week: 6
-date: 2027-03-29
+date: 2027-08-31
 teachers:
   - ivan-sidorov
 related:
   - sessions/06-session
 ---
 
-<!-- STARTER_CONTENT: structural placeholder, replace with a real outline. -->
+Getting in once is not enough if the access does not last. This lecture
+covers the strategies malware uses to survive reboots and interruptions,
+and why removing a persistent infection is harder than finding one.
 
-Placeholder lecture page. This entry exists so Week 6's session has a
-real lecture page to link its Lecture card to.
+## Outline
+
+- surviving reboots and interruptions
+- maintaining access
+- persistence strategies
+- why removing malware is harder than finding it

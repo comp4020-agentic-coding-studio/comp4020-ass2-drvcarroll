@@ -1,17 +1,22 @@
 ---
-title: Week 3 lecture
+title: Malware Architecture
 description:
-  Placeholder — a structural entry for Week 3's lecture, not yet a
-  written outline.
+  The components a malware system is built from, and why that system
+  increasingly resembles ordinary software
 week: 3
-date: 2027-03-08
+date: 2027-08-10
 teachers:
   - fulan-al-fulani
 related:
   - sessions/03-session
 ---
 
-<!-- STARTER_CONTENT: structural placeholder, replace with a real outline. -->
+A working piece of malware is a system, not a single trick, assembled from
+payloads, loaders and the supporting infrastructure that keeps them working.
 
-Placeholder lecture page. This entry exists so Week 3's session has a
-real lecture page to link its Lecture card to.
+## Outline
+
+- components of a malware system
+- payloads, loaders and supporting infrastructure
+- designing for modularity
+- why malware increasingly resembles ordinary software

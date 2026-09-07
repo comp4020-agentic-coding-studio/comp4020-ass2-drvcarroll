@@ -1,17 +1,25 @@
 ---
-title: Week 5 lecture
+title: Infiltration
 description:
-  Placeholder — a structural entry for Week 5's lecture, not yet a
-  written outline.
+  How malware reaches a target environment in the first place, from social
+  engineering to exploited software weaknesses
 week: 5
-date: 2027-03-22
+date: 2027-08-24
 teachers:
   - fulan-al-fulani
 related:
   - sessions/05-session
 ---
 
-<!-- STARTER_CONTENT: structural placeholder, replace with a real outline. -->
+Execution presumes malware is already present. This lecture covers how it
+gets there: through people, through software weaknesses, and through
+physical and network vectors, illustrated with case studies of
+infiltrations that worked.
 
-Placeholder lecture page. This entry exists so Week 5's session has a
-real lecture page to link its Lecture card to.
+## Outline
+
+- how malware gets into a target environment
+- social engineering
+- exploiting software weaknesses
+- physical and network vectors
+- case studies in successful infiltration

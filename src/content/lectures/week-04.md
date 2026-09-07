@@ -1,17 +1,24 @@
 ---
-title: Week 4 lecture
+title: Execution
 description:
-  Placeholder — a structural entry for Week 4's lecture, not yet a
-  written outline.
+  How malicious code gets from sitting on disk to actually running, and the
+  environments and triggers that make it happen
 week: 4
-date: 2027-03-15
+date: 2027-08-17
 teachers:
   - ivan-sidorov
 related:
   - sessions/04-session
 ---
 
-<!-- STARTER_CONTENT: structural placeholder, replace with a real outline. -->
+Code that never runs is not malware, only a file. This lecture covers how
+malicious software gets itself executed, and the eternal problem beneath
+every other technique it depends on: how do I get this thing to actually
+start?
 
-Placeholder lecture page. This entry exists so Week 4's session has a
-real lecture page to link its Lecture card to.
+## Outline
+
+- how malicious software gets code to run
+- execution environments
+- triggers and user interaction
+- the eternal problem of "how do I get this thing to actually start?"

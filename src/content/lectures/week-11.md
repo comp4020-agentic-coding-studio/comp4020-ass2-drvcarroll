@@ -1,17 +1,26 @@
 ---
-title: Week 11 lecture
+title: Operational Security
 description:
-  Placeholder — a structural entry for Week 11's lecture, not yet a
-  written outline.
+  Attribution, infrastructure hygiene and the human errors behind famous
+  operational-security failures
 week: 11
-date: 2027-05-03
+date: 2027-10-19
 teachers:
   - fulan-al-fulani
 related:
   - sessions/11-session
 ---
 
-<!-- STARTER_CONTENT: structural placeholder, replace with a real outline. -->
+Good malware and good operational security are not the same skill, and the
+gap between them is where operators get caught. This lecture covers
+attribution, infrastructure hygiene, and the logs, metadata and human
+errors behind famous operational-security failures.
 
-Placeholder lecture page. This entry exists so Week 11's session has a
-real lecture page to link its Lecture card to.
+## Outline
+
+- attribution
+- infrastructure hygiene
+- logs, metadata and mistakes
+- human error
+- famous operational-security failures
+- "how did they get caught?"
