@@ -52,8 +52,10 @@ export const courseMeta = slopCourseMetaSchema.parse({
   year: 2027,
   level: 4,
   startDate: "2027-07-27",
-  // Teaching runs to 26 Oct (D21); this end-of-exam-period date is
-  // provisional until Step 24 fixes the real Final Examination date.
+  // Teaching runs to 26 Oct (D21). CONTENT.md gives no exam date, so
+  // Step 24 fixes the Final Examination itself to this date, in the
+  // exam period ANU runs after teaching — the two are kept equal by
+  // construction, not independently guessed.
   endDate: "2027-11-12",
   description:
     "A course that teaches students how to make and produce malware, " +
