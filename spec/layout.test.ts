@@ -153,7 +153,7 @@ describe("layout contracts (BUILD_PLAN.md Step 8)", () => {
   it("orders each session section as subtitle, then description, then card", () => {
     const paths = [
       resolve(DIST, "sessions/01-getting-started/index.html"),
-      resolve(DIST, "sessions/04-session/index.html"),
+      resolve(DIST, "sessions/08-session/index.html"),
     ];
     for (const path of paths) {
       const main = parse(path).querySelector("#main")!;
@@ -182,7 +182,7 @@ describe("layout contracts (BUILD_PLAN.md Step 8)", () => {
   it("stacks each session section in one column, not two card grids", () => {
     const paths = [
       resolve(DIST, "sessions/02-first-review/index.html"), // Lecture + Lab
-      resolve(DIST, "sessions/04-session/index.html"), // + Assignment
+      resolve(DIST, "sessions/08-session/index.html"), // + Assignment
     ];
     for (const path of paths) {
       const main = parse(path).querySelector("#main")!;

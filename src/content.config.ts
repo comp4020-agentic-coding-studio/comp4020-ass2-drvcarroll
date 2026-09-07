@@ -43,7 +43,8 @@ export const collections = {
         // Absent on Weeks 1 and 12 (D22): the brief supplies exactly ten
         // labs, mapped onto Weeks 2-11 only.
         lab: reference("assessments").optional(),
-        // Present only on the Week 4/9 entries (Step 14).
+        // Present only on Week 8 (assignment-1) and Week 11
+        // (assignment-2), their real due-date/last-content homes (Step 26).
         assignment: reference("assessments").optional(),
       })
       .loose(),

@@ -1,38 +1,42 @@
 ---
-title: First review
+title: From idea to threat model
 description:
-  The second session, where work made in week 1 meets an audience for the first
-  time
+  The second session — where a motive becomes a threat model, and the
+  malware development lifecycle gets its first outing
 week: 2
-date: 2027-03-01
+date: 2027-08-03
 teachers:
   - ivan-sidorov
 lecture: week-02
 lab: lab-01
 spec:
-  - work from week 1 is running and can be shown in under two minutes
-  - you can name the one decision you are least sure about
-related:
-  - assessments/assignment-1
+  - you can state the fictional scenario's motivation and constraints in
+    one sentence
+  - your threat model names the target, the assets at risk and the
+    attacker's likely capability
 ---
 
-<!-- STARTER_CONTENT: replace this session, then remove this comment. -->
-
-Replace this page. It is here so the sessions listing sorts by week, the detail
-route renders a second spec, and the related block has an edge into the
-assessment collection.
+Every piece of malware starts as an idea under constraints. This session
+turns that idea into the first structured artefact of the semester: a threat
+model.
 
 ## Before the session
 
-Bring the work from week 1 and the one decision you are least sure about.
+Read the lecture's four common motivations (financial, espionage, disruption,
+ideological) so you can recognise which one is driving Lab 1's fictional
+scenario before you start modelling it.
 
 ## In the session
 
-Short demos, then feedback aimed at the decision rather than the polish. What
-makes a review worth attending is that the feedback changes what someone does
-next, so build in the time to act on it.
+The lecture walks the malware development lifecycle end to end — idea,
+design, implementation, testing, deployment, maintenance — then the anatomy
+of a malicious program: loader, payload, persistence, communication,
+configuration. Lab 1 then hands you a fictional scenario to analyse into
+exactly that shape: a lifecycle and a threat model naming who is targeted,
+what they stand to lose, and what the attacker is capable of.
 
 ## Afterwards
 
-If attendance or participation is worth marks, say so here and link the rule to
-the [assessment page](/assessments/assignment-1/) rather than restating it.
+Lab 1 is marked on whether the model is structured, not on how imaginative
+the scenario is. Keep the threat model — Week 3's blueprint builds its
+architecture directly on top of it.

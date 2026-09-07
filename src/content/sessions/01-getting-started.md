@@ -1,37 +1,43 @@
 ---
 title: Getting started
 description:
-  The first session of the semester — what to have working before you arrive,
-  and what happens once you do
+  The first session of the semester — what malware is, what the course
+  covers, and what you are expected to bring to the practical work
 week: 1
-date: 2027-02-22
+date: 2027-07-27
 teachers:
   - fulan-al-fulani
 lecture: week-01
 spec:
-  - your development environment runs the course's toolchain
-  - you can build and preview the site locally
-  - you have something, however rough, to show the class
+  - you can name one example of software that counts as malware and one
+    that does not, and say what separates them
+  - you can name the four pieces of assessment and their weights
+  - you can state why this course's practical work uses only benign,
+    simulated samples
 ---
 
-<!-- STARTER_CONTENT: replace this session, then remove this comment. -->
-
-Replace this page. A session brief tells a student three things: what to bring,
-what will happen, and how to tell afterwards whether it went well.
+The first session is orientation: what this course means by "malware," why
+it treats hostile software as a serious engineering problem, and what the
+semester ahead looks like.
 
 ## Before the session
 
-The `spec` above is the contract. Write each line so a reader can tell whether
-it has been met without asking you --- that is the difference between a spec and
-a wish.
+Nothing to prepare beyond curiosity. There is no lab this week and nothing to
+install yet — the toolchain for the practical weeks starts in Week 2.
 
 ## In the session
 
-Say how the time is actually spent, in the order it happens. If the session runs
-to a repeating shape --- a demo, then feedback, then work time --- name the
-parts and say roughly how long each takes. Students plan against it.
+The lecture opens with what counts as malware and why intent, not technique,
+is what decides it, then works through the history from experimental
+self-replicating code to today's professionalised operations. It closes with
+the course's own shape: the four pieces of assessment and their weights, and
+the one rule that governs every practical exercise from here on — benign
+samples and simulated environments only, curiosity required, real malice is
+not.
 
 ## Afterwards
 
-Say what leaves the session: a mark, a piece of feedback, a decision about the
-next week's work.
+You should be able to place this course's twelve weeks against its own
+structure — production lifecycle, then analysis and defence, then
+synthesis — and know what each piece of assessment is worth before Week 2's
+lab asks you to build anything.
