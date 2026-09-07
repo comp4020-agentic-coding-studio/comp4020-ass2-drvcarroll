@@ -2525,6 +2525,51 @@ out to require a test change, that is itself a finding that scope leaked
 into structure and belongs back in Step 1 of the loop. `pnpm check:evidence`
 confirms zero remaining markers in `src/content/sessions/`.
 
+**Amendment (post-implementation): the `assignment` decision, and one
+finding neither this step's Dependencies nor its own text anticipated.**
+
+1. **`assignment: assignment-1` moves to Week 8, `assignment: assignment-2`
+   to Week 11** --- both the candidates this step's carried-in text
+   itself named, not the third option (dropping assignment-2's field
+   entirely) or the un-named Week 12. Assignment 1 is due 2027-10-01,
+   inside Week 8's own teaching week, the most honest single week to
+   call its home; CONTENT.md's real Week 7 Slide 12 ("Assessment 1
+   Reminder", already cited by `assignment-1.md`'s own due-date comment)
+   reinforces this, since the reminder in Week 7 precedes Week 8's due
+   date rather than coinciding with it. Assignment 2's brief (OSINT,
+   reconnaissance, infection, persistence, communication, avoidance)
+   maps almost one-to-one onto Week 11's Operational Security content
+   (attribution, infrastructure hygiene, logs/metadata, human error),
+   the last teaching week its report depends on.
+2. **Week 12 was ruled out, not just left unconsidered.** CONTENT.md's
+   real Week 12 Slide 15 ("Assessment 2 Reminder") made Week 12 look
+   like the stronger textually-sourced candidate at first read, but
+   `spec/layout.test.ts`'s "renders exactly one section on Weeks 1 and
+   12" test (D22) hardcodes Week 12 as lecture-only with no lab ---
+   adding `assignment` there would have forced exactly the test change
+   this step's own Testing methodology line forbids. Week 11 satisfies
+   both the content evidence and the structural constraint at once,
+   since it already carries a lab and already renders three sections;
+   Week 12's real reminder slide is honoured in its session body as
+   prose instead, with no frontmatter reference.
+3. **`01-getting-started.md` was not "already real" as this step's own
+   Inputs line assumed.** It still carried the `STARTER_CONTENT` marker
+   and a generic "your development environment runs the course's
+   toolchain" body left over from the template scaffold, unrelated to
+   the malware course. Per CLAUDE.md's "read yourself first, do not
+   rely on paraphrase," the actual file was checked rather than the
+   plan's description of it, and it needed the same rewrite as
+   02--12 (Week 1 orientation content: what malware means here, the
+   course's own shape, the benign-samples-only rule) to satisfy this
+   step's own Outputs line ("Remove all STARTER_CONTENT markers").
+4. **The course-period date check is now fully green, not just less
+   red.** `spec/data-integrity.test.ts`'s "keeps every scheduled date
+   inside the teaching period" test, red since Step 6 and partially
+   closed by Steps 23--25, passes across all three collections for the
+   first time after this step's twelve session `date` fixes (D21's
+   real 2027-07-27--2027-11-12 range, gap after Week 6, matching each
+   week's lecture date exactly).
+
 ### Step 27 --- Slide decks: twelve `.deck.mdx` files, wired from their lectures
 
 **Goal.** `src/decks/week-01.deck.mdx` through `week-12.deck.mdx` carry the
