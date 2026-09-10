@@ -150,7 +150,10 @@ describe("layout contracts (BUILD_PLAN.md Step 8)", () => {
   // subtitle, a content coincidence pre-dating this step and out of its
   // scope (content is untouched). Asserting it here would fail on data,
   // not on this step's markup, so it is left to visual inspection.
-  it("orders each session section as subtitle, then description, then card", () => {
+  // Step 30 (D26): the description moved into the card's own slot, so a
+  // section is now subtitle immediately followed by its card, one card per
+  // subtitle, with the card's own body carrying real, non-title text.
+  it("orders each session section as subtitle, then card, with a described card body", () => {
     const paths = [
       resolve(DIST, "sessions/01-getting-started/index.html"),
       resolve(DIST, "sessions/08-session/index.html"),
@@ -164,21 +167,25 @@ describe("layout contracts (BUILD_PLAN.md Step 8)", () => {
       expect(subtitles.length, `${path}: section/card count mismatch`).toBe(cards.length);
 
       for (const [index, subtitle] of subtitles.entries()) {
-        const description = subtitle.nextElementSibling;
-        expect(description?.tagName, `${path}: "${subtitle.textContent}" has no following <p>`).toBe("P");
+        const card = subtitle.nextElementSibling;
+        expect(card?.classList.contains("at-card"), `${path}: "${subtitle.textContent}" not followed by its card`).toBe(
+          true,
+        );
+        expect(card, `${path}: "${subtitle.textContent}"'s card is not in card order`).toBe(cards[index]);
 
-        const card = cards[index];
-        // 4 = Node.DOCUMENT_POSITION_FOLLOWING: subtitle precedes its card.
-        const position = subtitle.compareDocumentPosition(card);
-        expect(position & 4, `${path}: card precedes subtitle "${subtitle.textContent}"`).toBeTruthy();
+        const title = card!.querySelector(".at-card-title")?.textContent?.trim();
+        const body = card!.querySelector(".at-card-body p")?.textContent?.trim();
+        expect(body, `${path}: "${subtitle.textContent}"'s card has no description`).toBeTruthy();
+        expect(body, `${path}: "${subtitle.textContent}"'s card body just repeats the title`).not.toBe(title);
       }
     }
   });
 
   // Step 19 (D19): sections stack in one column, not two side-by-side
-  // CardGrids — each section's subtitle/description/card share one
-  // container, and those containers sit in `sections` order inside a
-  // single common parent.
+  // CardGrids — each section's subtitle/card share one container, and
+  // those containers sit in `sections` order inside a single common
+  // parent. Step 30 (D26): a section is now two children, not three —
+  // the description moved into the card's own slot.
   it("stacks each session section in one column, not two card grids", () => {
     const paths = [
       resolve(DIST, "sessions/02-first-review/index.html"), // Lecture + Lab
@@ -195,10 +202,9 @@ describe("layout contracts (BUILD_PLAN.md Step 8)", () => {
 
       for (const section of sectionEls) {
         expect(section.parentNode, `${path}: section has no common parent`).toBe(wrapper);
-        const [heading, description, card] = [...section.children];
+        const [heading, card] = [...section.children];
         expect(heading?.tagName, `${path}: section's first child isn't a subtitle`).toBe("H2");
-        expect(description?.tagName, `${path}: section's second child isn't a description`).toBe("P");
-        expect(card?.classList.contains("at-card"), `${path}: section's third child isn't a card`).toBe(true);
+        expect(card?.classList.contains("at-card"), `${path}: section's second child isn't a card`).toBe(true);
       }
     }
   });
