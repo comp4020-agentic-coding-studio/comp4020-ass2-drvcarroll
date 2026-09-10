@@ -3031,6 +3031,61 @@ boilerplate line is caught rather than only noticed on a visual pass ---
 but do not block this step on it if the field isn't available where that
 suite currently reads from (`dist/api/index.json`).
 
+**Executed.** Each of the ten `lab-NN.md` files and `assignment-1.md`/
+`assignment-2.md` had its `spec:` array grown from 2-3 lines to 5,
+adding 2-3 further lines per entry --- every one a rephrasing of a
+sentence already present in that same file's own `submissionItems`,
+`marking.description`, or body prose (e.g. lab-05's new lines trace to
+its "planted" VM mechanisms and its body's "harder to remove than to
+find" claim; lab-09's trace to its false-positive/false-negative
+submission items and marking description; assignment-2's trace to its
+marking description's "not only the ones that went well" and its
+body's "a flag retrieved with no account of how... does not meet the
+brief"), never a new fact the file didn't already state. Existing
+lines were kept verbatim, per "never remove what you were not asked to
+remove"; assignment-2 was left without a "submitted by the deadline"
+line since it never had one to keep, and inventing that boilerplate
+line for the first time was judged outside "keep the existing line"'s
+remit. A swap-test read across all twelve arrays side by side confirmed
+each added line names that entry's own domain vocabulary (threat model,
+loaders/payloads, execution triggers, infiltration vectors, the planted
+VM, distribution infrastructure, the C2 simulator, static/dynamic/IOC,
+false positives/negatives, attribution confidence, the eight design
+elements, the flag/target machine) rather than reading as boilerplate
+interchangeable between entries.
+
+A mechanical check was added to `spec/data-integrity.test.ts`: contrary
+to this step's own fallback allowance, `spec` turned out to be
+available and cheap to check --- `course-content.ts` destructures
+`spec` off the frontmatter onto the node's own top-level `spec` field
+(sibling to `meta`, not inside it) before building `meta: rest`, so
+`dist/api/index.json`'s node objects already carry it. The new test
+asserts exactly the twelve `lab-*`/`assignment-*` nodes each have a
+`spec` array of at least 3 lines, so a future regression to
+boilerplate-only is caught by `pnpm check` rather than only a visual
+pass.
+
+`pnpm check` is green (typecheck: 0 errors/warnings/hints; 9/9 spec
+files, 56/56 tests). `git diff` on each of the twelve content files
+touches only its `spec:` array (confirmed via `git diff --stat`, all
+additions, zero deletions). Visual inspection: Google Chrome was
+available headless on this machine, so `/assessments/lab-01/` was
+screenshotted at both 1920x1080 and 390x844 against a `pnpm preview`
+server --- at 1920x1080 "The spec" section renders cleanly with all
+five lines in the same bulleted-list style as "What you submit",
+consistent with the rest of the page. At 390x844 the list content and
+structure are present and correct, but the whole page (including
+unmodified prose above the spec section) shows a pre-existing, uniform
+right-edge text-overflow artifact around the 390px boundary that
+disappears by 500px width and affects sections this step did not
+touch --- a rendering quirk in the theme's narrow-viewport chrome
+(mobile nav toggle chips), not something the spec-array content
+introduced, and out of this step's scope (`spec:` field only) to fix.
+The other eleven files' rendered `dist/assessments/<slug>/index.html`
+were additionally checked by direct HTML extraction of the
+`spec-list` section rather than a further screenshot round, confirming
+well-formed `<li>` markup for each added line.
+
 ## 7. Risks
 
 **The broken-link checker fails the build in Step 1.** Four known inbound links
