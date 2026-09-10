@@ -143,13 +143,9 @@ describe("layout contracts (BUILD_PLAN.md Step 8)", () => {
   // Step 15 (D15): each session section is subtitle, then description,
   // then a card, in that DOM order, one card per subtitle.
   //
-  // The plan's other Step 15 acceptance line — the card's own heading
-  // differs from the subtitle — holds for Lecture/Assignment sections
-  // (confirmed visually) but not universally: every placeholder lab entry's
-  // own `title` is literally "Lab {week}", the same text as its generated
-  // subtitle, a content coincidence pre-dating this step and out of its
-  // scope (content is untouched). Asserting it here would fail on data,
-  // not on this step's markup, so it is left to visual inspection.
+  // Step 32 (D28): subtitle/title number match was never a coincidence —
+  // it was a week-number bug (D22 broke 1:1 lab/week numbering). Fixed by
+  // deriving the subtitle from the entry's own id; asserted directly below.
   // Step 30 (D26): the description moved into the card's own slot, so a
   // section is now subtitle immediately followed by its card, one card per
   // subtitle, with the card's own body carrying real, non-title text.
@@ -177,6 +173,22 @@ describe("layout contracts (BUILD_PLAN.md Step 8)", () => {
         const body = card!.querySelector(".at-card-body p")?.textContent?.trim();
         expect(body, `${path}: "${subtitle.textContent}"'s card has no description`).toBeTruthy();
         expect(body, `${path}: "${subtitle.textContent}"'s card body just repeats the title`).not.toBe(title);
+
+        // Step 32 (D28): a Lab/Assignment subtitle's number must equal the
+        // number parsed from its own card's title, not just look plausible.
+        const kind = subtitle.textContent?.trim().match(/^(Lab|Assignment) (\d+)$/);
+        if (kind) {
+          const [, label, subtitleNumber] = kind;
+          const titleNumber = title?.match(/^\D*(\d+)/)?.[1];
+          expect(
+            titleNumber,
+            `${path}: "${label} ${subtitleNumber}"'s card title "${title}" has no leading number`,
+          ).toBeTruthy();
+          expect(
+            titleNumber,
+            `${path}: subtitle "${label} ${subtitleNumber}" disagrees with card title "${title}"`,
+          ).toBe(subtitleNumber);
+        }
       }
     }
   });

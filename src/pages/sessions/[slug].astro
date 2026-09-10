@@ -20,14 +20,26 @@ const lecture = await getEntry(session.data.lecture);
 const lab = session.data.lab ? await getEntry(session.data.lab) : undefined;
 const assignment = session.data.assignment ? await getEntry(session.data.assignment) : undefined;
 
+// Section number from the entry's own id (D28), not week number:
+// lab/assignment numbering doesn't run 1:1 with week (D22).
+function entryNumber(id: string): number {
+  return Number(id.match(/\d+$/)?.[0]);
+}
+
 // Per-section subtitle, referenced entry and its page path (D15).
 const sections = [
   { subtitle: `Lecture ${session.data.week}`, entry: lecture, href: `/lectures/${lecture.id}/` },
   ...(lab
-    ? [{ subtitle: `Lab ${session.data.week}`, entry: lab, href: `/assessments/${lab.id}/` }]
+    ? [{ subtitle: `Lab ${entryNumber(lab.id)}`, entry: lab, href: `/assessments/${lab.id}/` }]
     : []),
   ...(assignment
-    ? [{ subtitle: `Assignment ${session.data.week}`, entry: assignment, href: `/assessments/${assignment.id}/` }]
+    ? [
+        {
+          subtitle: `Assignment ${entryNumber(assignment.id)}`,
+          entry: assignment,
+          href: `/assessments/${assignment.id}/`,
+        },
+      ]
     : []),
 ];
 ---
