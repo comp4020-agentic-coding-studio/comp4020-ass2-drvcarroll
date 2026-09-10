@@ -376,6 +376,38 @@ attempt honestly, so it is placed after the teaching weeks end, in the same
 examination-preparation window as the Final Examination, rather than during
 a teaching week that has not yet covered its own prerequisites.
 
+**D25. The Policies page borrows structure, not text, from the real course's
+four policy topics, and stays one page with four anchor-linked cards rather
+than four sub-pages.** The brief names no in-universe policies at all, but the
+real COMP4020 course this repo sits inside publishes exactly four policy
+topics (code of conduct, AI use and integrity, communication, enrolment) as
+the genre a course policies page belongs to; reusing that four-topic shape
+gives the page a source to be traceable to, the same reasoning D20 already
+applied to the about-page copy, rather than inventing categories from
+nothing. The real pages' own text is ANU- and meta-level-specific (Ed
+Discussion, Canvas, Turnitin, crits, permission codes) and describes the
+actual COMP4020 studio, not SLOP4000, so each topic is rewritten against
+`CONTENT.md`'s own established facts instead --- direct contact with
+Professors Sidorov and Al-Fulani in place of a discussion board, the
+labs-build-on-each-other structure already stated in Week 1's slides, the
+"benign samples and simulated environments only" framing repeated across
+`CONTENT.md`, and `course-config.ts`'s real 2027-07-27--2027-11-12 dates ---
+so the page reads as SLOP4000's own voice (J2) rather than a copy with the
+serial numbers filed off.
+
+Four sub-pages under `/policies/<slug>/` were rejected: routing collection
+content that way needs a fifth content collection, and §1 fixes the platform
+at "four content collections that stay as they arrived." The chosen shape
+instead is one page, an intro paragraph, a `CardGrid` of four `Card`s whose
+`href`s are in-page anchors (`#code-of-conduct`, not an absolute path, so
+`withBase()` leaves them untouched), and four `<h2>` sections below carrying
+the full text. Each card's `title` is written identically to its section's
+`<h2>` text, so `rehype-slug` generates the matching `id` with no new markup
+(D4/D18's existing convention) and `PageIndex`'s right rail independently
+lists the same four names the cards do --- one vocabulary shared by the
+cards, the headings and the index, which is "fold into something already on
+screen" rather than a second navigation surface built to do what the first
+already does.
 
 ## 5. Architecture
 
@@ -2732,6 +2764,62 @@ different evidence trail entirely, out of this batch's scope by the same
 reasoning Outputs already applied to the two out-of-scope
 `STARTER_CONTENT` markers. This is a documented, justified exception to
 this step's own acceptance line, not a silent partial pass.
+
+### Step 29 --- Policies page: four topics, four cards, four sections
+
+**Goal.** Replace `src/pages/policies/index.mdx`'s `STARTER_CONTENT`
+placeholder with SLOP4000's own policies: an intro paragraph, a `CardGrid` of
+four `Card`s, and four matching `<h2>` sections, per D25.
+
+**Scope.** `src/pages/policies/index.mdx` only. No collection, schema,
+component or navigation change --- D25 already ruled out a fifth content
+collection, and `Card`/`CardGrid` are existing theme components already
+imported elsewhere (`src/pages/index.astro`).
+
+**Dependencies / spec.** Depends on D25. Serves J1 and J2 (the page reads as
+SLOP4000's own coherent voice, not filler) and S5 (a new `spec/` assertion
+for this page, `pnpm check` still green). Does not serve S4 (assessment
+weights are untouched by this step).
+
+**Inputs.** The real course's four published policy topics (code of conduct,
+AI use and integrity, communication, enrolment), read for structure only, per
+D25. `CONTENT.md`'s established facts to rewrite each topic against: the two
+convenors' names and roles, the labs-build-on-each-other framing, the
+benign-samples/simulated-environments framing, and `course-config.ts`'s
+2027-07-27--2027-11-12 dates. `src/components/PeopleGrid.astro` and
+`src/pages/index.astro` as the existing `Card`/`CardGrid` usage patterns.
+
+**Outputs.** `src/pages/policies/index.mdx` rewritten: frontmatter unchanged
+(title, description, hero already fit); the `STARTER_CONTENT` comment and its
+placeholder paragraph removed; one intro paragraph; a four-column `CardGrid`
+of `Card`s titled "Code of conduct", "AI use and integrity", "Communication"
+and "Enrolment", each `href="#<slug>"` and each with a one-sentence teaser as
+its slot content; four `<h2>` sections below in the same order, each heading
+text identical to its card's `title`, each followed by the topic's full
+SLOP4000-voiced content. `spec/layout.test.ts` gains one test asserting the
+built `/policies/` page carries exactly four `.at-card` elements, each with
+an `href` starting `#`, and four `h2`s under `#main` whose text matches the
+four cards' `title`s in the same order.
+
+**Acceptance.** `pnpm check` green, including the new test. Visual
+inspection at 1920x1080 and 390x844: the four cards render in a grid above
+the fold, clicking one jumps to its section, and `PageIndex`'s right rail
+lists the same four names. No `STARTER_CONTENT` matches remain under
+`src/pages/policies/`.
+
+**Constraints.** Do not touch `src/pages/index.astro` --- its own
+`STARTER_CONTENT` markers are a different, still out-of-scope page (Step 28
+Outputs). Do not add a fifth content collection or a new shared component;
+`Card`/`CardGrid` imported directly into the MDX file is enough, following
+`src/pages/index.astro`'s own pattern. No real-course-specific terms (Ed
+Discussion, Canvas, Turnitin, crits, permission codes, ANU, COMP4020) appear
+anywhere in the shipped text --- SLOP4000 is a fictional course judged on its
+own voice (J2), not a relabelled copy of this one.
+
+**Testing methodology.** Extend the existing dist-level JSDOM suite in
+`spec/layout.test.ts` (the file's own established pattern: build, parse
+`dist/policies/index.html`, assert on the parsed DOM) rather than adding a
+parallel test file for one page.
 
 ## 7. Risks
 
