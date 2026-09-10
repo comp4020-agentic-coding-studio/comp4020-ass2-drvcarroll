@@ -29,6 +29,10 @@ spec:
   - persistence is established and survives without being caught
   - the report covers OSINT, reconnaissance, infection, persistence,
     communication and avoidance methods
+  - the report honestly accounts for what worked and what did not
+    across all six named areas, not only the successes
+  - a retrieved flag with no account of how it was obtained does not
+    meet the brief on its own
 ---
 
 Each student is given a separate virtual host — its own IP address, its own

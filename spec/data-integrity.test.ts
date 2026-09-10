@@ -6,6 +6,7 @@ interface ApiNode {
   id: string;
   type: string;
   meta?: Record<string, unknown>;
+  spec?: string[];
   body?: string;
 }
 
@@ -46,6 +47,23 @@ describe("course data integrity", () => {
       expect(typeof brief === "string" && brief.trim().length > 0, `${node.id} has no brief`).toBe(
         true,
       );
+    }
+  });
+
+  // Step 31 / D27: every lab's and assignment's spec grew from 2 lines
+  // to several. This catches a regression back to boilerplate-only.
+  it("gives every lab and assignment a spec of at least three lines", () => {
+    const assessments = api.nodes.filter((node) => node.type === "assessments");
+    const labsAndAssignments = assessments.filter((node) =>
+      /^assessments\/(lab-\d+|assignment-\d+)$/.test(node.id),
+    );
+    expect(labsAndAssignments.length).toBe(12);
+    for (const node of labsAndAssignments) {
+      expect(Array.isArray(node.spec), `${node.id} has no spec array`).toBe(true);
+      expect(
+        (node.spec ?? []).length,
+        `${node.id} has too few spec lines`,
+      ).toBeGreaterThanOrEqual(3);
     }
   });
 

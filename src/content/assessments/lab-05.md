@@ -24,6 +24,13 @@ keyDates:
 spec:
   - submitted by the deadline, in the format named below
   - each persistence mechanism found is explained, not just listed
+  - accounts for the persistence mechanisms planted in the prepared
+    virtual machine
+  - explains in mechanism-specific terms how each one survives a reboot
+    or interruption
+  - reflects why an established mechanism is harder to remove than it
+    was to find, rather than treating detection and removal as one
+    problem
 ---
 
 Getting in once is not the same as staying in. This lab is about

@@ -26,6 +26,11 @@ spec:
   - submitted by the deadline, in the format named below
   - translates the given scenario into a structured lifecycle and threat
     model rather than restating it
+  - the written threat model names the scenario's target and motivation
+  - a lifecycle diagram or structured breakdown lays out the malware's
+    stages
+  - demonstrates the judgement to say, of a comparable malicious-software
+    idea, what lifecycle stage it is at and what threat model it implies
 ---
 
 Before any malware gets designed, it starts as an idea: a target, a

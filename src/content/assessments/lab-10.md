@@ -26,6 +26,12 @@ spec:
   - submitted by the deadline, in the format named below
   - the stated confidence in the attribution matches the strength of the
     supporting evidence
+  - reconstructs the actor using only the supplied logs, infrastructure
+    metadata and operational-security mistakes given
+  - the reconstruction reflects the operational-security failures used
+    as its model, without inventing detail beyond that evidence
+  - the confidence assessment is honest about what the evidence does
+    not establish, not only what it does
 ---
 
 The course's final lab turns to the mistake side of operational security:

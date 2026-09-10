@@ -25,6 +25,12 @@ spec:
   - submitted by the deadline, in the format named below
   - the simulator's request/response pattern matches the analysis of the
     captured traffic
+  - connects the traffic analysis and the simulator built from it,
+    rather than treating them as two separate exercises
+  - the simulator stays benign — it reproduces the pattern without
+    functioning as real command-and-control
+  - the analysis considers what happens to the channel when the C2
+    server goes dark, not only while it is live
 ---
 
 Once malware is running on a target, it typically needs to talk to its

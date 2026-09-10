@@ -26,6 +26,13 @@ spec:
   - submitted by the deadline, in the format named below
   - each scenario's infiltration vector is identified and compared to the
     others, not treated in isolation
+  - reports on each of the prepared scenarios — phishing, vulnerability
+    exploitation, removable media, network and supply-chain — using
+    only the evidence given
+  - grounds each identified vector in a specific piece of that supplied
+    evidence
+  - the comparison names what each vector needs from an attacker and
+    what it leaves behind, not only which vector was used
 ---
 
 Getting malware into a target environment is a separate problem from

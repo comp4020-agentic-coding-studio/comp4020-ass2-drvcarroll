@@ -26,6 +26,12 @@ keyDates:
 spec:
   - submitted by the deadline, in the format named below
   - clearly separates observed behaviour from inferred behaviour
+  - covers both a static analysis and a dynamic analysis, the dynamic
+    analysis run in a controlled environment
+  - the written investigation lists the indicators of compromise
+    identified
+  - works backward from the sample to reconstruct what it was intended
+    to do, not just what it does on the surface
 ---
 
 Having spent the semester building malware conceptually, this lab flips

@@ -24,6 +24,11 @@ keyDates:
 spec:
   - submitted by the deadline, in the format named below
   - connects each execution trigger tested to the trace evidence it leaves
+  - records every trigger tested, along with the trace each one produced
+  - explains what evidence each trigger leaves behind for an
+    investigator to find later
+  - shows how the choice of trigger shapes both the resulting behaviour
+    and the evidence available afterward
 ---
 
 An architecture on paper still has to run somewhere. This lab is about

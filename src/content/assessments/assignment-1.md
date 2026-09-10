@@ -33,6 +33,11 @@ spec:
     requirements
   - the eight elements read as one coherent design, not eight unrelated
     answers to eight prompts
+  - the elements visibly constrain each other — for example, a
+    persistence strategy carries detection risks the design accounts
+    for rather than ignores
+  - the design is honest about its own detection risks, not only its
+    capabilities
 ---
 
 By Week 8, the course has covered enough of the production lifecycle —

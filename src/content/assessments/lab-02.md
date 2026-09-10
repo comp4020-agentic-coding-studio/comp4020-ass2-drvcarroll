@@ -25,6 +25,10 @@ spec:
   - submitted by the deadline, in the format named below
   - the architecture separates loaders, payloads, modules and
     infrastructure rather than describing one undifferentiated blob
+  - the architecture diagram names each component and the role it plays
+  - the modularity choices made are justified, not just asserted
+  - reasons about separation of concerns and maintainability the way
+    ordinary software architecture would, not just a single exploit
 ---
 
 Once a lifecycle exists, it needs an architecture: the pieces a real

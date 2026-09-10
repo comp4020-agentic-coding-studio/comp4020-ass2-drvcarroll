@@ -26,6 +26,12 @@ spec:
   - submitted by the deadline, in the format named below
   - the revision is justified against the original rules' measured false
     positives and false negatives
+  - reports test results for the original rules against the simulated
+    behaviours before any revision is made
+  - each rule change in the revised set is explained in terms of the
+    specific false positive or false negative it fixes
+  - the revised rules measurably reduce false positives, false
+    negatives, or both, relative to the originals tested
 ---
 
 If malware authors care about staying hidden, defenders care about

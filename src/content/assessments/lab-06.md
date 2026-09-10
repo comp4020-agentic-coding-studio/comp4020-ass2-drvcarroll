@@ -25,6 +25,12 @@ spec:
   - submitted by the deadline, in the format named below
   - names the campaign's delivery mechanisms, scaling approach and at
     least one realistic failure point
+  - includes a diagram of the campaign's distribution infrastructure,
+    not only a written description of it
+  - the analysis weighs the costs of running that infrastructure, not
+    only its delivery mechanisms and failure points
+  - shows what would be expected to happen to the infrastructure and
+    delivery as the campaign scales up
 ---
 
 Falling in the mid-semester week, this lab steps back from a single
