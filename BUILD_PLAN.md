@@ -409,6 +409,39 @@ cards, the headings and the index, which is "fold into something already on
 screen" rather than a second navigation surface built to do what the first
 already does.
 
+**D26. Session-section cards carry their own description in the card, and
+the paragraph that used to sit above them is retired.** Reported directly: a
+session page's card currently shows only a title, unlike every other `Card`
+on the site (`PeopleGrid`, the home page's `CardGrid`), which always puts a
+one-line description in the card's own slot. The description text was never
+actually missing --- `entry.data.description` was already rendered, just as
+a loose paragraph above the card rather than inside it --- so the fix is not
+new copy, it is moving existing copy into the element it describes, which is
+"fold into something already on screen" rather than "add a control," and
+stops the same sentence being spent in two places on the page (the card
+would otherwise repeat what the paragraph already said). This supersedes
+D15/D19's asserted three-child order (subtitle, description paragraph,
+card); the two structural tests those decisions added to
+`spec/layout.test.ts` are amended by the step that makes this change, in the
+same step, rather than left red for a later one to notice.
+
+**D27. Every lab's and both assignments' `spec:` list is expanded from one
+content line to several, drawn only from that entry's own already-committed
+fields.** Reported directly: each of the ten labs and Assignment 1/2 declares
+a `spec:` array of exactly two lines --- the shared "submitted by the
+deadline" boilerplate, and one content-specific line --- which is thinner
+than `SpecList`'s own preamble promises ("what a marker checks... some
+checked mechanically, the rest judged") and thinner than the same entry's
+own `submissionItems`, `marking.description` and body prose already
+establish. The fix authors 2-3 further lines per entry, each one turning an
+already-committed fact (a submission item, the marking rationale, a
+specific claim the body makes) into a marker-facing spec line, rather than
+inventing new requirements the brief never supplied --- the same restraint
+D22 already applied to lab count. Scope is exactly what was asked: the ten
+`lab-NN.md` files and `assignment-1.md`/`assignment-2.md`; `final-exam.md`
+and `final-project.md` are neither a lab nor an assignment (and the latter
+is `published: false`, D24), so they are untouched.
+
 ## 5. Architecture
 
 ```
@@ -2868,6 +2901,105 @@ column width, rather than from a screenshot; the four anchors, the
 hero, the 12-row WeekRail and the footer acknowledgement were confirmed
 structurally via the passing `spec/` suite (which already covers all of
 those, sitewide, from earlier steps) and by inspecting the built HTML.
+
+### Step 30 --- Session-page cards: description moves inside the card
+
+**Goal.** Every card on a session page shows its own title and a one-line
+description in its own slot, self-contained like every other `Card` on the
+site; the standalone paragraph that used to carry that description is gone,
+not duplicated beside the card.
+
+**Scope.** `src/pages/sessions/[slug].astro` (the `sections.map` markup) and
+`spec/layout.test.ts` (the two tests keyed to the old three-child order:
+Step 15's "orders each session section as subtitle, then description, then
+card" and Step 19's "stacks each session section in one column"). No content
+file, schema or other component changes.
+
+**Dependencies / spec.** Depends on D26. Serves no mechanically-checked spec
+id directly --- this is interface polish on an existing page, not new
+content --- but bears on J2 (a bare, description-less card reads as
+unfinished, working against "the prose has a voice rather than reading as
+generated filler").
+
+**Inputs.** The current `[slug].astro`; `src/components/PeopleGrid.astro`
+and `src/pages/index.astro` as the sitewide convention for a `Card` whose
+slot carries the destination's own description; `spec/layout.test.ts` in
+full, to amend the two affected tests in place rather than add competing
+ones.
+
+**Outputs.** Each section renders `<h2>{subtitle}</h2>` followed directly by
+a `Card` whose slot contains `<p>{entry.data.description}</p>` --- no
+sibling paragraph between them. `spec/layout.test.ts`'s two affected tests
+updated to assert the new two-child order (`h2`, then `.at-card`) and that
+each card's own body carries the entry's non-empty description.
+
+**Acceptance.** `pnpm check` green, including the amended tests. Visual
+inspection at 1920x1080 and 390x844: each Lecture/Lab/Assignment card shows
+its title and a one-line description inside the card's own border, with no
+orphaned paragraph floating above it.
+
+**Constraints.** Do not touch any file under `src/content/`. Do not change
+`.session-sections`' stacking direction, gap, or the placement of
+`TeachingTeam`/`RelatedContent` beyond what removing one child naturally
+requires. Do not weaken the removed tests' intent (order, non-empty content)
+when rewriting them --- amend them to the new correct shape, don't delete
+the assertion.
+
+**Testing methodology.** Amend the two existing dist-level JSDOM tests in
+`spec/layout.test.ts` in place, since they assert exactly the structure this
+step changes, rather than leaving them to fail and adding parallel
+replacements beside them.
+
+### Step 31 --- Real spec-section content: ten labs, two assignments
+
+**Goal.** `/assessments/lab-01/` through `lab-10/`, `assignment-1/` and
+`assignment-2/` each show a "The spec" section with several concrete,
+grounded lines --- doing the marker-facing job `SpecList`'s own preamble
+describes --- instead of one shared boilerplate line plus one content line.
+
+**Scope.** The `spec:` frontmatter field only, in exactly twelve files:
+`src/content/assessments/lab-01.md` through `lab-10.md`,
+`assignment-1.md`, `assignment-2.md`. No other frontmatter field, no body
+prose, no other content file, changes.
+
+**Dependencies / spec.** Depends on D27. Serves J1/J2 (a marker-facing
+section this thin reads as unfinished, working against course coherence and
+voice) rather than a mechanically-checked S-id, since spec depth is
+judged, not counted, by the brief.
+
+**Inputs.** Each of the twelve files' own already-committed `brief`,
+`submissionItems`, `marking.description`, `weight` and body markdown --- the
+only sources drawn from, per D27. No re-reading of `CONTENT.md` for new
+facts: everything added must already be established somewhere in that same
+file.
+
+**Outputs.** Each of the twelve files' `spec:` array grown to 3-5 lines: the
+existing deadline/format line and existing content line kept (sharpened only
+if genuinely unclear), plus one further line per submission item (rephrased
+as a checkable spec line rather than copied verbatim) and, where the body
+names a specific quality bar not already covered, one more judged line.
+Every added line must be traceable to that same file's own pre-existing
+content --- if a reviewer can't point to the sentence it came from, it
+doesn't go in.
+
+**Acceptance.** `pnpm check` green. `git diff` on each of the twelve files
+touches only the `spec:` array. Visual inspection at 1920x1080 and 390x844
+of `/assessments/lab-01/`, one more lab, and both assignments: "The spec"
+section shows the fuller list, still reading as one coherent set of
+requirements rather than a padded one.
+
+**Constraints.** Do not touch `final-exam.md`, `final-project.md`, or any
+`sessions`/`lectures` file. Do not invent a fact (a tool, a number, a target)
+that entry's own brief/submissionItems/marking/body does not already state.
+
+**Testing methodology.** `pnpm check`'s existing `SpecList` render path and
+`spec/data-integrity.test.ts`'s evidence checks already exercise these
+files; if a mechanical length/non-triviality check is cheap to add there
+(matching that file's existing per-field pattern, e.g. "gives every
+assessment a non-empty brief"), add it, so a future regression to one
+boilerplate line is caught rather than only noticed on a visual pass ---
+but do not block this step on it if the field isn't available where that
+suite currently reads from (`dist/api/index.json`).
 
 ## 7. Risks
 
