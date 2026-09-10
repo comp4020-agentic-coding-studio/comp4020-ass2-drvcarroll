@@ -8,8 +8,87 @@ heroImage: /src/assets/images/hero-home.avif
 heroImageAlt: A lecture theatre reduced to flat gold and black shapes, rows of seats sweeping past the frame, in a two-ink risograph print
 ---
 
-{/* STARTER_CONTENT: replace this policy page, then remove this comment. */}
+import Card from "astro-theme-university/components/Card.astro";
+import CardGrid from "astro-theme-university/components/CardGrid.astro";
 
-Replace this page. Course-wide rules live here so an assessment brief can link
-to one place; a course with no rules worth a page can delete it, along with its
-entry in `src/site-config.ts`.
+SLOP4000 runs on four rules, set by Professor Ivan Sidorov and Professor
+Fulan Al-Fulani: what conduct the subject matter demands, what an AI tool
+may and may not do for you, how to reach the two of them, and what staying
+enrolled across a semester of labs that each depend on the last requires.
+
+<CardGrid columns={2}>
+  <Card headingLevel="h2" title="Code of conduct" href="#code-of-conduct">
+    <p>Every exercise stays on benign samples and simulated targets, with no exceptions.</p>
+  </Card>
+  <Card headingLevel="h2" title="AI use and integrity" href="#ai-use-and-integrity">
+    <p>Generative tools may assist your work, but the design decisions and the write-up have to be yours.</p>
+  </Card>
+  <Card headingLevel="h2" title="Communication" href="#communication">
+    <p>Reach Professor Sidorov or Professor Al-Fulani directly, and reach them early.</p>
+  </Card>
+  <Card headingLevel="h2" title="Enrolment" href="#enrolment">
+    <p>The course runs 27 July to 12 November 2027, and each week's lab assumes the last one happened.</p>
+  </Card>
+</CardGrid>
+
+## Code of conduct
+
+SLOP4000 studies hostile software as an engineering discipline, and that
+subject matter is exactly why its code of conduct is not boilerplate.
+Every lab, every lecture example and both assessments are scoped to
+deliberately benign samples run inside simulated, disposable environments:
+curiosity about how the material works is the whole point of enrolling,
+but real malice, a real target, or code built to do real harm is never in
+scope, on this course or any other. Work that reaches outside a simulated
+environment — against a real host, a real network, or another student's
+system — is treated as a conduct matter first and a grading one second,
+regardless of how competent the work is.
+
+The same standard extends to how you discuss the material outside class:
+techniques covered here are taught for analysis and defence, and sharing
+anything built on this course's material for use against a real target is
+a breach of the same conduct this section sets, not a separate rule.
+
+## AI use and integrity
+
+A course whose subject is deception has an unusually direct stake in
+knowing whose work is whose. You may use generative tools to explore
+ideas, check your understanding, or tidy a draft, but the architecture
+decisions in Assessment 1 and the infiltration, persistence and evasion
+choices you defend in Assessment 2 have to be judgements you made and can
+explain, not output you are relaying. Where a tool materially shaped a
+submission, say so plainly in the write-up rather than leaving it to be
+inferred — undisclosed use that stands in for your own analysis is treated
+as a breach of academic integrity, the same as it would be on any other
+piece of assessed work.
+
+Assessment 2 in particular is judged on the report as much as the outcome:
+a flag retrieved without a defensible account of how you found and kept
+access to it does not demonstrate what the assessment is designed to
+measure.
+
+## Communication
+
+There is no discussion board standing between you and the people running
+this course. General questions about the syllabus, the labs or either
+assessment go directly to Professor Sidorov, the Course Convenor, or
+Professor Al-Fulani, the Co-Convenor — both are named on the People page,
+and either can answer. Because each week's lab builds directly on the
+lifecycle stage the last one covered — a threat model feeding an
+architecture, an architecture feeding an execution strategy, and so on
+through to the operational-security work in the closing weeks — a question
+left unresolved for a week compounds rather than waiting quietly, so raise
+it as soon as it comes up rather than at the following week's lab.
+
+## Enrolment
+
+SLOP4000 runs weekly from 27 July to 12 November 2027, with a
+mid-semester break built into the schedule rather than a fixed weekly
+cadence throughout. Because the ten labs are a single progression — each
+one assumes the lifecycle stage the previous lab produced, from an initial
+threat model through to the attribution and operational-security work
+that closes it — enrolling after Week 1 means arriving without the
+foundation the next lab is written to assume, not simply missing a mark.
+Anyone enrolling late should contact Professor Sidorov or Professor
+Al-Fulani before their first lab so the gap can be named honestly rather
+than discovered partway through it.

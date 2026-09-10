@@ -240,4 +240,32 @@ describe("layout contracts (BUILD_PLAN.md Step 8)", () => {
     const total = labWeights.reduce((sum, weight) => sum + weight, 0);
     expect(total, `lab-01..lab-10 weights currently sum to ${total}, not 20`).toBeCloseTo(20, 1);
   });
+
+  // Step 29 (D25): four anchor-linked cards match four h2 sections, in order.
+  // Card's own title also renders as h2 (headingLevel="h2", matching
+  // PeopleGrid's precedent) so axe's heading-order check has no h1->h3 skip
+  // to flag --- so "section h2" below excludes headings inside a .at-card.
+  it("matches /policies/'s four cards to its four h2 sections", () => {
+    const main = parse(resolve(DIST, "policies/index.html")).querySelector("#main")!;
+
+    const cards = [...main.querySelectorAll(".at-card")];
+    expect(cards.length, "expected exactly four .at-card elements").toBe(4);
+    for (const card of cards) {
+      expect(card.getAttribute("href"), "card href should be an in-page anchor").toMatch(/^#/);
+    }
+
+    const sectionHeadings = [...main.querySelectorAll("h2")].filter((h) => !h.closest(".at-card"));
+    expect(sectionHeadings.length, "expected exactly four section h2s").toBe(4);
+
+    // rehype-autolink-headings appends a decorative "#" anchor inside each
+    // heading, so text is read the same way page-index.ts reads it.
+    const headingText = (heading: Element) => {
+      const clone = heading.cloneNode(true) as Element;
+      clone.querySelector(".at-heading-anchor")?.remove();
+      return clone.textContent?.trim();
+    };
+
+    const cardTitles = cards.map((card) => card.querySelector(".at-card-title")?.textContent?.trim());
+    expect(cardTitles).toEqual(sectionHeadings.map(headingText));
+  });
 });
