@@ -3086,6 +3086,24 @@ were additionally checked by direct HTML extraction of the
 `spec-list` section rather than a further screenshot round, confirming
 well-formed `<li>` markup for each added line.
 
+**Follow-up: the 390px overflow this step disclosed was a screenshot-tool
+artifact, not a site defect.** Re-investigated directly rather than via a
+new step, since the finding was "no code change needed" rather than a fix
+to implement. The `--window-size=390,...` Chrome CLI flag used for that
+screenshot does not reliably set the actual CSS viewport in headless
+screenshot mode: measured directly, it produced `window.innerWidth === 500`
+while the screenshot canvas was still 390px wide, so content correctly
+laid out for ~500px was captured cropped to 390px --- exactly the uniform
+right-edge clipping both this step and a same-session manual repro saw.
+Re-tested with the viewport set precisely via CDP's
+`Emulation.setDeviceMetricsOverride({width: 390, ...})` before navigation
+(confirmed `window.innerWidth === 390` first): the home page,
+`/assessments/lab-01/`, and `/sessions/02-first-review/` all render with
+`document.documentElement.scrollWidth === window.innerWidth === 390`, no
+element right edge beyond 390px, and nav bar, both rail toggle pills, hero
+image, and body text all fully on-screen in the resulting screenshots.
+No CSS or markup change made --- there was nothing to fix.
+
 ## 7. Risks
 
 **The broken-link checker fails the build in Step 1.** Four known inbound links
