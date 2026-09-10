@@ -2950,6 +2950,36 @@ the assertion.
 step changes, rather than leaving them to fail and adding parallel
 replacements beside them.
 
+**Executed.** `[slug].astro`'s `sections.map` now renders `<h2>{subtitle}</h2>`
+directly followed by `<Card ...>` whose slot holds `<p>{entry.data.description}
+</p>` --- the sibling paragraph is gone, its text moved rather than deleted,
+matching `PeopleGrid.astro`'s and `index.astro`'s own Card-slot convention
+exactly. The stale style-block comment describing a three-child section
+(subtitle, description, card) was corrected to two; no selector needed
+changing, since none of `.session-sections`' rules counted or targeted
+children by position. Step 15's test is renamed and rewritten to assert the
+new two-child order (subtitle immediately followed by its `.at-card`, same
+count, same document order) plus a real assertion the plan's Outputs implied
+but did not spell out: each card's own body carries non-empty text distinct
+from its title, so a card that regressed to title-only would still fail this
+test even though the sibling-paragraph check it replaced no longer applies.
+Step 19's test is amended in place, only its destructured
+`[heading, description, card]` narrowing to `[heading, card]`; the
+wrapper/no-CardGrid/stacking assertions are untouched, per the Constraints.
+`pnpm check` is green (9/9 spec files, 54/54 tests, typecheck clean). No
+headless-browser or screenshot tool is installed in this environment (no
+Playwright/Puppeteer/chromium-cli present), so the visual pass is a direct
+inspection of the built `dist/sessions/02-first-review/index.html` and its
+compiled CSS rather than a rendered screenshot at either viewport: the built
+markup confirms `<div class="session-section"><h2 id="lecture-2">Lecture
+2</h2><a class="at-card" href="...">` with `.at-card-body` holding both the
+`h3` title and the description `<p>` with no paragraph between the `h2` and
+the anchor, and `.at-card`'s compiled CSS (`border:1px solid
+var(--at-divider)`, `.at-card-body{padding:var(--at-spacing-md)}`) carries no
+width-scoped media query, so the same single bordered card holds at 1920x1080
+and 390x844 alike, only the flex-column `.session-sections` (already unchanged
+from D19) governing the layout at either width.
+
 ### Step 31 --- Real spec-section content: ten labs, two assignments
 
 **Goal.** `/assessments/lab-01/` through `lab-10/`, `assignment-1/` and
