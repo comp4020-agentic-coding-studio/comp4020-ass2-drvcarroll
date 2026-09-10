@@ -3190,6 +3190,59 @@ Lab/Assignment subtitle's own number equals the number parsed from its
 card's title, so a future reintroduction of the week-number shortcut
 fails the suite rather than only a visual pass.
 
+**Executed.** `entryNumber(id: string): number` was added inline in
+`[slug].astro` itself (`Number(id.match(/\d+$/)?.[0])`), not as a new
+`src/lib/` module --- this step's own Scope line restricts the touched
+files to `[slug].astro` and `spec/layout.test.ts`, and a one-line regex
+over an id shape the file already relies on elsewhere (the `href`
+construction) does not clear the bar for a third file and a new unit
+test suite of its own. The Lab/Assignment subtitles now read
+`` `Lab ${entryNumber(lab.id)}` `` / `` `Assignment
+${entryNumber(assignment.id)}` ``; the Lecture subtitle keeps
+`session.data.week` untouched, per this step's own constraint.
+
+The existing "orders each session section..." test needed no
+structural change, exactly as predicted: its `(Lecture|Lab|
+Assignment) \d+` pattern match and subtitle/card DOM-order assertions
+passed unmodified against the corrected output. The direct number
+check was added inside that same test (extended, not duplicated as a
+new `it()`) --- for each Lab/Assignment subtitle, the number in the
+subtitle text and the leading number in the card's own title are
+parsed and asserted equal. Its stale comment (Step 15, restated at
+Step 30) calling the match "a content coincidence... out of scope" is
+corrected to name the real cause (a week-number computation, broken by
+D22's own deliberately offset lab numbering) and record that this step
+fixed it.
+
+The new assertion was verified to actually catch a regression, not
+just pass vacuously: the week-number shortcut was temporarily
+reintroduced in `[slug].astro` (`` `Lab ${session.data.week}` `` /
+`` `Assignment ${session.data.week}` ``) and `pnpm check` re-run ---
+the extended test failed exactly as intended, on
+`sessions/08-session/index.html`: `subtitle "Lab 8" disagrees with
+card title "Lab 7: C2 Communications Laboratory": expected '7' to be
+'8'`. The file was then restored (`diff` confirmed byte-identical to
+the fixed version) and `pnpm check` re-run green before committing.
+
+`pnpm check` is green: typecheck 0 errors/0 warnings/0 hints across 45
+files; 9/9 spec files, 55/55 tests; build clean with no broken links.
+Visual inspection used headless Chrome via CDP (`Emulation.
+setDeviceMetricsOverride` before `Page.navigate`, per the exact-viewport
+method this session's own instructions specify, correcting Step 31's
+`--window-size` artifact) against `npx serve dist`, at both 1920x1080
+and 390x844, on `/sessions/02-first-review/` (Week 2) and
+`/sessions/03-session/` (Week 3). `Runtime.evaluate` read each
+section's rendered subtitle/card-title pair directly rather than
+relying on the screenshot alone: Week 2 showed `{"subtitle":"Lab
+1","cardTitle":"Lab 1: From Idea to Threat Model"}`, Week 3 showed
+`{"subtitle":"Lab 2","cardTitle":"Lab 2: Build a Malware Blueprint"}`
+--- both numbers matching, at both viewports, with `window.innerWidth`
+confirmed exactly 390 and 1920 (no repeat of Step 31's 500px
+artifact). The screenshots additionally show the Lecture subtitle
+(`Lecture 2`/`Lecture 3`) unchanged and correctly tracking week number,
+confirming that section was not touched by this fix. Chrome and the
+static file server were both terminated after the check.
+
 ## 7. Risks
 
 **The broken-link checker fails the build in Step 1.** Four known inbound links
