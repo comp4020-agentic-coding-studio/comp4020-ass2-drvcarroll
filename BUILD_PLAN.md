@@ -442,6 +442,39 @@ D22 already applied to lab count. Scope is exactly what was asked: the ten
 and `final-project.md` are neither a lab nor an assignment (and the latter
 is `published: false`, D24), so they are untouched.
 
+**D28. A session page's Lab and Assignment section headings are renumbered
+from the entry they actually link to, not from the session's own week
+number.** Reported directly: `[slug].astro` builds each section's `<h2>`
+subtitle as `` `Lab ${session.data.week}` `` / `` `Assignment
+${session.data.week}` ``, which silently assumes lab/assignment numbering
+runs 1:1 with week numbering. D22 already broke that assumption on
+purpose --- "the brief names exactly ten labs (Lab 1 through Lab 10),
+mapped one-to-one onto Weeks 2--11" --- and `CONTENT.md`'s own schedule
+table confirms it explicitly ("Week 2 --- Lab 1", "Week 3 --- Lab 2", ...,
+"Week 11 --- Lab 10"). So every one of the ten Lab sections sitewide
+currently shows a subtitle one number ahead of the card directly beneath
+it (Week 2's session heads its Lab card "Lab 2" over a card titled "Lab
+1: From Idea to Threat Model"), and the same mistake affects both
+Assignment sections, whose numbering has no relationship to week number
+at all (Assignment 1 falls in Week 8, Assignment 2 in Week 11). Lecture
+subtitles are the one case this does not affect --- lectures run 1:1 with
+week number by design, and a lecture's own `title` never states a number
+to conflict with --- so they are left untouched.
+
+A pre-existing comment in `spec/layout.test.ts` (from Step 15, restated at
+Step 30) had already noticed the Lab card's title matches its generated
+subtitle and dismissed it as "a content coincidence... out of scope,
+content is untouched." That framing was itself the bug: it was never a
+coincidence, it was every real lab silently relying on a week-number
+computation that only looked right because nobody had checked it against
+D22's actual, deliberately offset numbering. The fix derives the section
+number from the referenced entry's own stable id (`lab-01` → 1,
+`assignment-1` → 1) via one small shared helper, rather than from
+`session.data.week`, so the subtitle can never again drift from the title
+of the card it sits directly above --- and the comment is corrected to
+say so, rather than left asserting a coincidence that a look at D22 would
+have disproved.
+
 ## 5. Architecture
 
 ```
@@ -3103,6 +3136,59 @@ Re-tested with the viewport set precisely via CDP's
 element right edge beyond 390px, and nav bar, both rail toggle pills, hero
 image, and body text all fully on-screen in the resulting screenshots.
 No CSS or markup change made --- there was nothing to fix.
+
+### Step 32 --- Fix the Lab/Assignment section-number mismatch on session pages
+
+**Goal.** Every Lab and Assignment section on every session page shows the
+same number in its `<h2>` subtitle as in the card's own title directly
+beneath it --- "Lab 1" over "Lab 1: From Idea to Threat Model," never "Lab
+2" over it.
+
+**Scope.** `src/pages/sessions/[slug].astro`'s `sections` array
+construction only, plus the stale explanatory comment in
+`spec/layout.test.ts` (the one calling the match "a content coincidence").
+No content file, no other template, no other test, changes.
+
+**Dependencies / spec.** Depends on D28. Serves J1 (a session page whose
+own two headings for the same entry disagree is not coherent, and
+coherence is a judged rather than counted quality here) and directly
+protects S-ids already covered by the existing "orders each session
+section..." layout test, which must keep passing unmodified.
+
+**Inputs.** `session.data.week` (still correct and used for the Lecture
+subtitle only), `lab.id`/`assignment.id` (the stable reference slugs
+`lab-01`..`lab-10`, `assignment-1`/`assignment-2`, already used elsewhere
+in the same file to build each section's `href`).
+
+**Outputs.** A single small helper (e.g. `entryNumber(id: string): number`,
+extracting the trailing digits from an id already known to be
+`<kind>-<digits>`) used to build the Lab and Assignment subtitles in place
+of `session.data.week`; the Lecture subtitle is untouched. The
+`spec/layout.test.ts` comment at Step 15/Step 30's note is corrected to
+describe the real cause (a week-number computation, not a data
+coincidence) and record that Step 32 fixed it, rather than continuing to
+assert it was out of scope.
+
+**Acceptance.** `pnpm check` green, including the existing "orders each
+session section..." test unmodified (it matches the `Lab \d+`/`Assignment
+\d+` pattern generically and does not hardcode a specific number, so it
+already exercises the corrected output without needing new assertions).
+Visual inspection at 1920x1080 and 390x844 of `/sessions/02-first-review/`
+(Week 2 → Lab 1) and `/sessions/03-session/` (Week 3 → Lab 2): each
+section's subtitle number matches its card's own title number.
+
+**Constraints.** Do not change `session.data.week`, any content file's
+`title`, or the Lecture section's subtitle (it is already correct and
+untouched by this bug). Do not add a new schema field to derive the
+number when the existing id slug already carries it unambiguously.
+
+**Testing methodology.** `pnpm check`'s existing layout suite already
+asserts subtitle/card ordering and pattern-matches `(Lecture|Lab|
+Assignment) \d+`, so it re-runs unmodified as the regression guard;
+add one direct assertion there (or extend the existing test) that each
+Lab/Assignment subtitle's own number equals the number parsed from its
+card's title, so a future reintroduction of the week-number shortcut
+fails the suite rather than only a visual pass.
 
 ## 7. Risks
 
