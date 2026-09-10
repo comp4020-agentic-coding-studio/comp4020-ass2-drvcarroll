@@ -2821,6 +2821,54 @@ own voice (J2), not a relabelled copy of this one.
 `dist/policies/index.html`, assert on the parsed DOM) rather than adding a
 parallel test file for one page.
 
+**Executed.** `src/pages/policies/index.mdx` now carries the intro
+paragraph, the four-card `CardGrid` and the four matching `<h2>` sections,
+exactly as Outputs describes, with one discovered addition: each `Card`
+takes `headingLevel="h2"` (the same override `PeopleGrid.astro` already
+uses, for the same reason). Left at its `h3` default, the card titles are
+the first heading after the hero `<h1>` with nothing between, and axe's
+mandatory `heading-order` check (`astro-theme-university`'s build-blocking
+accessibility gate, not something `spec/` runs in parallel) fails the
+build on that skip — Step 29's own Outputs text didn't anticipate this
+because it wrote the plan before the page existed to build and check.
+`headingLevel="h2"` is the smallest fix available (it needs no new
+heading, unlike bridging to `h3`/`h4`, which the math of axe's
+level-can-only-drop-or-rise-by-one rule shows would need two placeholder
+landmark headings instead of zero) and it does not disturb `href`/`id`
+correctness: rehype-slug assigns each section's clean id
+(`code-of-conduct`, etc.) at MDX-compile time, before the post-build
+`heading-ids.ts` pass ever looks at the (initially id-less) card
+headings, so the cards' own headings always land on the `-1`-suffixed id
+and every card's `href="#<slug>"` still resolves to its section, not to
+itself — confirmed against the built `dist/policies/index.html`.
+
+The one honest cost, also discovered rather than assumed: `PageIndex`
+reads every `#main h2, h3` (D4's deliberately generic contract), so the
+right rail now lists eight entries — each of the four policy names once
+from its card heading and once from its section heading — rather than
+four. Keeping `PageIndex` page-agnostic (Section 2: "must not read any
+collection", generic by design) was preferred over special-casing it for
+one page's card/section overlap, which this step's Scope line (this file
+only) also rules out. `spec/layout.test.ts`'s new test asserts the
+Outputs' actual intent — four `.at-card` elements with in-page-anchor
+`href`s, and four section `<h2>`s (excluding any inside a `.at-card`)
+whose text matches the four cards' titles in order — rather than the
+plan's literal "four h2s under #main", which the `headingLevel="h2"` fix
+makes count eight. `pnpm check` is green (9/9 spec files, 54/54 tests, no
+accessibility, broken-link or deck-structure violations). No
+`STARTER_CONTENT` match remains under `src/pages/policies/`; no real
+ANU/COMP4020 term appears in the shipped text (checked by grep). Visual
+inspection used the built `dist/policies/index.html` and its CSS
+directly rather than a rendered screenshot: no headless-browser tool
+(`chromium-cli`, Playwright/Puppeteer) is installed in this environment,
+so the grid (`.at-card-grid--2`'s `repeat(auto-fill, minmax(min(100%,
+20rem), 1fr))`) was confirmed to stack to one column at 390px and hold
+two columns at 1920px directly from its CSS rule and the theme's content
+column width, rather than from a screenshot; the four anchors, the
+hero, the 12-row WeekRail and the footer acknowledgement were confirmed
+structurally via the passing `spec/` suite (which already covers all of
+those, sitewide, from earlier steps) and by inspecting the built HTML.
+
 ## 7. Risks
 
 **The broken-link checker fails the build in Step 1.** Four known inbound links
