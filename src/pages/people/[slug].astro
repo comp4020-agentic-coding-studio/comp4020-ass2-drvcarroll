@@ -76,3 +76,40 @@ const description = person.data.description;
     <Content />
   </PageLayout>
 </ContentLayout>
+
+<style>
+  /* Row-pairs dt/dd regardless of how many are conditionally rendered */
+  dl {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 0.5rem 0;
+  }
+
+  dt,
+  dd {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 0.5rem 0.75rem;
+    /* Fixed dark chip: legible in both light/dark theme states */
+    background: #1a1a1a;
+  }
+
+  dt {
+    color: #eab308;
+    font-weight: 600;
+    border-radius: var(--at-border-radius) 0 0 var(--at-border-radius);
+  }
+
+  dd {
+    color: var(--at-white);
+    border-radius: 0 var(--at-border-radius) var(--at-border-radius) 0;
+  }
+
+  dd a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: inherit;
+  }
+</style>
