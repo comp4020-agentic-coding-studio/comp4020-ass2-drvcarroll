@@ -7,8 +7,8 @@ affiliation: Slop University Cybersecurity Research Group
 role: Co-Convenor
 email: fulan.al-fulani@slop.university
 contact: Email for course-level questions; use the weekly session for feedback on work.
-photo: ./marisol-quaye.avif
-photoAlt: A stylised portrait of a person in three-quarter view, flat gold and black shapes on warm cream, in a two-ink risograph print
+photo: ../../assets/images/pfp_2.jpeg
+photoAlt: An orange round-faced character with a sly smile, wearing a wooden Trojan-horse costume, in a circular badge illustration
 ---
 
 His academic career began after relocating to Australia in 2012 from Iran,

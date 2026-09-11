@@ -8,8 +8,8 @@ affiliation: Slop University School of Invented Disciplines
 role: Course Convenor
 email: ivan.sidorov@slop.university
 contact: Email for course-level questions; use the weekly session for feedback on work.
-photo: ./idris-fenn.avif
-photoAlt: A stylised portrait of a person facing the viewer, flat gold and black shapes on warm cream, in a two-ink risograph print
+photo: ../../assets/images/pfp_3.jpeg
+photoAlt: A green mad-scientist mascot with wild white hair and moustache, wearing goggles and a lab coat, holding a glowing test tube, in a circular badge illustration
 ---
 
 His academic career began in the late Cold War period. Following the
