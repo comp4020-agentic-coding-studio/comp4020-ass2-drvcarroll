@@ -3,6 +3,7 @@ import { render } from "astro:content";
 import { getPublishedCollection } from "astro-course-university/content";
 import ContentLayout from "astro-theme-university/layouts/ContentLayout.astro";
 import PageLayout from "../../layouts/PageLayout.astro";
+import heroImage from "../../assets/images/people_background.jpg";
 import { siteConfig } from "../../site-config";
 
 export async function getStaticPaths() {
@@ -26,10 +27,6 @@ const roleLabels: Record<string, string> = {
 const roleLabel = person.data.role
   ? (roleLabels[person.data.role] ?? person.data.role)
   : undefined;
-// Astro's generated type does not retain the image/alt refinement relationship,
-// so narrow the alt at the rendering boundary as well.
-const rawPhotoAlt = (person.data as { photoAlt?: unknown }).photoAlt;
-const photoAlt = typeof rawPhotoAlt === "string" ? rawPhotoAlt : "";
 // Every page owes a description --- it is what a search result and a shared
 // link show underneath the title.
 const description = person.data.description;
@@ -38,8 +35,8 @@ const description = person.data.description;
 <ContentLayout
   title={person.data.title}
   description={description}
-  heroImage={person.data.photo ?? undefined}
-  heroImageAlt={photoAlt}
+  heroImage={heroImage}
+  heroImageAlt="A black background filled with dense cascading columns of green alphanumeric code-rain characters"
   {...siteConfig}
 >
   <PageLayout>
