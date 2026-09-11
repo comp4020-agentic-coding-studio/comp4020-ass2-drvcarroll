@@ -3243,6 +3243,132 @@ artifact). The screenshots additionally show the Lecture subtitle
 confirming that section was not touched by this fix. Chrome and the
 static file server were both terminated after the check.
 
+### Step 33 --- Opening deck slide: bullets read left, not centered
+
+**Goal.** Every weekly deck's opening slide (the `.impact`-classed slide
+carrying the "Week Overview"/"Course Title"/"Course Review Overview"
+heading and its bullet list) shows that bullet list left-aligned, the
+way every other slide's body copy reads, instead of centered under a
+centered heading.
+
+**Scope.** `src/decks/theme.css` only, as a rule layered after its
+existing `@import` of `astro-theme-university/styles/deck.css`. No
+change to any of the twelve `week-*.deck.mdx` content files (none
+carry per-slide markup to change) and no change inside
+`node_modules/astro-theme-university` (vendored; a project override
+belongs in the project's own deck stylesheet, which
+`src/decks/theme.css`'s own header comment already documents as the
+place to add rules).
+
+**Dependencies / spec.** None blocking. Not tied to a published spec
+id --- a direct, user-requested visual correction --- but it serves the
+general interface rule already named in this file's governing
+`CLAUDE.md`: "Alignment, proximity, and a visual hierarchy matching
+the order things should be read in." A centered bullet list reads as
+a second headline, not as the itemised body copy every other slide in
+the same deck uses.
+
+**Inputs.** The vendored `.impact` slide class
+(`astro-theme-university/styles/deck.css:386-434`) sets
+`text-align: center` on the whole `.impact` section, which cascades
+onto its `li`/`p` descendants alongside the heading. The deck's built
+DOM (`dist/decks/week-01/index.html`) confirms slides are flat
+sibling `<section>` elements directly under `.slides` with no
+stack/wrapper nesting, so the opening slide is reliably the first
+`<section>` child of the deck and addressable by a structural
+selector without touching authored content. Week 12 is the one deck
+with a second `.impact` slide (`# Close`, its final slide, also with
+a bullet list) --- confirmed by grepping `_class: impact` across
+`src/decks/*.deck.mdx` --- so the fix must not be class-only or it
+also flips that unrelated slide.
+
+**Outputs.** One override rule appended to `src/decks/theme.css`,
+selecting only the bullet items of the first section in each deck
+(e.g. `.reveal .slides > section.impact:first-child li`), setting
+`text-align: left`. The heading (`h1`) is untouched --- it is not a
+bullet point and the ask is scoped to bullet text --- and Week 12's
+closing `.impact` slide is untouched because it is not its deck's
+first section.
+
+**Acceptance.** `pnpm check` green. Visual inspection at 1920x1080 and
+390x844 of at least `/decks/week-01/` and `/decks/week-02/` (opening
+slides) plus `/decks/week-12/` navigated to both its opening slide and
+its closing "Close" slide: opening-slide bullets start flush left: the
+heading still reads as the existing centered impact treatment,
+unchanged; Week 12's closing slide bullets remain centered,
+unaffected by the fix.
+
+**Constraints.** Do not edit `node_modules/astro-theme-university`.
+Do not add a marker class to any `.deck.mdx` file when a structural
+selector already isolates the opening slide without touching content.
+Do not change the heading's alignment or any other `.impact` styling
+not named above.
+
+**Testing methodology.** Deck pages are explicitly outside
+`spec/layout.test.ts`'s chrome checks (that file filters `/decks/`
+pages out as "a separate template with no [chrome]"), and there is no
+existing deck-CSS test to extend. Add one small assertion instead:
+after `pnpm build`, read the compiled CSS asset(s) under
+`dist/_astro/*.css` (or, if the rule does not survive minification
+under a stable selector string, read `src/decks/theme.css` directly)
+and assert it contains a rule pairing a `section.impact` /
+`:first-child` selector on `li` with `text-align: left` or
+`text-align:left`, so a future edit that silently drops the override
+fails `pnpm check` rather than only a visual pass.
+
+**Executed.** The exact rule landed in `src/decks/theme.css`, appended
+after the `@import`:
+
+```css
+.reveal .slides > section.impact:first-child li {
+  text-align: left;
+}
+```
+
+No class-only selector was used, and no marker class was added to any
+`.deck.mdx` file --- `:first-child` alone isolates the opening slide,
+per the Constraints. `li` was targeted directly rather than the
+section itself because `text-align: center` on `.impact` only reaches
+`li`/`h1` through inheritance; a rule matching an element directly
+always outranks an inherited value regardless of specificity, so no
+extra specificity was needed beyond what selects the right slide.
+
+A new `spec/deck-theme.test.ts` was added (one file for this one
+concern, per the "one test file per code file maximum" convention):
+after `pnpm build` it concatenates every `dist/_astro/*.css` asset and
+asserts the built output matches
+`/section\.impact:first-child\s+li\s*\{[^}]*text-align:\s*left/`,
+confirming the rule survives minification under a stable selector
+string (verified directly: the built asset contains it literally as
+`.reveal .slides>section.impact:first-child li{text-align:left}`, so
+the dist-reading path was used rather than the src-file fallback).
+The assertion was verified to actually catch a regression, not pass
+vacuously: `:first-child` was temporarily removed from
+`theme.css`, `pnpm build` and the test re-run --- it failed as
+intended, then the file was restored (`diff` confirmed
+byte-identical) and `pnpm check` re-run green before committing.
+
+`pnpm check` is green: typecheck 0 errors/0 warnings/0 hints across 46
+files; 10/10 spec files, 56/56 tests (the new test plus the prior 55).
+
+Visual inspection used headless Chrome via CDP (`Emulation.
+setDeviceMetricsOverride` before `Page.navigate`, matching Step 32's
+method) against `npx serve dist`, screenshotting at both 1920x1080 and
+390x844. `/decks/week-01/` and `/decks/week-02/` opening slides showed
+their bullet lists flush left under a heading whose own box position
+was unchanged (headings are `text-align: left` on the element already,
+pre-existing and unrelated to this step; their apparent centering on
+an impact slide comes from the slide's flex/grid placement of the
+heading's box, not from text alignment, and neither changed).
+`/decks/week-12/` was driven to its last slide with a real `End`
+keypress via `Input.dispatchKeyEvent` (dismissing the initial reveal.js
+help overlay with `ArrowRight` first, since `Escape` opens reveal's
+slide-overview grid rather than dismissing it) and confirmed via
+`document.querySelector('section.present h1').textContent === "Close"`
+before capturing: its bullets remained centered at both viewports,
+unaffected by the fix, exactly as `:first-child` predicts since it is
+that deck's second `.impact` section.
+
 ## 7. Risks
 
 **The broken-link checker fails the build in Step 1.** Four known inbound links

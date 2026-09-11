@@ -11,3 +11,8 @@
  * slide class you reach for (`_class: quote`), a code-heavy layout, a
  * background. */
 @import url("astro-theme-university/styles/deck.css");
+
+/* Opening slide's bullets read left, like every other slide's body copy. */
+.reveal .slides > section.impact:first-child li {
+  text-align: left;
+}
