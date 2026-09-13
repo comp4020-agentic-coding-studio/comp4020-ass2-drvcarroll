@@ -33,29 +33,29 @@ spec:
     requirements
   - the eight elements read as one coherent design, not eight unrelated
     answers to eight prompts
-  - the elements visibly constrain each other — for example, a
+  - the elements visibly constrain each other, for example, a
     persistence strategy carries detection risks the design accounts
     for rather than ignores
   - the design is honest about its own detection risks, not only its
     capabilities
 ---
 
-By Week 8, the course has covered enough of the production lifecycle —
-architecture, execution, infiltration, persistence — for a design to stand
-on its own. This assignment asks for exactly that: a fictional piece of
-malware, invented from scratch and documented the way a real engineering
-team would document a system before building it.
+By Week 8, the course has covered enough of the production lifecycle,
+namely architecture, execution, infiltration and persistence, for a design
+to stand on its own. This assignment asks for exactly that: a fictional
+piece of malware, invented from scratch and documented in the manner a
+real engineering team would document a system before building it.
 
-The design has eight required parts: purpose, target, architecture,
+The design comprises eight required parts: purpose, target, architecture,
 infection lifecycle, persistence strategy, communication model, detection
 risks and operational requirements. None of these is optional, and none is
-graded alone — the point of the assignment is that they constrain each
-other. A target chosen for its data value implies an architecture that
-protects that data in transit; a persistence strategy implies a set of
-detection risks the design has to answer for, not ignore. A response that
-treats the eight sections as eight unrelated short-answer questions has
-missed what the assignment is testing.
+graded in isolation, since the point of the assignment is that they
+constrain one another. A target chosen for its data value implies an
+architecture that protects that data in transit; a persistence strategy
+implies a set of detection risks the design must answer for rather than
+ignore. A response that treats the eight sections as eight unrelated
+short-answer questions has misunderstood what the assignment is testing.
 
-As with every practical exercise in this course, the artefact is a
-document, not working software: the malware described here is never built
-or deployed, only designed and reasoned about.
+As with every practical exercise in this course, the resulting artefact is
+a document rather than working software: the malware described here is
+never built or deployed, only designed and reasoned about.

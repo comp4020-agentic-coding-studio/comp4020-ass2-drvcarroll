@@ -22,25 +22,27 @@ marking:
   mode: holistic
   description:
     Assessed on coherent reasoning across the whole lifecycle rather than
-    on factual recall — how motivation shapes architecture and operational
-    security, which stages tend to generate detectable evidence, and
-    whether attribution claims are made with appropriate confidence.
+    on factual recall, namely how motivation shapes architecture and
+    operational security, which stages tend to generate detectable
+    evidence, and whether attribution claims are made with appropriate
+    confidence.
 spec:
   - sat during the scheduled exam period
   - answers reason across the lifecycle rather than restating slide content
 ---
 
-The exam is the course's synthesis: two hours, in person, written, covering
-everything from Week 1's "what counts as malware?" through Week 11's
-operational-security failures. It does not test any single week in
-isolation — a strong answer connects motivation to architecture, execution
-to the evidence it leaves behind, and persistence to the operational-
-security cost of maintaining it.
+The examination is the course's synthesis: two hours, in person, written,
+covering everything from Week 1's question of what counts as malware
+through to Week 11's operational-security failures. It does not test any
+single week in isolation; a strong answer connects motivation to
+architecture, execution to the evidence it leaves behind, and persistence
+to the operational-security cost of maintaining it.
 
 Week 12's own revision guidance is the best preparation available: be able
 to explain each lifecycle stage and its trade-offs, practise mapping a
 scenario onto the full production path, distinguish observed fact from
 inferred intent, and state confidence levels honestly when discussing
-attribution. The same deadpan seriousness the course has held toward its
-farcical subject all semester applies here too — this is a systems-
-engineering exam, not a trivia round about real-world exploits.
+attribution. The seriousness with which the course has treated its subject
+all semester applies here as well: this is a systems-engineering
+examination, assessed on reasoning rather than on recall of individual
+exploits.
