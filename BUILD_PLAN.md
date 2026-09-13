@@ -3661,6 +3661,16 @@ passes). No unit test applies to prose; verification is a full re-read of
 all four files against the acceptance criteria, plus a grep for `—` across
 the four files returning no matches.
 
+**Amendment (post-implementation).** The commit for this step only
+touched `assignment-1.md`, `assignment-2.md` and `final-exam.md`.
+`final-project.md`'s `description` field still carried one em dash
+("The capstone — a placeholder brief..."), so the step's own Acceptance
+line ("zero em dash characters remain in these four files") was not
+actually met at the time of that commit. Fixed now by rewriting the
+em dash to a comma-joined appositive, matching this step's own
+established style; no other field in `final-project.md` needed a
+change. Step 37 is now complete across all four files.
+
 ### Step 38 --- Copyedit: Labs 01--06
 
 **Goal.** `lab-01.md` through `lab-06.md` read as clean, professional
