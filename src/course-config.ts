@@ -58,10 +58,10 @@ export const courseMeta = slopCourseMetaSchema.parse({
   // construction, not independently guessed.
   endDate: "2027-11-12",
   description:
-    "A course that teaches students how to make and produce malware, " +
-    "treated with deadpan seriousness despite its farcical premise: " +
-    "hostile software as engineering, tracing the production lifecycle " +
-    "from idea to operational use, with practical work confined to " +
-    "benign samples and simulated environments.",
+    "An undergraduate course in the engineering of malicious software: " +
+    "production, distribution, analysis and detection, examined with " +
+    "the same rigour applied to any other class of software system. " +
+    "Practical work is confined throughout to benign samples and " +
+    "simulated environments.",
   tags: ["malware", "software-engineering", "security"],
 }) satisfies CourseMetaInput;

@@ -3846,6 +3846,15 @@ non-string configuration value (dates, numbers, booleans, keys).
 acceptance criteria; grep for `—` across these three files, excluding any
 line starting with `//`, returning no matches.
 
+**Amendment (post-implementation).** Only `course-config.ts`'s
+`courseMeta.description` needed a change; re-reading it against `title`
+found no problem, so `title` is untouched. `404.md` was already clean, so
+it needed no change either. `site-config.ts`'s diff turned out to be
+`withBase()` wiring for the GitHub Pages base path, not prose, so it is
+committed separately in the base-path fix, not here. `index.astro`'s
+`heroImageAlt` still has its em dash, unchanged: this step's file scope is
+`course-config.ts` only, and `heroImageAlt` remains outstanding work.
+
 ## 7. Risks
 
 **The broken-link checker fails the build in Step 1.** Four known inbound links
