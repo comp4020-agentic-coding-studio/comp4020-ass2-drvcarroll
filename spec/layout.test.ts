@@ -5,8 +5,10 @@ import { JSDOM } from "jsdom";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { BEAD_ORDER } from "../src/lib/timeline";
+import { gitOrigin, resolveDeployment } from "../scripts/pages-base";
 
 const DIST = resolve("dist");
+const BASE = resolveDeployment(process.env, gitOrigin).base.replace(/\/$/, "");
 
 /** Every built *.html file under dist/, as an absolute path. */
 function allHtmlFiles(dir: string): string[] {
@@ -87,7 +89,7 @@ describe("layout contracts (BUILD_PLAN.md Step 8)", () => {
     for (const [index, bead] of [...beads].entries()) {
       const link = bead.querySelector("a[href]");
       expect(link, `bead ${index} has no link`).not.toBeNull();
-      expect(link!.getAttribute("href")).toBe(`/assessments/${BEAD_ORDER[index]}/`);
+      expect(link!.getAttribute("href")).toBe(`${BASE}/assessments/${BEAD_ORDER[index]}/`);
 
       const label = bead.querySelector("span.timeline-bead-label");
       const date = bead.querySelector("span.timeline-bead-date");

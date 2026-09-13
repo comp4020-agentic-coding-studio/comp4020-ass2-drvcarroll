@@ -2,6 +2,7 @@
 import Card from "astro-theme-university/components/Card.astro";
 import CardGrid from "astro-theme-university/components/CardGrid.astro";
 import ContentLayout from "astro-theme-university/layouts/ContentLayout.astro";
+import { withBase } from "astro-theme-university/url";
 import PageLayout from "../layouts/PageLayout.astro";
 import heroImage from "../assets/images/overview_background.jpg";
 import { courseMeta } from "../course-config";
@@ -37,13 +38,13 @@ import { siteConfig } from "../site-config";
 
     <h2>Where to go next</h2>
     <CardGrid columns={2}>
-      <Card title="Timeline" href="/timeline/">
+      <Card title="Timeline" href={withBase("/timeline/")}>
         <p>Every graded deliverable, in semester order, on one spine.</p>
       </Card>
-      <Card title="People" href="/people/">
+      <Card title="People" href={withBase("/people/")}>
         <p>Who teaches the course and how to reach them.</p>
       </Card>
-      <Card title="Policies" href="/policies/">
+      <Card title="Policies" href={withBase("/policies/")}>
         <p>The rules that govern how the course is run and assessed.</p>
       </Card>
     </CardGrid>

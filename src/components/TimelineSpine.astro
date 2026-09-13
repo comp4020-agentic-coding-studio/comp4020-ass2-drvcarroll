@@ -3,6 +3,7 @@
 // orders it with the pure `orderBeads` (src/lib/timeline.ts), and renders
 // one TimelineBead per entry along a thickened vertical line.
 import { getPublishedCollection } from "astro-course-university/content";
+import { withBase } from "astro-theme-university/url";
 import TimelineBead from "./TimelineBead.astro";
 import { orderBeads } from "../lib/timeline";
 import { formatCourseDate } from "../lib/dates";
@@ -17,7 +18,7 @@ const beads = orderBeads(assessments);
     beads.map((entry) => (
       <TimelineBead
         label={entry.data.title}
-        href={`/assessments/${entry.id}/`}
+        href={withBase(`/assessments/${entry.id}/`)}
         date={formatCourseDate(entry.data.due)}
         description={entry.data.description ?? ""}
       />

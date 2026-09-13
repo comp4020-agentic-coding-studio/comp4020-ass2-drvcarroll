@@ -1,4 +1,5 @@
 import { defineSiteConfig } from "astro-theme-university/types";
+import { withBase } from "astro-theme-university/url";
 import { slopBranding } from "astro-theme-slop";
 import { courseMeta } from "./course-config";
 
@@ -23,10 +24,10 @@ export const siteConfig = defineSiteConfig({
   // Overview duplicates the wordmark's own link under a discoverable
   // label; Timeline joins now that /timeline/ exists (Step 6).
   links: [
-    { text: "Overview", href: "/" },
-    { text: "Timeline", href: "/timeline/" },
-    { text: "People", href: "/people/" },
-    { text: "Policies", href: "/policies/" },
+    { text: "Overview", href: withBase("/") },
+    { text: "Timeline", href: withBase("/timeline/") },
+    { text: "People", href: withBase("/people/") },
+    { text: "Policies", href: withBase("/policies/") },
   ],
 
   // Generic placeholder: no real institution or place is decided yet.

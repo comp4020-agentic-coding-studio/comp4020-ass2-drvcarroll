@@ -4,6 +4,7 @@ import { getPublishedCollection } from "astro-course-university/content";
 import RelatedContent from "astro-course-university/components/RelatedContent.astro";
 import Card from "astro-theme-university/components/Card.astro";
 import ContentLayout from "astro-theme-university/layouts/ContentLayout.astro";
+import { withBase } from "astro-theme-university/url";
 import PageLayout from "../../layouts/PageLayout.astro";
 import TeachingTeam from "../../components/TeachingTeam.astro";
 import { formatCourseDate } from "../../lib/dates";
@@ -28,16 +29,26 @@ function entryNumber(id: string): number {
 
 // Per-section subtitle, referenced entry and its page path (D15).
 const sections = [
-  { subtitle: `Lecture ${session.data.week}`, entry: lecture, href: `/lectures/${lecture.id}/` },
+  {
+    subtitle: `Lecture ${session.data.week}`,
+    entry: lecture,
+    href: withBase(`/lectures/${lecture.id}/`),
+  },
   ...(lab
-    ? [{ subtitle: `Lab ${entryNumber(lab.id)}`, entry: lab, href: `/assessments/${lab.id}/` }]
+    ? [
+        {
+          subtitle: `Lab ${entryNumber(lab.id)}`,
+          entry: lab,
+          href: withBase(`/assessments/${lab.id}/`),
+        },
+      ]
     : []),
   ...(assignment
     ? [
         {
           subtitle: `Assignment ${entryNumber(assignment.id)}`,
           entry: assignment,
-          href: `/assessments/${assignment.id}/`,
+          href: withBase(`/assessments/${assignment.id}/`),
         },
       ]
     : []),

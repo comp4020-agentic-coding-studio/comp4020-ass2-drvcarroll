@@ -1,5 +1,6 @@
 ---
 import { getPublishedCollection } from "astro-course-university/content";
+import { withBase } from "astro-theme-university/url";
 import Card from "astro-theme-university/components/Card.astro";
 import CardGrid from "astro-theme-university/components/CardGrid.astro";
 
@@ -42,7 +43,7 @@ const visible = people.sort((a, b) => {
       <Card
         headingLevel="h2"
         title={person.data.title}
-        href={`/people/${person.id}/`}
+        href={withBase(`/people/${person.id}/`)}
         image={person.data.photo ?? undefined}
         imageAlt={photoAlt(person.data)}
       >
