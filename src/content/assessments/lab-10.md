@@ -34,13 +34,13 @@ spec:
     not establish, not only what it does
 ---
 
-The course's final lab turns to the mistake side of operational security:
-attribution, infrastructure hygiene, and the logs, metadata and human
-errors that let defenders work backward from an operation to the people
-running it.
+The course's final lab turns to the mistake side of operational
+security: attribution, infrastructure hygiene, and the logs, metadata and
+human errors that allow defenders to work backward from an operation to
+the people running it.
 
-Given a set of famous operational-security failures as a model, students
-reconstruct a fictional actor from supplied evidence and write an
-assessment of how confidently that evidence actually supports the
-attribution — the same question every real "how did they get caught?"
+Given a set of well-documented operational-security failures as a model,
+students reconstruct a fictional actor from the supplied evidence and
+write an assessment of how confidently that evidence actually supports
+the attribution, the same question every real "how did they get caught?"
 case ultimately turns on.

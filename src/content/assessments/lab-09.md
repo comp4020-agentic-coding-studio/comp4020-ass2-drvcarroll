@@ -35,12 +35,12 @@ spec:
 ---
 
 If malware authors care about staying hidden, defenders care about
-finding them anyway. This lab looks at detection from the defender's
-seat: signature-based rules, behavioural rules, and the trade-off every
-detection system makes between catching real threats and flagging benign
-activity by mistake.
+finding them regardless. This lab examines detection from the defender's
+position: signature-based rules, behavioural rules, and the trade-off
+every detection system makes between catching genuine threats and
+flagging benign activity by mistake.
 
 Working against benign simulated malware behaviours, students test the
 detection rules provided, measure where they misfire in either direction,
-and revise the rules to do better — a concrete demonstration of why
-detection is a tuning problem, not a one-off decision.
+and revise the rules accordingly, a concrete demonstration of why
+detection is an ongoing tuning problem rather than a one-off decision.

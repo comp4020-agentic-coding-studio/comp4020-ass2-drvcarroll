@@ -39,8 +39,8 @@ the perspective to the investigator's: static and dynamic analysis as an
 investigative process, working backward from a sample to reconstruct what
 it was intended to do.
 
-Students analyse a deliberately benign sample using both techniques, and
-write up the investigation as they would for a real one — identifying
-indicators of compromise, and being explicit throughout about the
-difference between what the analysis directly observed and what it only
-infers.
+Students analyse a deliberately benign sample using both techniques and
+write up the investigation as they would for a genuine one, identifying
+indicators of compromise while remaining explicit throughout about the
+difference between what the analysis directly observed and what it
+merely infers.

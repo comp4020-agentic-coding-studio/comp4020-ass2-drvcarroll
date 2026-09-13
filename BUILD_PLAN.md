@@ -3707,6 +3707,13 @@ placeholders) rather than being rewritten into invented real content.
 acceptance criteria; grep for `—` across the six files returning no
 matches.
 
+**Amendment (post-implementation).** Only `lab-07.md`-`lab-10.md` are
+done; `lab-11.md` and `lab-12.md` still carry four em dashes each,
+unchanged. This step's own Acceptance line names them as the known
+offenders, so the gap is real, not an oversight in this note. Committed
+as-is rather than marked complete; `lab-11.md`/`lab-12.md` remain
+outstanding work.
+
 ### Step 40 --- Copyedit: people bios and the people index page
 
 **Goal.** The four people bios and `src/pages/people/index.mdx` read as

@@ -27,19 +27,20 @@ spec:
     captured traffic
   - connects the traffic analysis and the simulator built from it,
     rather than treating them as two separate exercises
-  - the simulator stays benign — it reproduces the pattern without
+  - the simulator stays benign, reproducing the pattern without
     functioning as real command-and-control
   - the analysis considers what happens to the channel when the C2
     server goes dark, not only while it is live
 ---
 
-Once malware is running on a target, it typically needs to talk to its
-operator. This lab covers that channel: the basic concepts behind
-command-and-control, the shapes information exchange between operator and
-target can take, and the infrastructure dependencies that channel relies
-on — including what happens when the server on the other end goes dark.
+Once malware is running on a target, it typically needs to communicate
+with its operator. This lab covers that channel: the basic concepts
+behind command-and-control, the forms information exchange between
+operator and target can take, and the infrastructure dependencies that
+channel relies on, including what happens when the server on the other
+end goes dark.
 
-Students analyse a set of captured C2 traffic to work out its
-communication pattern, then build a benign simulator reproducing that
-same request/response behaviour, connecting analysis to construction
-rather than treating them as separate skills.
+Students analyse a set of captured command-and-control traffic to
+determine its communication pattern, then build a benign simulator that
+reproduces that same request and response behaviour, connecting analysis
+to construction rather than treating the two as separate skills.
