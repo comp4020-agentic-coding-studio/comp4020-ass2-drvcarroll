@@ -2,7 +2,7 @@
 title: Distribution
 description:
   Week 7 covers getting malware from creator to targets at scale,
-  alongside a mid-semester retrospective and assessment discussion
+  alongside a mid-semester retrospective and assessment discussion.
 week: 7
 date: 2027-09-21
 teachers:

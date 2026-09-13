@@ -2,7 +2,7 @@
 title: Infiltration
 description:
   Week 5 covers how malware gets into a target environment, from social
-  engineering to supply-chain compromise
+  engineering to supply-chain compromise.
 week: 5
 date: 2027-08-24
 teachers:

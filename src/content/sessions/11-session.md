@@ -2,7 +2,7 @@
 title: Operational security
 description:
   Week 11 addresses attribution, infrastructure hygiene and the human
-  errors that end campaigns technical detection never caught
+  errors that end campaigns technical detection never caught.
 week: 11
 date: 2027-10-19
 teachers:

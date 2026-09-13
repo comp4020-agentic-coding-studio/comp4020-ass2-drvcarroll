@@ -2,7 +2,7 @@
 title: Detection & evasion
 description:
   Week 10 covers how defenders identify malware, and why authors design
-  around being noticed
+  around being noticed.
 week: 10
 date: 2027-10-12
 teachers:

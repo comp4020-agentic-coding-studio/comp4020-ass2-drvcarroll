@@ -2,7 +2,7 @@
 title: Malware architecture
 description:
   Week 3 addresses the components of a malware system, and designing them
-  as separate, replaceable modules rather than one binary
+  as separate, replaceable modules rather than one binary.
 week: 3
 date: 2027-08-10
 teachers:

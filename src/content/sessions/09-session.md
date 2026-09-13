@@ -2,7 +2,7 @@
 title: Malware analysis
 description:
   Week 9 covers static and dynamic analysis, and reconstructing what a
-  sample was intended to do
+  sample was intended to do.
 week: 9
 date: 2027-10-05
 teachers:

@@ -2,7 +2,7 @@
 title: Review
 description:
   Week 12 connects the semester's lifecycle into one coherent picture,
-  and prepares for the final examination
+  and prepares for the final examination.
 week: 12
 date: 2027-10-26
 teachers:

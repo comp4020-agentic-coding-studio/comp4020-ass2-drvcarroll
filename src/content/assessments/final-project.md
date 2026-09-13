@@ -2,7 +2,7 @@
 title: Final project
 description:
   The capstone, a placeholder brief for the larger piece of work the semester
-  builds towards
+  builds towards.
 # CONTENT.md names no final project: Weekly Labs 20 + Assignment 1 20 +
 # Assignment 2 20 + Final Exam 40 = 100 (D24) already accounts for the
 # whole mark. Unpublished, not deleted, per D22's precedent for content

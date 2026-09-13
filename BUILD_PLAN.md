@@ -3924,6 +3924,46 @@ page. This step records only that the placeholder was replaced with
 prose meeting the site's copy standard; the substance of what the course
 teaches is the student's own account, not something reconstructed here.
 
+### Step 46 --- Copyedit: terminal punctuation sweep
+
+**Goal.** Every genuine prose sentence across the site's content (not the
+intentionally fragment-style `spec:`/`submissionItems` bullets) ends in
+correct terminal punctuation. Steps 37-40 each claimed this criterion was
+met; it was not, in two concrete places.
+
+**Scope.** The `description` frontmatter field of
+`src/content/assessments/final-project.md` and of all twelve
+`src/content/sessions/*.md` files. No other field, no wording, voice or
+structural key changed. `src/content/lectures/**` and `src/decks/**`
+remain out of scope per D33.
+
+**Dependencies / spec.** D33's site-wide copyedit pass and its own
+acceptance line, "every sentence ends in correct terminal punctuation,"
+which Steps 37 and 40's amendments both asserted was satisfied.
+
+**Inputs.** A scripted sweep of every `description`/`brief`/
+`marking.description` field across `assessments`, `sessions` and `people`,
+checking each field's rendered text (multi-line YAML scalars joined) for
+a trailing `.`/`:`/`?`/`!`.
+
+**Outputs.** The sweep found the site's assessment and people
+`description`/`brief` fields consistently end in a period (12 of 13
+assessment files already did; only `final-project.md`'s did not), while
+all twelve session `description` fields consistently did not. Both are
+now fixed to match the established, verified convention.
+
+**Acceptance.** The same scripted sweep reports zero remaining fields
+missing terminal punctuation across `assessments`, `sessions` and
+`people`. No `spec:` or `submissionItems` bullet gained a period.
+
+**Constraints.** Punctuation-only. No YAML comments, schema keys, or body
+paragraph prose touched (body paragraphs were independently confirmed
+already correct throughout).
+
+**Testing methodology.** `pnpm check` green (58 pages, 56/56 tests, no
+broken links). The sweep script re-run post-fix, output attached to this
+step: zero remaining issues.
+
 ## 7. Risks
 
 **The broken-link checker fails the build in Step 1.** Four known inbound links

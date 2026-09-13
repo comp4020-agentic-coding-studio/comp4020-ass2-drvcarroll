@@ -2,7 +2,7 @@
 title: Command, control & communication
 description:
   Week 8 covers how malware talks back to its operator, and what happens
-  when the server on the other end gets switched off
+  when the server on the other end gets switched off.
 week: 8
 date: 2027-09-28
 teachers:

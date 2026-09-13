@@ -3,7 +3,7 @@ title: Getting started
 description:
   The first session of the semester, covering what malware is, what the
   course covers, and what a student is expected to bring to the practical
-  work
+  work.
 week: 1
 date: 2027-07-27
 teachers:

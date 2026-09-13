@@ -2,7 +2,7 @@
 title: Execution
 description:
   Week 4 covers how malicious software gets code to run at all, and the
-  traces every execution method leaves behind
+  traces every execution method leaves behind.
 week: 4
 date: 2027-08-17
 teachers:

@@ -2,7 +2,7 @@
 title: From idea to threat model
 description:
   The second session, where a motive becomes a threat model, and the
-  malware development lifecycle gets its first outing
+  malware development lifecycle gets its first outing.
 week: 2
 date: 2027-08-03
 teachers:

@@ -2,7 +2,7 @@
 title: Persistence
 description:
   Week 6 addresses surviving reboots and interruptions, and why removing
-  malware is harder than finding it
+  malware is harder than finding it.
 week: 6
 date: 2027-08-31
 teachers:
