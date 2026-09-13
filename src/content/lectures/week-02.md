@@ -6,11 +6,8 @@ description:
 week: 2
 date: 2027-08-03
 teachers:
-  - ivan-sidorov
+  - fulan-al-fulani
 slides: /decks/week-02/
-related:
-  - sessions/02-first-review
-  - assessments/assignment-1
 ---
 
 Every malicious program starts somewhere short of malicious: a threat model,

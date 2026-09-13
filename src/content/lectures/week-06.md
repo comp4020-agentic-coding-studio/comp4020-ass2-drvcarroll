@@ -6,10 +6,8 @@ description:
 week: 6
 date: 2027-08-31
 teachers:
-  - ivan-sidorov
+  - fulan-al-fulani
 slides: /decks/week-06/
-related:
-  - sessions/06-session
 ---
 
 Getting in once is not enough if the access does not last. This lecture

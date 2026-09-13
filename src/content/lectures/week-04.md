@@ -6,10 +6,8 @@ description:
 week: 4
 date: 2027-08-17
 teachers:
-  - ivan-sidorov
+  - fulan-al-fulani
 slides: /decks/week-04/
-related:
-  - sessions/04-session
 ---
 
 Code that never runs is not malware, only a file. This lecture covers how

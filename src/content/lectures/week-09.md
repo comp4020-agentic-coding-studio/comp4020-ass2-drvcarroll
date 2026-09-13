@@ -6,10 +6,8 @@ description:
 week: 9
 date: 2027-10-05
 teachers:
-  - fulan-al-fulani
+  - ivan-sidorov
 slides: /decks/week-09/
-related:
-  - sessions/09-session
 ---
 
 Having built and distributed malware for eight weeks, the course turns to

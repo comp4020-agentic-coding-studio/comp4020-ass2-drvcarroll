@@ -6,10 +6,8 @@ description:
 week: 7
 date: 2027-09-21
 teachers:
-  - fulan-al-fulani
+  - ivan-sidorov
 slides: /decks/week-07/
-related:
-  - sessions/07-session
 ---
 
 A three-week gap separates this lecture from the last: a mid-semester

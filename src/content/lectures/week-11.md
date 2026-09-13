@@ -6,10 +6,8 @@ description:
 week: 11
 date: 2027-10-19
 teachers:
-  - fulan-al-fulani
+  - ivan-sidorov
 slides: /decks/week-11/
-related:
-  - sessions/11-session
 ---
 
 Good malware and good operational security are not the same skill, and the

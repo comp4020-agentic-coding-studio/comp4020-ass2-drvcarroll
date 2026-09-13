@@ -8,8 +8,6 @@ date: 2027-08-24
 teachers:
   - fulan-al-fulani
 slides: /decks/week-05/
-related:
-  - sessions/05-session
 ---
 
 Execution presumes malware is already present. This lecture covers how it
