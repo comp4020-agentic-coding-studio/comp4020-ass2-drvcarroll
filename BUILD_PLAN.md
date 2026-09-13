@@ -531,6 +531,23 @@ recolouring the text --- the same "pill on a fixed surface" convention
 `index.astro`'s `.course-tags` already established for exactly this reason,
 reused here rather than invented a second time.
 
+**D33. A copyedit pass fixes grammar, punctuation, capitalisation and tone
+across every rendered prose string, but explicitly excludes
+`src/content/lectures` and `src/decks`.** Reported directly: "please review
+all the grammar in assignment 2, the website content... excluding the
+lectures, they are fine." "Website content" means every string a visitor or
+marker actually reads on a page: frontmatter `title`/`description`/`brief`/
+`spec`/`exemplars`/`submissionItems` prose, MDX body copy, and rendered
+`alt` text. It does not mean YAML or code comments (`# ...` in frontmatter,
+`//` in `.ts` files) --- those are process annotations for a future session,
+not content a marker sees on the site, so they keep whatever dash or
+phrasing they already have. Em dashes are replaced with the punctuation the
+sentence actually needs (a comma, a full stop, a colon or a semicolon)
+rather than swapped for another dash convention, since substituting one dash
+for another just relocates the problem. This serves J2 (voice, not
+generated filler) and touches no mechanically checkable spec id, since none
+of S1--S5 tests prose quality.
+
 ## 5. Architecture
 
 ```
@@ -3599,6 +3616,228 @@ chip background auto-match dd's height even when `dd` text wraps to two
 lines (confirmed on `ivan-sidorov`'s Affiliation/Contact rows at 390px),
 so no extra CSS was needed for that case. `dd a` got `min-height: 44px`
 via `display: inline-flex` for the tap-target rule.
+
+### Step 37 --- Copyedit: assessment briefs (Assignment 1, Assignment 2, Final
+Exam, Final Project)
+
+**Goal.** `assignment-1.md`, `assignment-2.md`, `final-exam.md` and
+`final-project.md` read as clean, professional academic prose: correct
+punctuation and full stops, correct capitalisation, no em dashes, one
+consistent formal voice.
+
+**Scope.** The free-text frontmatter fields (`title`, `description`,
+`brief`, `spec`, `exemplars[].description`, `submissionItems`) of those four
+files only. No YAML/code comments, no dates, weights, week numbers or
+schema keys.
+
+**Dependencies / spec.** D33. Serves J2.
+
+**Inputs.** The four files as they stand today; the `assessments` schema in
+`src/content.config.ts` (field presence and any length bounds a rewrite must
+stay inside).
+
+**Outputs.** The same four files, same frontmatter shape, corrected prose.
+
+**Acceptance.** Zero em dash characters remain in these four files; every
+sentence ends in correct terminal punctuation; capitalisation is sentence
+case with proper nouns capitalised and no stray capitals; the voice reads
+as one consistent formal register across all four.
+
+**Constraints.** Do not change `due`, `weight`, `week`, `published` or any
+other structural key. Do not touch the `#`-prefixed YAML comments (D33).
+Do not invent content `final-project.md` doesn't have; it stays a
+placeholder brief, only its existing prose gets corrected.
+
+**Testing methodology.** `pnpm check` stays green (schema validation still
+passes). No unit test applies to prose; verification is a full re-read of
+all four files against the acceptance criteria, plus a grep for `—` across
+the four files returning no matches.
+
+### Step 38 --- Copyedit: Labs 01--06
+
+**Goal.** `lab-01.md` through `lab-06.md` read as clean, professional
+academic prose, matching Step 37's standard.
+
+**Scope.** The free-text frontmatter fields of `lab-01.md`--`lab-06.md`
+only.
+
+**Dependencies / spec.** D33. Serves J2. Independent of Step 37.
+
+**Inputs.** The six files as they stand; the `assessments` schema bounds.
+
+**Outputs.** The same six files, corrected prose only.
+
+**Acceptance.** Zero em dashes; correct terminal punctuation throughout;
+sentence-case capitalisation; one consistent formal voice across all six,
+and consistent with Step 37's four.
+
+**Constraints.** Do not change `due`, `weight`, `week`, `marking` or any
+other structural key. Do not touch YAML comments.
+
+**Testing methodology.** `pnpm check` green. Full re-read against
+acceptance criteria; grep for `—` across the six files returning no
+matches.
+
+### Step 39 --- Copyedit: Labs 07--12
+
+**Goal.** `lab-07.md` through `lab-12.md` read as clean, professional
+academic prose, matching Steps 37/38's standard. `lab-11.md`/`lab-12.md`
+are the two known em-dash offenders (four occurrences each) and both are
+`published: false` placeholders (D22's precedent: no eleventh/twelfth lab
+exists in the real content).
+
+**Scope.** The free-text frontmatter fields of `lab-07.md`--`lab-12.md`
+only.
+
+**Dependencies / spec.** D33. Serves J2. Independent of Steps 37/38.
+
+**Inputs.** The six files as they stand; the `assessments` schema bounds.
+
+**Outputs.** The same six files, corrected prose only.
+
+**Acceptance.** Zero em dashes; correct terminal punctuation throughout;
+sentence-case capitalisation; one consistent formal voice. `lab-11.md`/
+`lab-12.md` stay explicit, honest placeholders (still say they are
+placeholders) rather than being rewritten into invented real content.
+
+**Constraints.** Do not change `published: false` on `lab-11.md`/
+`lab-12.md`, or any other structural key. Do not touch YAML comments.
+
+**Testing methodology.** `pnpm check` green. Full re-read against
+acceptance criteria; grep for `—` across the six files returning no
+matches.
+
+### Step 40 --- Copyedit: people bios and the people index page
+
+**Goal.** The four people bios and `src/pages/people/index.mdx` read as
+clean, professional academic prose.
+
+**Scope.** `src/content/people/anastasia-rusakova.md`,
+`fulan-al-fulani.md`, `ivan-sidorov.md`, `marcus-whitfield.md` (free-text
+fields only), and `src/pages/people/index.mdx`'s body copy.
+
+**Dependencies / spec.** D33. Serves J2. Independent of Steps 37--39.
+
+**Inputs.** The four bio files and the index page as they stand; the
+`people` collection schema.
+
+**Outputs.** The same five files, corrected prose only.
+
+**Acceptance.** Zero em dashes; correct terminal punctuation; sentence-case
+capitalisation; a consistent formal voice across bios that still lets each
+person read as a distinct individual, not a template filled in four times.
+
+**Constraints.** Do not change `role`, `email`, `web` or any other
+structural/contact field. Do not touch YAML comments. Do not remove any
+person or field.
+
+**Testing methodology.** `pnpm check` green. Full re-read against
+acceptance criteria; grep for `—` across these five files returning no
+matches.
+
+### Step 41 --- Copyedit: sessions 01--06
+
+**Goal.** `01-getting-started.md` through `06-session.md` read as clean,
+professional academic prose.
+
+**Scope.** The free-text frontmatter and body-copy fields of
+`sessions/01-getting-started.md`--`06-session.md` only.
+
+**Dependencies / spec.** D33. Serves J2. Independent of Steps 37--40.
+
+**Inputs.** The six files as they stand; the `sessions` schema.
+
+**Outputs.** The same six files, corrected prose only.
+
+**Acceptance.** Zero em dashes; correct terminal punctuation throughout;
+sentence-case capitalisation; one consistent formal voice.
+
+**Constraints.** Do not change `week`, `date`, `lecture`, `lab`,
+`assignment` or any other structural key. Do not touch YAML comments.
+
+**Testing methodology.** `pnpm check` green. Full re-read against
+acceptance criteria; grep for `—` across the six files returning no
+matches.
+
+### Step 42 --- Copyedit: sessions 07--12
+
+**Goal.** `07-session.md` through `12-session.md` read as clean,
+professional academic prose, matching Step 41's standard.
+
+**Scope.** The free-text frontmatter and body-copy fields of
+`sessions/07-session.md`--`12-session.md` only.
+
+**Dependencies / spec.** D33. Serves J2. Independent of Steps 37--41.
+
+**Inputs.** The six files as they stand; the `sessions` schema.
+
+**Outputs.** The same six files, corrected prose only.
+
+**Acceptance.** Zero em dashes; correct terminal punctuation throughout;
+sentence-case capitalisation; one consistent formal voice, consistent with
+Step 41's six.
+
+**Constraints.** Do not change `week`, `date`, `lecture`, `lab`,
+`assignment` or any other structural key. Do not touch YAML comments.
+
+**Testing methodology.** `pnpm check` green. Full re-read against
+acceptance criteria; grep for `—` across the six files returning no
+matches.
+
+### Step 43 --- Copyedit: the Policies page
+
+**Goal.** `src/pages/policies/index.mdx` (95 lines of body copy across four
+topics) reads as clean, professional academic prose.
+
+**Scope.** `src/pages/policies/index.mdx`'s body copy only.
+
+**Dependencies / spec.** D25 (this page's structure), D33. Serves J2.
+Independent of Steps 37--42.
+
+**Inputs.** The file as it stands.
+
+**Outputs.** The same file, same four-topic/four-card/four-section
+structure (D25), corrected prose only.
+
+**Acceptance.** Zero em dashes; correct terminal punctuation throughout;
+sentence-case capitalisation; one consistent formal voice across all four
+topics.
+
+**Constraints.** Do not change the four-topic structure D25 established or
+remove any topic, card or section.
+
+**Testing methodology.** `pnpm check` green. Full re-read against
+acceptance criteria; grep for `—` in the file returning no matches.
+
+### Step 44 --- Copyedit: site-wide rendered strings
+
+**Goal.** Every remaining rendered (not code-comment) string outside the
+content collections reads as clean, professional academic prose: the home
+page's hero `alt` text, `site-config.ts`'s nav/copy strings, and
+`404.md`'s body copy.
+
+**Scope.** `src/pages/index.astro`'s `heroImageAlt` string, `src/
+site-config.ts`'s user-visible string fields, and `src/pages/404.md`'s
+body. `src/course-config.ts`'s `courseMeta.description`/`title` are already
+correct prose (Step 20) and are re-read here only to confirm they still
+meet this step's standard, not rewritten unless a problem is found.
+
+**Dependencies / spec.** D33. Serves J2. Independent of Steps 37--43.
+
+**Inputs.** The three files as they stand.
+
+**Outputs.** The same files, corrected rendered strings only; code comments
+untouched (D33).
+
+**Acceptance.** Zero em dashes in any rendered string; correct terminal
+punctuation; sentence-case capitalisation; one consistent formal voice.
+
+**Constraints.** Do not touch `//` code comments. Do not change any
+non-string configuration value (dates, numbers, booleans, keys).
+
+**Testing methodology.** `pnpm check` green. Full re-read against
+acceptance criteria; grep for `—` across these three files, excluding any
+line starting with `//`, returning no matches.
 
 ## 7. Risks
 
