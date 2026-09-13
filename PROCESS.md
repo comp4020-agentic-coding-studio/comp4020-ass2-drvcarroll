@@ -1,53 +1,34 @@
 # Process overview
 
-<!-- TEMPLATE: this file is a shape to fill in, not a form. Replace everything
-     in it with your own overview, and delete this comment — `pnpm
-     check:evidence` will remind you if it's still here. -->
-
-Written by you, for a reader: how you got from the brief to the harness and
-agentic workflow behind this submission. Markers read this file and follow its
-citations; they don't trawl the repo for evidence you didn't point at.
-
-This file is the shape; the course site's
-[assessment page](https://comp.anu.edu.au/courses/comp4020-agentic-coding-studio/topics/assessment/#what-you-submit)
-is the requirement, and its
-[word counts](https://comp.anu.edu.au/courses/comp4020-agentic-coding-studio/topics/assessment/#word-counts)
-cover every deliverable.
-
 ## What I built
 
-One paragraph: the thing, and the idea behind it.
+I built *"SLOP4000: Introduction to Malware Production"*, a farical course complete with weekly content, lectures, labs, staff, and assessments, within a neat and polished Slop University template. This course is focused on the malware lifecycle, teaching students how to create, produce, distribute and maintain persistance through high quality malware, and ensure they don't get caught! Sponsored by the GRU, NSA and ASD.
 
 ## How I got here
 
-The account of the process: how the work actually went, and how you knew the
-result was right. Tell it in whatever order makes it clear. A weekly prototype
-needs a paragraph or two; an assignment needs more.
+### Beat 1: The Content
+Due to my interest in cybersecurity, I've always found malware fascinating as a concept. I’ve also been slightly afraid of it, as I don’t know enough about malware, and I am thus not fully equipped to defend against it. This was the genisis for my idea for this course; a course that taught students how to make and produce malware. Obviously, this is farcical, as no real university is giving out lessons on malware development and deployment! But many cyber courses have the same structure, and this could very well pass in a western university if you weren't too scrupulous. 
 
-Cite the record as you go, as links whose text is the commit hash or range and
-whose target is this repo's commit or compare URL, so a reader clicks straight
-to the evidence:
+As a software engineer that is concerned with the overall design, direction, and content of a software project, I manually created the "base" content for this course, such as:
+- The weekly topics and content progression;
+- The assessment timeline; 
+- The staff bios; and
+- The UI design.
 
-- one commit: [`a1b2c3d`](https://github.com/YOUR-ORG/YOUR-REPO/commit/a1b2c3d)
-- a range:
-  [`a1b2c3d...e4f5a6b`](https://github.com/YOUR-ORG/YOUR-REPO/compare/a1b2c3d...e4f5a6b)
+While it took some time to put together a rough plan and course content, I thoroughly enjoyed the process, crafting a progression from introduction, to creation, to distribution, with the course building on its’ own knowledge base progressively, while increasing in complexity and thematic content. This was the entire bulk of the manual labour - after dumping into `CONTENT.md` (`cbc62cd`) the rest was almost entirely automated, starting with the course record itself landing as SLOP4000 in `2b2cd06`.
 
-To pair a prompt with the commit it produced, quote the prompt (curated, not a
-full transcript) next to the citation:
+### Beat 2: The Skill
+I constructed a skill called `/execute_plan`, a cumulation of my "harness engineering" work so far this semester, carried into this repo in `c223608` and shaped into its atomic-step form in `6857d5f`. The overall concept is simple; I call the skill, and as input provide a description / brain-dump of what I want built. The main agent (i.e. the orchestrator) then breaks my input down into atomic, actionable steps designed to be executed by a dispatched sub-agent (i.e. the executor) with minimal context. These steps are saved in `BUILD_PLAN.md` by the orchestrator, which serves several goals;
 
-> the prompt, verbatim
+1. The primary is a persistence of the instructions for a specific build step that can then be fed to the executor, which will then update the build plan with it's own observations, including challenges met, design choices, pre-requesites required, and so forth. A nice consequence of this is that `BUILD_PLAN.md` becomes **part of the harness**; it is constantly updated with the executors' design decisions and thought process, so any problems or changes that the agent observes **lands back in the harness**.
+2. The secondary is **retention and context efficiency**; the orchestrator is instructed to dispatch executors with only the minimal context required - the single step in the build plan, the `CLAUDE.md` system prompt (containing design principles, the spec, etc), and some general instructions - which are then executed with minimal token usage.
+3. The tertiary goal is that `BUILD_PLAN.md` acts as a fine-grained journal of the entire build process that I can review to assess the progress and performance of the agents, with associated commits to help diff the code manually. Commits like `577fb79` and `e9efacb`, plan amendments recording an executor's findings after a step, are that journal in practice.
 
-Screenshots are welcome where one carries the point better than a sentence does.
-Commit the file to this repo and link it with a **relative** path, which is what
-makes it render on GitHub: `![alt text](docs/before.png)`. Images don't count
-towards the word count and don't replace the citation.
+### Beat 3: The Phases
+With the raw content of the course defined, and the build process automated, my work was cut out for me. My general process entailed running the `/execute_plan` skill in 3 main phases;
 
-## Before you ship
+1. **User Interface Re-design** (`8033433`-`a0891fa`, Steps 1-19): redesigned the website structure slightly to add my own unique flair and streamline the navigation for prospective students.
+2. **Content integration** (`2b2cd06`-`df09808`, Steps 20-31): uploading the `CONTENT.md` file with instructions to integrate and subsequently polish the content with a more academic tone.
+3. **Visual Polish** (`8b3198c`-`69921cd`, Steps 32-36): including updated images for the hero pages and staff profiles, alongside ensuring my repo was provisioned correctly and passed all checks.
 
-`pnpm check:evidence` verifies that this comment is gone, that your citations
-resolve to real commits, that a crit week's reflection entry is in
-`reflections/`, and that your `CLAUDE.md` is there. It checks that your account
-is traceable, not that it is good: that is the marker's call.
-
-Images aren't checked: unlike a citation whose SHA doesn't resolve, a broken
-image is visible the moment this file is rendered on GitHub.
+Having the workflow broken down into an orchestrator / executor split was something I found very efficient and allowed high level design decisions from my behalf, and properly aligned grunt-work manual labour from claude Sonnet (I did not need to use Opus at all), while maintaining cohesion throughout the whole project. It was nice to have my agent loop working well - only once did I have to ask the agent to undo something it did (`2abc399`, fixing a rail-side flip its own previous fix had caused), and instead i could keep brain-dummping my instructions, which would then get converted into detailed steps for an agent to carry out. 
