@@ -3558,6 +3558,14 @@ covers only `ivan-sidorov.md`, `fulan-al-fulani.md` and the four
 uncommitted with the rest of the content rewrite, to be committed whenever
 that base content is.
 
+**Amendment (commit-history repair).** `anastasia-rusakova.md` and
+`marcus-whitfield.md` are now committed, as their own base content: both
+were already free of em dashes, so no separate Step 40 copyedit was
+needed for them. No BUILD_PLAN step documents why the people collection
+grew from the two convenors (D23, Step 21) to four entries; that
+decision predates this repair and its rationale is not reconstructed
+here.
+
 ### Step 36 --- Person page fact list: dt/dd on one row, gold label, white value
 
 **Goal.** The person detail page's Role/Affiliation/Email/Web/Contact list
