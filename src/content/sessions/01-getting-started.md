@@ -1,13 +1,17 @@
 ---
 title: Getting started
 description:
-  The first session of the semester — what malware is, what the course
-  covers, and what you are expected to bring to the practical work
+  The first session of the semester, covering what malware is, what the
+  course covers, and what a student is expected to bring to the practical
+  work
 week: 1
 date: 2027-07-27
 teachers:
   - fulan-al-fulani
+  - marcus-whitfield
 lecture: week-01
+related:
+  - sessions/12-session
 spec:
   - you can name one example of software that counts as malware and one
     that does not, and say what separates them
@@ -16,28 +20,33 @@ spec:
     simulated samples
 ---
 
-The first session is orientation: what this course means by "malware," why
-it treats hostile software as a serious engineering problem, and what the
-semester ahead looks like.
+The first session serves as orientation. It establishes what this course
+means by "malware," why hostile software is treated here as a serious
+engineering problem rather than a curiosity, and what the semester ahead is
+structured to deliver.
 
 ## Before the session
 
-Nothing to prepare beyond curiosity. There is no lab this week and nothing to
-install yet — the toolchain for the practical weeks starts in Week 2.
+There is no preparation beyond curiosity, and no laboratory exercise this
+week. The toolchain used in the practical sessions is introduced from Week 2
+onward, so nothing needs to be installed in advance.
 
 ## In the session
 
-The lecture opens with what counts as malware and why intent, not technique,
-is what decides it, then works through the history from experimental
-self-replicating code to today's professionalised operations. It closes with
-the course's own shape: the four pieces of assessment and their weights, and
-the one rule that governs every practical exercise from here on — benign
-samples and simulated environments only, curiosity required, real malice is
-not.
+The lecture opens by establishing what counts as malware, arguing that
+intent rather than technique is what ultimately decides the classification,
+before tracing the field's history from early self-replicating code to
+today's professionalised operations. It closes by setting out the course's
+own structure: the four pieces of assessment and their respective weights,
+together with the single rule that governs every practical exercise from
+this point onward. All practical work is confined to benign samples and
+simulated environments; curiosity is required, and nothing resembling
+genuine malicious intent is permitted.
 
 ## Afterwards
 
-You should be able to place this course's twelve weeks against its own
-structure — production lifecycle, then analysis and defence, then
-synthesis — and know what each piece of assessment is worth before Week 2's
-lab asks you to build anything.
+Students should leave this session able to situate the coming twelve weeks
+within the course's own structure: a production lifecycle first, followed by
+analysis and defence, and closing with synthesis. They should also know what
+each piece of assessment is worth before Week 2's laboratory session asks
+them to build anything.
