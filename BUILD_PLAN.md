@@ -3715,12 +3715,18 @@ placeholders) rather than being rewritten into invented real content.
 acceptance criteria; grep for `—` across the six files returning no
 matches.
 
-**Amendment (post-implementation).** Only `lab-07.md`-`lab-10.md` are
-done; `lab-11.md` and `lab-12.md` still carry four em dashes each,
-unchanged. This step's own Acceptance line names them as the known
-offenders, so the gap is real, not an oversight in this note. Committed
-as-is rather than marked complete; `lab-11.md`/`lab-12.md` remain
-outstanding work.
+**Amendment (post-implementation).** `lab-07.md`-`lab-10.md` were done
+first; `lab-11.md` and `lab-12.md` still carried four em dashes each at
+that point, left as outstanding work rather than marked complete.
+
+**Amendment (completed).** `lab-11.md` and `lab-12.md`'s four
+frontmatter fields (`description`, `brief`, `submissionItems`,
+`marking.description`) are now copyedited too, each em dash replaced
+and both files still reading as explicit, honest placeholders
+(`published: false` unchanged, the word "placeholder" kept in every
+field). Their body paragraphs are unchanged: this step's Scope line
+covers frontmatter fields only. Step 39 is now complete across all six
+files.
 
 ### Step 40 --- Copyedit: people bios and the people index page
 
