@@ -31,13 +31,14 @@ spec:
     and the evidence available afterward
 ---
 
-An architecture on paper still has to run somewhere. This lab is about
+An architecture on paper still has to run somewhere. This lab addresses
 that step: how code actually gets executed, the range of triggers and
 execution environments available to it, and the perennial problem every
-piece of software (malicious or not) has to solve — how does this thing
-actually start?
+piece of software, malicious or otherwise, has to solve: how does this
+thing actually start?
 
 Working with benign programs only, students trigger execution through
-different mechanisms and read the resulting traces, building an
-understanding of how the choice of trigger shapes both behaviour and the
-evidence that behaviour leaves for an investigator to find later.
+several different mechanisms and read the resulting traces, building an
+understanding of how the choice of trigger shapes both the resulting
+behaviour and the evidence that behaviour leaves for an investigator to
+find later.

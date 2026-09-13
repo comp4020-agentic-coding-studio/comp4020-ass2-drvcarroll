@@ -33,14 +33,16 @@ spec:
     idea, what lifecycle stage it is at and what threat model it implies
 ---
 
-Before any malware gets designed, it starts as an idea: a target, a
-motive, a rough shape of what it should do. This lab is that first step,
-made explicit. Working from a fictional scenario, students build a threat
-model — who is targeted, why, and by whom — and a lifecycle that lays the
-idea out as stages a real development process would need to pass through.
+Before any malware is designed, it exists only as an idea: a target, a
+motive, and a rough shape of what it should accomplish. This lab makes that
+first step explicit. Working from a fictional scenario, students construct
+a threat model, naming who is targeted, why, and by whom, together with a
+lifecycle that lays the idea out as the stages a real development process
+would need to pass through.
 
-The point is translation, not invention: the scenario is given, and the
-work is turning a loose idea into the structured form the rest of the
-course's malware-development lifecycle depends on. A student who finishes
-this lab can look at any malicious-software idea and say what lifecycle
-stage it is at and what threat model it implies.
+The point is translation rather than invention. The scenario itself is
+supplied, and the work lies in turning a loose idea into the structured
+form the remainder of the course's malware-development lifecycle depends
+on. A student who completes this lab should be able to examine any
+malicious-software idea and state what lifecycle stage it occupies and
+what threat model it implies.

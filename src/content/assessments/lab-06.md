@@ -34,12 +34,13 @@ spec:
 ---
 
 Falling in the mid-semester week, this lab steps back from a single
-target to a whole campaign: how malware gets from its creator to many
+target to a whole campaign: how malware travels from its creator to many
 targets, the infrastructure that delivery depends on, and what happens
-when that operation has to scale.
+once that operation is required to scale.
 
-Students design a distribution infrastructure for a fictional campaign —
-delivery mechanisms, supporting infrastructure, the costs of running it —
-and analyse where it would be expected to fail. It sits alongside this
-week's own mid-semester retrospective, matching the lecture's own pause to
-take stock of the semester's assessment work so far.
+Students design a distribution infrastructure for a fictional campaign,
+covering delivery mechanisms, supporting infrastructure and the costs of
+running it, and analyse where that infrastructure would be expected to
+fail. The exercise sits alongside this week's own mid-semester
+retrospective, matching the lecture's pause to take stock of the
+semester's assessment work so far.

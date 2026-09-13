@@ -8,8 +8,8 @@ due: 2027-08-24T17:00:00+10:00
 # 2% (10 labs x 2% = 20% of course total; BUILD_PLAN.md D24).
 weight: 2
 brief: >
-  Investigate a set of simulated infiltration scenarios — phishing,
-  vulnerability exploitation, removable media, network and supply-chain —
+  Investigate a set of simulated infiltration scenarios, namely phishing,
+  vulnerability exploitation, removable media, network and supply-chain,
   using the prepared evidence provided, and compare the vectors involved.
 submissionItems:
   - A short investigation report per scenario, using the prepared evidence
@@ -26,22 +26,23 @@ spec:
   - submitted by the deadline, in the format named below
   - each scenario's infiltration vector is identified and compared to the
     others, not treated in isolation
-  - reports on each of the prepared scenarios — phishing, vulnerability
-    exploitation, removable media, network and supply-chain — using
-    only the evidence given
+  - reports on each of the prepared scenarios, namely phishing,
+    vulnerability exploitation, removable media, network and
+    supply-chain, using only the evidence given
   - grounds each identified vector in a specific piece of that supplied
     evidence
   - the comparison names what each vector needs from an attacker and
     what it leaves behind, not only which vector was used
 ---
 
-Getting malware into a target environment is a separate problem from
-getting it to execute once there. This lab looks at initial access from
+Getting malware into a target environment is a distinct problem from
+getting it to execute once there. This lab examines initial access from
 the investigator's side: a set of prepared, simulated scenarios covering
 phishing, exploited vulnerabilities, removable media, network vectors and
 supply-chain compromise, each with its own evidence trail to work through.
 
-No infiltration is performed — the scenarios and their evidence are
-supplied — so the work is identification and comparison: which vector was
-used, what evidence points to it, and how the vectors differ in what they
-need from an attacker and what they leave behind.
+No infiltration is performed by the student; the scenarios and their
+evidence are supplied in full, so the work consists of identification and
+comparison: which vector was used, what evidence points to it, and how the
+vectors differ in what they require from an attacker and what they leave
+behind.

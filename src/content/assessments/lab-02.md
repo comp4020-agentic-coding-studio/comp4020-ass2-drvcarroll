@@ -31,13 +31,14 @@ spec:
     ordinary software architecture would, not just a single exploit
 ---
 
-Once a lifecycle exists, it needs an architecture: the pieces a real
-system would be built from, and how they fit together. This lab asks for
-that blueprint — a design only, never a running program — laying out
-loaders, payloads and the modules and infrastructure they call on.
+Once a lifecycle exists, it requires an architecture: the components a
+real system would be built from, and how those components fit together.
+This lab asks for that blueprint, a design only and never a running
+program, laying out loaders, payloads and the supporting modules and
+infrastructure they depend on.
 
-The design work here mirrors ordinary software architecture more than it
-mirrors a single exploit: the same pressures toward modularity, separation
-of concerns and maintainability apply, which is exactly the point the
-lecture makes about why malware increasingly resembles the software
-engineering it borrows from.
+The design work here more closely mirrors ordinary software architecture
+than it does a single exploit. The same pressures toward modularity,
+separation of concerns and maintainability apply, which is precisely the
+point the lecture makes about why malware increasingly resembles the
+software engineering discipline it borrows from.
