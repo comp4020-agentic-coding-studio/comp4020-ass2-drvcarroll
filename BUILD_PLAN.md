@@ -3756,6 +3756,19 @@ person or field.
 acceptance criteria; grep for `—` across these five files returning no
 matches.
 
+**Amendment (post-implementation).** All five files already met every
+Acceptance line as committed: `grep '—'` returns no matches in any of
+them; every sentence in every bio and in `index.mdx`'s `description`
+ends with correct terminal punctuation; capitalisation is sentence-case
+throughout; and the four bios already read in one consistent formal
+voice while staying distinct (different institutions, different
+research focus, different personal history, different mascot art).
+`anastasia-rusakova.md` and `marcus-whitfield.md` were already confirmed
+clean when committed, per Step 35's amendment above; this step's own
+re-read now confirms `ivan-sidorov.md`, `fulan-al-fulani.md` and
+`index.mdx` need no changes either. No content edit was required; this
+step is complete by inspection, and `pnpm check` remains green.
+
 ### Step 41 --- Copyedit: sessions 01--06
 
 **Goal.** `01-getting-started.md` through `06-session.md` read as clean,
