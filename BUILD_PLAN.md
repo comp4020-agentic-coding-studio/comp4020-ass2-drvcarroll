@@ -3863,6 +3863,38 @@ committed separately in the base-path fix, not here. `index.astro`'s
 `heroImageAlt` still has its em dash, unchanged: this step's file scope is
 `course-config.ts` only, and `heroImageAlt` remains outstanding work.
 
+### Step 45 --- Home page body copy
+
+**Goal.** `src/pages/index.astro`'s "What you will do" and "Who it is
+for" paragraphs carry real, course-specific copy in place of the
+`STARTER_CONTENT` placeholder text.
+
+**Scope.** `src/pages/index.astro`'s two `<p>` elements under those two
+headings, and removal of the `STARTER_CONTENT` marker comment above them.
+No other change to the page.
+
+**Dependencies / spec.** Step 28 explicitly deferred this exact marker as
+"out of this batch's scope... unless a review pass finds [it] should be
+--- if so, that is a new, separately justified step, not a silent
+addition here." This is that step.
+
+**Inputs.** The existing placeholder paragraphs; `courseMeta`'s
+description; the course's actual weekly structure (lecture, lab,
+assignment) as established by Steps 21-27.
+
+**Outputs.** Two paragraphs of real prose: what a student spends the
+semester doing, and who the course assumes as its audience.
+
+**Acceptance.** No `STARTER_CONTENT` marker remains in `index.astro`; the
+home page reads as a real course description, not a template.
+
+**Constraints.** No other page content, structure or styling changes.
+
+**Testing methodology.** `pnpm check` green. Visual read of the home
+page. This step records only that the placeholder was replaced with
+prose meeting the site's copy standard; the substance of what the course
+teaches is the student's own account, not something reconstructed here.
+
 ## 7. Risks
 
 **The broken-link checker fails the build in Step 1.** Four known inbound links
