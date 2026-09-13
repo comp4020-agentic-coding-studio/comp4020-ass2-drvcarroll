@@ -475,6 +475,62 @@ of the card it sits directly above --- and the comment is corrected to
 say so, rather than left asserting a coincidence that a look at D22 would
 have disproved.
 
+**D29. Real hero background images replace the shared `hero-home.avif`
+placeholder on Overview, Timeline, People and Policies.** D14 reused one
+placeholder image across all four pages "until real photography exists" ---
+the user has now placed four dedicated images in `src/assets/images`
+(`overview_background.jpg`, `timeline_background.jpg`,
+`people_background.jpg`, `policies_background.jpg`), one per page, so the
+condition D14 was waiting on no longer holds. Each page switches from the
+shared placeholder to its own image, with `heroImageAlt` rewritten to
+describe what that image actually shows rather than carrying over the old
+risograph-artwork description.
+
+**D30. The person detail page's hero stops using that person's own `photo`,
+and shows the same People hero image every other person's page (and the
+People index) shows.** Reported directly: "when an individual clicks on a
+staff member, the hero background stays as the one for people." Before this,
+`person.data.photo` did two jobs at once --- the page-level hero background
+on `/people/<slug>/`, and (via `PeopleGrid`) the card thumbnail on `/people/`
+--- and the user's request separates them: the hero job moves to the shared
+`people_background.jpg` (D29), imported the same way `index.astro`'s and
+`timeline/index.astro`'s hero images already are, and `photo` keeps only the
+card-thumbnail job.
+
+**D31. Every one of the four people entries gets a real `photo`, sourced
+from the four `pfp_N.jpeg` files the user placed in `src/assets/images`.**
+Two entries (`anastasia-rusakova`, `marcus-whitfield`) had no `photo` before
+this step; the other two (`ivan-sidorov`, `fulan-al-fulani`) pointed at the
+pre-D23-rename placeholder avifs (`idris-fenn.avif`, `marisol-quaye.avif`).
+The brief specifies no likeness for any of the four, and the four supplied
+images are otherwise-interchangeable illustrated avatars, so the mapping
+from person to `pfp_N` is arbitrary and is fixed once, by the same
+alphabetical-by-slug order `PeopleGrid`'s own sort already falls back to
+(`anastasia-rusakova` → `pfp_1`, `fulan-al-fulani` → `pfp_2`,
+`ivan-sidorov` → `pfp_3`, `marcus-whitfield` → `pfp_4`), rather than left
+for a future pass to decide. The path syntax changes with it: the schema's
+`image()` loader resolves relative to the entry file, and the new assets
+live two directories above `src/content/people/`, so each `photo` becomes
+`../../assets/images/pfp_N.jpeg` in place of the old same-directory
+`./name.avif`.
+
+**D32. The person page's fact list becomes a same-row label/value layout, a
+fixed dark chip background, gold label, white value --- not the browser's
+default stacked `<dl>`.** Reported directly: "for each staff member i want
+the associated dt and dd elements to be on the same row, with the dd
+element to be white and the dt element to be yellow, its cleaner UI that
+way." Neither colour is one of the theme's existing semantic tokens ---
+`--at-accent` resolves to the brand teal here, not yellow --- so both are
+literal values scoped to this one element, rather than repurposing an
+unrelated token or redefining a sitewide one for a single-page request.
+Plain yellow-on-page-background or white-on-page-background text would drop
+under the 4.5:1 contrast floor in the theme's light mode (`--at-bg` is
+near-white there), so each row gets its own fixed near-black chip
+background, independent of the light/dark toggle, rather than only
+recolouring the text --- the same "pill on a fixed surface" convention
+`index.astro`'s `.course-tags` already established for exactly this reason,
+reused here rather than invented a second time.
+
 ## 5. Architecture
 
 ```
@@ -3368,6 +3424,181 @@ slide-overview grid rather than dismissing it) and confirmed via
 before capturing: its bullets remained centered at both viewports,
 unaffected by the fix, exactly as `:first-child` predicts since it is
 that deck's second `.impact` section.
+
+### Step 34 --- Real hero backgrounds for Overview, Timeline, People and Policies; the person page stops using its own photo as hero
+
+**Goal.** Replace the shared `hero-home.avif` placeholder (Step 12) on the
+four chrome pages with the four dedicated background images now supplied,
+and make the person detail page's hero the shared People image (D30)
+instead of that person's own photo.
+
+**Scope.** `src/pages/index.astro` (hero import + alt →
+`overview_background.jpg`); `src/pages/timeline/index.astro` (hero import +
+alt → `timeline_background.jpg`); `src/pages/people/index.mdx`
+(frontmatter `heroImage`/`heroImageAlt` → `people_background.jpg`);
+`src/pages/policies/index.mdx` (frontmatter `heroImage`/`heroImageAlt` →
+`policies_background.jpg`); `src/pages/people/[slug].astro` (`heroImage`
+switches from `person.data.photo` to an imported `people_background.jpg`;
+`heroImageAlt` switches from `photoAlt` to the People page's own alt text).
+No change to `PeopleGrid.astro` (Step 35's job) or to any `.astro`/`.mdx`
+file's non-hero content.
+
+**Dependencies / spec.** D14 (supersedes its "one placeholder, reused"
+clause), D29, D30. Independent of Steps 35 and 36 --- different files, no
+shared state.
+
+**Inputs.** The four new assets already in `src/assets/images/`
+(`overview_background.jpg`, `timeline_background.jpg`,
+`people_background.jpg`, `policies_background.jpg`); each image's actual
+content (viewed directly): a black-and-green "digital rain" character
+cascade (Overview), a dark circuit-board network of glowing nodes and
+traces (Timeline), a taller black-and-green code cascade (People), and a
+green code cascade faintly forming a world-map silhouette (Policies);
+Step 12's existing `resolveHeroImage` plumbing, which already accepts both
+an imported `ImageMetadata` (the two `.astro` pages) and a `/src/assets/...`
+frontmatter string (the two `.mdx` pages) unchanged.
+
+**Outputs.** Four visually distinct hero images across Overview/Timeline/
+People/Policies; every `/people/<slug>/` page showing the same People hero
+image regardless of which person it is.
+
+**Acceptance.** At both viewports: Overview, Timeline, People and Policies
+each show a different hero image from one another; any two distinct
+`/people/<slug>/` pages show the *same* hero image as each other and as
+`/people/`.
+
+**Constraints.** `heroImageAlt` on each page must describe what that image
+actually shows, not a reused description of the old placeholder artwork.
+Do not touch `PeopleGrid.astro`'s use of `photo` as a card thumbnail, and do
+not remove `photo`/`photoAlt` from the `people` schema --- Step 35 still
+needs them.
+
+**Testing methodology.** No new pure logic; `spec/layout.test.ts`'s existing
+`.at-hero`-presence assertion is agnostic to which image is used, so it
+stays green unchanged. Visual inspection at both viewports is the primary
+check: confirm the four chrome-page images differ from each other, and that
+two different people's pages share one image.
+
+### Step 35 --- Real profile photos for all four people
+
+**Goal.** Every one of the four `people` entries gets a real `photo` from
+the four `pfp_N.jpeg` avatars now in `src/assets/images`, shown on their
+`PeopleGrid` card.
+
+**Scope.** `src/content/people/anastasia-rusakova.md`,
+`fulan-al-fulani.md`, `ivan-sidorov.md`, `marcus-whitfield.md` frontmatter
+(`photo`/`photoAlt` fields only). No change to `PeopleGrid.astro`,
+`people/[slug].astro`, or the `people` schema in `src/content.config.ts` ---
+all three already read `photo`/`photoAlt` correctly (Step 34 repoints
+`[slug].astro`'s *hero* elsewhere, but its schema fields are untouched).
+
+**Dependencies / spec.** D31. Independent of Steps 34 and 36.
+
+**Inputs.** The four images (viewed directly): `pfp_1.jpeg`, a teal fuzzy
+mascot in a graduation cap with warning-triangle icons; `pfp_2.jpeg`, an
+orange character inside a wooden Trojan-horse costume; `pfp_3.jpeg`, a green
+mad-scientist mascot in a lab coat and goggles holding a test tube;
+`pfp_4.jpeg`, a purple spiked-virus mascot in a lab coat and tie. D31's
+fixed mapping (alphabetical by slug): `anastasia-rusakova` → `pfp_1`,
+`fulan-al-fulani` → `pfp_2`, `ivan-sidorov` → `pfp_3`, `marcus-whitfield` →
+`pfp_4`.
+
+**Outputs.** Four `people` entries each with `photo:
+../../assets/images/pfp_N.jpeg` and a `photoAlt` describing that mascot
+(literally, per the Inputs above --- no invented backstory tying a mascot to
+its person). `ivan-sidorov.md`/`fulan-al-fulani.md`'s old
+`./idris-fenn.avif`/`./marisol-quaye.avif` references are replaced, not
+supplemented.
+
+**Acceptance.** `/people/` shows all four cards with a distinct photo, at
+both viewports; no card falls back to text-only.
+
+**Constraints.** Do not delete `idris-fenn.avif`/`marisol-quaye.avif` from
+disk --- they are unreferenced after this step, but removing files nobody
+asked to remove is out of scope. `photoAlt` is required by the schema's
+`superRefine` whenever `photo` is set; every changed entry must carry one.
+
+**Testing methodology.** `pnpm build` is the primary check --- content
+collection `image()` resolution fails the build on a bad relative path, so
+a wrong `../../assets/images/pfp_N.jpeg` is caught mechanically, not just
+visually. Visual inspection of `/people/` at both viewports for the rest.
+
+**Amendment (post-implementation).** `anastasia-rusakova.md` and
+`marcus-whitfield.md` turned out to be untracked in git --- unlike
+`ivan-sidorov.md`/`fulan-al-fulani.md`, no prior commit has ever added
+these two entries, so their full bio content (title, description, body)
+is itself part of the pre-existing uncommitted content rewrite this step
+was told not to touch or commit. A never-committed file can't be split at
+the hunk level the way a dirty tracked file can: staging only the two new
+`photo`/`photoAlt` lines against an empty index blob would commit a
+two-line file with no closing frontmatter delimiter or body, breaking the
+build for that commit in isolation, and staging the whole file would pull
+someone else's uncommitted bio prose into this step's commit. Working tree
+edits still add `photo`/`photoAlt` to both files (verified visually, both
+viewports, per the Acceptance line above), but the commit for this step
+covers only `ivan-sidorov.md`, `fulan-al-fulani.md` and the four
+`pfp_N.jpeg` assets; the other two entries' `photo` fields ride along
+uncommitted with the rest of the content rewrite, to be committed whenever
+that base content is.
+
+### Step 36 --- Person page fact list: dt/dd on one row, gold label, white value
+
+**Goal.** The person detail page's Role/Affiliation/Email/Web/Contact list
+reads as same-row label/value pairs on a fixed dark chip, gold label text,
+white value text, in place of the browser's default stacked `<dl>`.
+
+**Scope.** `src/pages/people/[slug].astro` only --- its existing `<dl>`
+markup (unchanged structure: still one `<dt>`/`<dd>` pair per fact, still
+conditional per field) and a new scoped `<style>` block. No change to any
+other page's `<dl>` usage, if any exists elsewhere.
+
+**Dependencies / spec.** D32. Independent of Steps 34 and 35.
+
+**Inputs.** The existing `<dl>` in `people/[slug].astro` (Role,
+Affiliation, Email, Web, Contact, each already conditionally rendered);
+`index.astro`'s `.course-tags` pill (the existing "fixed-surface pill"
+precedent D32 cites); the site's contrast rule (4.5:1 for text) and its
+light/dark toggle (`--at-bg` is near-white in light mode, so a fixed dark
+chip background, not a theme token, is what keeps both colours legible in
+either mode).
+
+**Outputs.** A `dl` styled as `display: grid` (or an equivalent row-pairing
+layout) so each `dt`/`dd` sits on one visual row rather than stacking; every
+row on a fixed near-black background chip; `dt` text in a literal yellow;
+`dd` text in literal white (`var(--at-white)` is already the theme's fixed
+white token; yellow is a new literal value scoped to this component, per
+D32).
+
+**Acceptance.** At both viewports, every present fact (Role, Affiliation,
+Email, Web, Contact) shows its label and value on the same row, label
+yellow, value white, legible against its own chip in both the light and
+dark theme toggle states.
+
+**Constraints.** Do not remove any of the five conditionally-rendered
+fields or change what data each shows --- only the layout and colour of the
+existing markup changes. Do not touch `--at-accent` or any other shared
+token; both colours are literal and scoped to this page's `<style>` block.
+Maintain the 44px+ tap-target guidance for the `mailto:`/`http` links
+inside `dd`.
+
+**Testing methodology.** No new pure logic to unit-test. Visual inspection
+at both viewports, and in both the light and dark theme-toggle states
+(`--at-bg`'s light-mode near-white makes the light state the harder of the
+two to get right), confirming the row layout and both text colours read
+clearly against the chip background.
+
+**Amendment (post-implementation).** Implemented as sketched: `dl` is a
+two-column grid (`max-content 1fr`, `gap: 0.5rem 0`), so dt/dd auto-place
+onto one row per pair with no nth-child indexing. Literal colours settled
+on `#1a1a1a` chip, `#eab308` gold `dt` text (~9.1:1 on the chip), and
+`var(--at-white)` `dd` text (~17.4:1), both computed via the WCAG relative
+luminance formula --- comfortably clear of the 4.5:1 floor regardless of
+theme toggle, since the chip is a fixed literal, not `--at-bg`. One
+unanticipated benefit: grid's default `align-items: stretch` makes dt's
+chip background auto-match dd's height even when `dd` text wraps to two
+lines (confirmed on `ivan-sidorov`'s Affiliation/Contact rows at 390px),
+so no extra CSS was needed for that case. `dd a` got `min-height: 44px`
+via `display: inline-flex` for the tap-target rule.
 
 ## 7. Risks
 
